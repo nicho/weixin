@@ -45,7 +45,7 @@ import com.google.common.collect.Maps;
 @RequestMapping(value = "/task")
 public class TaskController {
 
-	private static final String PAGE_SIZE = "3";
+	private static final String PAGE_SIZE = "10";
 
 	private static Map<String, String> sortTypes = Maps.newLinkedHashMap();
 	static {

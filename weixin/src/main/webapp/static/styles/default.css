@@ -18,3 +18,8 @@
 }
 
 #footer a {color: #999;}
+
+.pagination {
+	float: right;
+	 margin: 0px 0;
+}
