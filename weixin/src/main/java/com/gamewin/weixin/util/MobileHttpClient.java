@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URLEncoder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -29,7 +28,8 @@ public class MobileHttpClient {
 		//String ticket=getJsapi_ticket(access_token);
 		//System.out.println(ticket);
 		String ticket="gQFr8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xLzVUdlpJSUxrSUhkWnRZOHVSeFZyAAIETzyCVQMEgDoJAA==";
-		getticketImage(URLEncoder.encode(ticket,"UTF-8"));
+		//String url=request.getServletContext().getRealPath("/")+"\\image\\";
+		//getticketImage(URLEncoder.encode(ticket,"UTF-8"),url);
 	}
 
 	public static String getAccessToken() throws Exception {
@@ -126,8 +126,8 @@ public class MobileHttpClient {
 		return jsapi_ticket;
 
 	}
-	public static String getticketImage(String ticket) throws Exception {
-		String jsapi_ticket = "";
+	public static String getticketImage(String ticket,String url) throws Exception {
+	 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
 			HttpGet httpPost = new HttpGet("https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + ticket);
@@ -141,20 +141,26 @@ public class MobileHttpClient {
 			        throw new IOException("Got bad response, error code = " + response.getStatusLine().getStatusCode()
 			          );
 			      }
-			      if (entity != null) {
+			     
+			      if (entity != null) { 
 			        InputStream input = entity.getContent();
-			        OutputStream output = new FileOutputStream(new File("D:\\2.jpg"));
+			        OutputStream output = new FileOutputStream(new File(url));
 			        IOUtils.copy(input, output);
 			        output.flush();
+			        
+			        output.close();
+			        input.close();
 			      }
 
 			} finally {
 				response.close();
+				
 			}
 		} finally {
 			httpclient.close();
 		}
-		return jsapi_ticket;
+		return url;
+		
 
 	}
 

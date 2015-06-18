@@ -5,9 +5,11 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.task;
 
+import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.shiro.SecurityUtils;
@@ -21,12 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springside.modules.web.Servlets;
+
 import com.gamewin.weixin.entity.Task;
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.TaskService;
-import org.springside.modules.web.Servlets;
-
+import com.gamewin.weixin.util.MobileHttpClient;
 import com.google.common.collect.Maps;
 
 /**
@@ -133,9 +136,21 @@ public class TaskController {
 	}
 	
 	@RequestMapping(value = "createTicket/{id}")
-	public String createTicket(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+	public String createTicket(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,HttpServletRequest request) {
 		String AccessToken=taskService.getAccessToken();
 		System.out.println(AccessToken);
+		String ticket;
+		try {
+			ticket = MobileHttpClient.getJsapi_ticket(AccessToken);
+			System.out.println(ticket);
+			String url=request.getServletContext().getRealPath("/")+"\\image\\1.jpg";
+			MobileHttpClient.getticketImage(URLEncoder.encode(ticket,"UTF-8"),url);
+			
+		} catch (Exception e) { 
+			e.printStackTrace();
+		}
+		
+		
 		redirectAttributes.addFlashAttribute("message", "成功");
 		return "redirect:/task/";
 	}
