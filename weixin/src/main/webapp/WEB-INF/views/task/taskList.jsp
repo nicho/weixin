@@ -23,14 +23,14 @@
 	</div>
 	
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>序号</th><th>名称</th><th >描述</th><th >操作</th></tr></thead>
+		<thead><tr><th>序号</th><th>名称</th><th >关注次数</th><th >操作</th></tr></thead>
 		<tbody>
 		<c:forEach items="${tasks.content}" var="task"  varStatus="vstatus">
 			<tr>
 				<td align="center">${vstatus.index+1}</td>
-				<td><a href="${ctx}/task/update/${task.id}">${task.title}</a></td>
-				<td>${task.description}</td>
-				<td><a href="${ctx}/task/delete/${task.id}">删除</a> <a href="${ctx}/task/createTicket/${task.id}">生成</a></td>
+				<td> ${task.title} </td>
+				<td>1</td>
+				<td><a href="${ctx}/task/update/${task.id}">查看</a></td>
 				 
 			</tr>
 		</c:forEach>
@@ -39,6 +39,6 @@
 	
 	<tags:pagination page="${tasks}" paginationSize="5"/>
 
-	<div><a class="btn" href="${ctx}/task/create">创建任务</a></div>
+	<div> </div>
 </body>
 </html>

@@ -5,6 +5,7 @@
  *******************************************************************************/
 package com.gamewin.weixin.service.task;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ import com.gamewin.weixin.util.MobileHttpClient;
 public class TaskService {
 
 	private TaskDao taskDao;
-	
+
 	@Autowired(required = false)
 	private SpyMemcachedClient memcachedClient;
 
@@ -81,7 +82,7 @@ public class TaskService {
 	 */
 	private Specification<Task> buildSpecification(Long userId, Map<String, Object> searchParams) {
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
+	//	filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
 		Specification<Task> spec = DynamicSpecifications.bySearchFilter(filters.values(), Task.class);
 		return spec;
 	}
@@ -90,7 +91,7 @@ public class TaskService {
 	public void setTaskDao(TaskDao taskDao) {
 		this.taskDao = taskDao;
 	}
-	 
+
 	public String getAccessToken() {
 		String key = MemcachedObjectType.WEIXIN.getPrefix() + "AccessToken";
 
@@ -102,13 +103,13 @@ public class TaskService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		
+
 		}
 		return accessToken;
 	}
- 
+
 	public String getJsapiTicket(String accessToken) {
-		String key = MemcachedObjectType.WEIXIN.getPrefix() + "JsapiTicket"+accessToken;
+		String key = MemcachedObjectType.WEIXIN.getPrefix() + "JsapiTicket" + accessToken;
 
 		String jsapiTicket = memcachedClient.get(key);
 		if (StringUtils.isEmpty(jsapiTicket)) {
@@ -118,9 +119,19 @@ public class TaskService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		
+
 		}
 		return jsapiTicket;
 	}
 
+	public Task getTaskByUser(Long userid) {
+		Map<String, SearchFilter> filters = new HashMap<String, SearchFilter>();
+		filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userid));
+		Specification<Task> spec = DynamicSpecifications.bySearchFilter(filters.values(), Task.class);
+		List<Task> list = taskDao.findAll(spec);
+		if (list != null && list.size() > 0)
+			return list.get(0);
+		else
+			return null;
+	}
 }

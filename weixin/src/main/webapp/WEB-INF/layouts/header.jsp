@@ -14,12 +14,12 @@
 			
 				<ul class="dropdown-menu">
 					<shiro:hasRole name="admin">
-						<li><a href="${ctx}/admin/user">Admin Users</a></li>
+						<li><a href="${ctx}/admin/user">管理会员</a></li>
+						<li><a href="${ctx}/admin/task">管理会员二维码</a></li>
 						<li class="divider"></li>
 					</shiro:hasRole>
-					<li><a href="${ctx}/api">APIs</a></li>
-					<li><a href="${ctx}/profile">Edit Profile</a></li>
-					<li><a href="${ctx}/logout">Logout</a></li>
+					<li><a href="${ctx}/index">我的二维码</a></li> 
+					<li><a href="${ctx}/logout">退出</a></li>
 				</ul>
 			</div>
 		</shiro:user>
