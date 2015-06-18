@@ -30,7 +30,7 @@
 				<td align="center">${vstatus.index+1}</td>
 				<td><a href="${ctx}/task/update/${task.id}">${task.title}</a></td>
 				<td>${task.description}</td>
-				<td><a href="${ctx}/task/delete/${task.id}">删除</a> <a href="${ctx}/task/delete/${task.id}">生成</a></td>
+				<td><a href="${ctx}/task/delete/${task.id}">删除</a> <a href="${ctx}/task/createTicket/${task.id}">生成</a></td>
 				 
 			</tr>
 		</c:forEach>

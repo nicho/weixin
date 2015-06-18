@@ -131,4 +131,13 @@ public class TaskController {
 		ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
 		return user.id;
 	}
+	
+	@RequestMapping(value = "createTicket/{id}")
+	public String createTicket(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+		String AccessToken=taskService.getAccessToken();
+		System.out.println(AccessToken);
+		redirectAttributes.addFlashAttribute("message", "成功");
+		return "redirect:/task/";
+	}
+
 }

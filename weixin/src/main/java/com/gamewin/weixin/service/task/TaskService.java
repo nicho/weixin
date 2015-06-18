@@ -8,6 +8,7 @@ package com.gamewin.weixin.service.task;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,11 +17,15 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import com.gamewin.weixin.entity.Task;
-import com.gamewin.weixin.repository.TaskDao;
+import org.springside.modules.cache.memcached.SpyMemcachedClient;
 import org.springside.modules.persistence.DynamicSpecifications;
 import org.springside.modules.persistence.SearchFilter;
 import org.springside.modules.persistence.SearchFilter.Operator;
+
+import com.gamewin.weixin.entity.Task;
+import com.gamewin.weixin.repository.TaskDao;
+import com.gamewin.weixin.util.MemcachedObjectType;
+import com.gamewin.weixin.util.MobileHttpClient;
 
 // Spring Bean的标识.
 @Component
@@ -29,6 +34,9 @@ import org.springside.modules.persistence.SearchFilter.Operator;
 public class TaskService {
 
 	private TaskDao taskDao;
+	
+	@Autowired(required = false)
+	private SpyMemcachedClient memcachedClient;
 
 	public Task getTask(Long id) {
 		return taskDao.findOne(id);
@@ -82,4 +90,37 @@ public class TaskService {
 	public void setTaskDao(TaskDao taskDao) {
 		this.taskDao = taskDao;
 	}
+	 
+	public String getAccessToken() {
+		String key = MemcachedObjectType.WEIXIN.getPrefix() + "AccessToken";
+
+		String accessToken = memcachedClient.get(key);
+		if (StringUtils.isEmpty(accessToken)) {
+			try {
+				accessToken = MobileHttpClient.getAccessToken();
+				memcachedClient.set(key, MemcachedObjectType.WEIXIN.getExpiredTime(), accessToken);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+		}
+		return accessToken;
+	}
+ 
+	public String getJsapiTicket(String accessToken) {
+		String key = MemcachedObjectType.WEIXIN.getPrefix() + "JsapiTicket"+accessToken;
+
+		String jsapiTicket = memcachedClient.get(key);
+		if (StringUtils.isEmpty(jsapiTicket)) {
+			try {
+				jsapiTicket = MobileHttpClient.getJsapi_ticket(accessToken);
+				memcachedClient.set(key, MemcachedObjectType.WEIXIN.getExpiredTime(), jsapiTicket);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+		}
+		return jsapiTicket;
+	}
+
 }

@@ -65,6 +65,54 @@
 	<!-- 依赖项定义 -->
 	<dependencies>
 		<dependency>
+			<groupId>org.springside</groupId>
+			<artifactId>springside-core</artifactId>
+			<classifier>tests</classifier>
+			<!-- for xxxDemo class -->
+			<scope>compile</scope>
+			<version>4.2.3-GA</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springside</groupId>
+			<artifactId>springside-extension</artifactId>
+			<classifier>tests</classifier>
+			<!-- for xxxDemo class -->
+			<scope>compile</scope>
+			<version>4.2.3-GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springside</groupId>
+			<artifactId>springside-core</artifactId>
+			<version>4.2.3-GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springside</groupId>
+			<artifactId>springside-extension</artifactId>
+			<version>4.2.3-GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springside</groupId>
+			<artifactId>springside-metrics</artifactId>
+			<version>4.2.3-GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springside</groupId>
+			<artifactId>springside-redis</artifactId>
+			<version>4.2.3-GA</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.spy</groupId>
+			<artifactId>spymemcached</artifactId>
+			<version>2.11.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.thimbleware.jmemcached</groupId>
+			<artifactId>jmemcached-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
