@@ -108,21 +108,7 @@ public class TaskService {
 		return accessToken;
 	}
 
-	public String getJsapiTicket(String accessToken) {
-		String key = MemcachedObjectType.WEIXIN.getPrefix() + "JsapiTicket" + accessToken;
-
-		String jsapiTicket = memcachedClient.get(key);
-		if (StringUtils.isEmpty(jsapiTicket)) {
-			try {
-				jsapiTicket = MobileHttpClient.getJsapi_ticket(accessToken);
-				memcachedClient.set(key, MemcachedObjectType.WEIXIN.getExpiredTime(), jsapiTicket);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
-		return jsapiTicket;
-	}
+ 
 
 	public Task getTaskByUser(Long userid) {
 		Map<String, SearchFilter> filters = new HashMap<String, SearchFilter>();

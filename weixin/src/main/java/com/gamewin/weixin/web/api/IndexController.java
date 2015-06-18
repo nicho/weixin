@@ -48,7 +48,7 @@ public class IndexController {
 			System.out.println(AccessToken);
 			String ticket;
 			try {
-				ticket = MobileHttpClient.getJsapi_ticket(AccessToken);
+				ticket = MobileHttpClient.getJsapi_ticket(AccessToken,user.id);
 				System.out.println(ticket);
 				String url=request.getServletContext().getRealPath("/")+"\\image\\"+imageUrl;
 				MobileHttpClient.getticketImage(URLEncoder.encode(ticket,"UTF-8"),url);

@@ -28,6 +28,7 @@
 				/static/** = anon
 				/api/** = anon
 				/register/** = anon
+				/ReceiveServlet=anon
 				/admin/** = roles[admin] 
 				/** = user
 			</value>

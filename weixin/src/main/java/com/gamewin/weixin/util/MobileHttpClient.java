@@ -80,7 +80,7 @@ public class MobileHttpClient {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getJsapi_ticket(String access_token) throws Exception {
+	public static String getJsapi_ticket(String access_token,Long userId) throws Exception {
 		String jsapi_ticket = "";
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
@@ -89,7 +89,7 @@ public class MobileHttpClient {
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("expire_seconds", 604800);
 			jsonObj.put("action_name", "QR_SCENE"); 
-			jsonObj.put("action_info", new JSONObject().put("scene", new JSONObject().put("scene_id", 123))); 
+			jsonObj.put("action_info", new JSONObject().put("scene", new JSONObject().put("scene_id", userId))); 
 			
 			StringEntity entity = new StringEntity(jsonObj.toString(), "UTF-8");
 

@@ -135,24 +135,5 @@ public class AdminTaskController {
 		return user.id;
 	}
 	
-	@RequestMapping(value = "createTicket/{id}")
-	public String createTicket(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,HttpServletRequest request) {
-		String AccessToken=taskService.getAccessToken();
-		System.out.println(AccessToken);
-		String ticket;
-		try {
-			ticket = MobileHttpClient.getJsapi_ticket(AccessToken);
-			System.out.println(ticket);
-			String url=request.getServletContext().getRealPath("/")+"\\image\\1.jpg";
-			MobileHttpClient.getticketImage(URLEncoder.encode(ticket,"UTF-8"),url);
-			
-		} catch (Exception e) { 
-			e.printStackTrace();
-		}
-		
-		
-		redirectAttributes.addFlashAttribute("message", "成功");
-		return "redirect:/task/";
-	}
-
+	 
 }
