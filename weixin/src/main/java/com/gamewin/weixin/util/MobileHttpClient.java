@@ -1,8 +1,15 @@
 package com.gamewin.weixin.util;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -19,10 +26,10 @@ public class MobileHttpClient {
 		//String access_token = getAccessToken();
 		//System.out.println(access_token);
 		String access_token="cXW9din35BAzEeMAsEY2PAANgs3xDi4hLLzXnL_8N4pJYhB1Yjpavz7tD926yyL-qG00Wr7_M844WQqUk73Sum_9igHiqfYn_Z_G2VBmxTs";
-		String ticket=getJsapi_ticket(access_token);
-		System.out.println(ticket);
-		//gQFr8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xLzVUdlpJSUxrSUhkWnRZOHVSeFZyAAIETzyCVQMEgDoJAA==
-
+		//String ticket=getJsapi_ticket(access_token);
+		//System.out.println(ticket);
+		String ticket="gQFr8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xLzVUdlpJSUxrSUhkWnRZOHVSeFZyAAIETzyCVQMEgDoJAA==";
+		getticketImage(URLEncoder.encode(ticket,"UTF-8"));
 	}
 
 	public static String getAccessToken() throws Exception {
@@ -112,6 +119,37 @@ public class MobileHttpClient {
 
 			} finally {
 				response1.close();
+			}
+		} finally {
+			httpclient.close();
+		}
+		return jsapi_ticket;
+
+	}
+	public static String getticketImage(String ticket) throws Exception {
+		String jsapi_ticket = "";
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		try {
+			HttpGet httpPost = new HttpGet("https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + ticket);
+
+ 
+			CloseableHttpResponse response = httpclient.execute(httpPost);
+			try {
+				 HttpEntity entity = response.getEntity();
+
+			      if (response.getStatusLine().getStatusCode() >= 400) {
+			        throw new IOException("Got bad response, error code = " + response.getStatusLine().getStatusCode()
+			          );
+			      }
+			      if (entity != null) {
+			        InputStream input = entity.getContent();
+			        OutputStream output = new FileOutputStream(new File("D:\\2.jpg"));
+			        IOUtils.copy(input, output);
+			        output.flush();
+			      }
+
+			} finally {
+				response.close();
 			}
 		} finally {
 			httpclient.close();
