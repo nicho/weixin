@@ -23,22 +23,21 @@
 	</div>
 	
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>序号</th><th>名称</th><th >关注次数</th><th >操作</th></tr></thead>
+		<thead><tr><th>序号</th><th>用户OPENID</th><th >事件</th><th >时间</th></tr></thead>
 		<tbody>
-		<c:forEach items="${tasks.content}" var="task"  varStatus="vstatus">
+		<c:forEach items="${weiXinUsers.content}" var="task"  varStatus="vstatus">
 			<tr>
 				<td align="center">${vstatus.index+1}</td>
-				<td> ${task.title} </td>
-				<td>1</td>
-				<td><a href="${ctx}/task/update/${task.id}">查看</a> <a href="${ctx}/weixinUser">查看用户</a></td>
-				 
-				 
+				<td> ${task.fromUserName} </td>
+				<td>${task.eventKey}</td>
+				<td>${task.createDate}</td>
+				  
 			</tr>
 		</c:forEach>
 		</tbody>
 	</table>
 	
-	<tags:pagination page="${tasks}" paginationSize="5"/>
+	<tags:pagination page="${weiXinUsers}" paginationSize="5"/>
 
 	<div> </div>
 </body>

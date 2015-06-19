@@ -159,7 +159,7 @@ public class ApiListController {
         	wxUser.setMsgType(msgType);
         	wxUser.setEvent(inputMsg.getEvent());
         	wxUser.setEventKey(inputMsg.getEventKey());
-        	wxUser.setCreateTime(inputMsg.getCreateTime());
+        	wxUser.setCreateTime(inputMsg.getCreateTime().toString());
         	weiXinUserService.saveWeiXinUser(wxUser);
             
             

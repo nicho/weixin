@@ -17,7 +17,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class WeiXinUser extends IdEntity {
 	private String toUserName;
 	private String fromUserName;
-	private Long createTime;
+	private String createTime;
 	private String msgType;
 	private String event;
 	private String eventKey;
@@ -51,11 +51,11 @@ public class WeiXinUser extends IdEntity {
 
 	 
 
-	public Long getCreateTime() {
+	public String getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Long createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 
