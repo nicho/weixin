@@ -17,10 +17,13 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.gamewin.weixin.entity.WeiXinUser;
+import com.gamewin.weixin.service.weixinUser.WeiXinUserService;
 import com.gamewin.weixin.util.InputMessage;
 import com.gamewin.weixin.util.OutputMessage;
 import com.gamewin.weixin.util.SHA1;
@@ -33,6 +36,8 @@ import com.thoughtworks.xstream.XStream;
 public class ApiListController {
 	private String Token = "DU2qERxP";  
 	
+	@Autowired
+	private WeiXinUserService weiXinUserService;
 	
 	@RequestMapping(method ={ RequestMethod.GET, RequestMethod.POST })
 	public void list(HttpServletRequest request, HttpServletResponse response) {
@@ -49,9 +54,14 @@ public class ApiListController {
 	            System.out.println(echostr);  
 	            access(request, response);  
 	        } else {  
-	            // 进入POST聊天处理  
+	        	 // 进入POST聊天处理  
 	            System.out.println("enter post");  
-	           
+	            try {  
+	                // 接收消息并返回消息  
+	                acceptMessage(request, response);  
+	            } catch (IOException e) {  
+	                e.printStackTrace();  
+	            }  
 	        }  
 		 
 	}
@@ -130,9 +140,32 @@ public class ApiListController {
             System.out.println("发送方帐号：" + inputMsg.getFromUserName());  
             System.out.println("消息创建时间：" + inputMsg.getCreateTime() + new Date(createTime * 1000l));  
             System.out.println("消息Event：" + inputMsg.getEvent());  
-            System.out.println("消息EventKey：" + inputMsg.getEventKey());  
-            System.out.println("消息Id：" + inputMsg.getMsgId());  
+            System.out.println("消息EventKey：" + inputMsg.getEventKey());   
   
+            
+//            if("subscribe".equals(inputMsg.getEvent()))
+//            {
+//
+//            }
+//            else if("SCAN".equals(inputMsg.getEvent()))
+//            {
+//            	
+//            }
+             
+        	WeiXinUser wxUser=new WeiXinUser();
+        	wxUser.setCreateDate(new Date());
+        	wxUser.setToUserName(inputMsg.getToUserName());
+        	wxUser.setFromUserName(inputMsg.getFromUserName());
+        	wxUser.setMsgType(msgType);
+        	wxUser.setEvent(inputMsg.getEvent());
+        	wxUser.setEventKey(inputMsg.getEventKey());
+        	wxUser.setCreateTime(inputMsg.getCreateTime());
+        	weiXinUserService.saveWeiXinUser(wxUser);
+            
+            
+            
+            
+            
             StringBuffer str = new StringBuffer();  
             str.append("OK");  
 //            str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>");  
