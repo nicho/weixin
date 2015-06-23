@@ -86,9 +86,8 @@ public class MobileHttpClient {
 		try {
 			HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=" + access_token);
 
-			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("expire_seconds", 604800);
-			jsonObj.put("action_name", "QR_SCENE"); 
+			JSONObject jsonObj = new JSONObject(); 
+			jsonObj.put("action_name", "QR_LIMIT_SCENE"); 
 			jsonObj.put("action_info", new JSONObject().put("scene", new JSONObject().put("scene_id", userId))); 
 			
 			StringEntity entity = new StringEntity(jsonObj.toString(), "UTF-8");
