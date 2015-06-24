@@ -82,7 +82,8 @@ public class WeiXinUserService {
 	 */
 	private Specification<WeiXinUser> buildSpecification(Long userId, Map<String, Object> searchParams) {
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		filters.put("eventKey", new SearchFilter("eventKey", Operator.EQ, userId));
+	//	filters.put("eventKey", new SearchFilter("eventKey", Operator.EQ, userId));
+		filters.put("eventKey", new SearchFilter("eventKey", Operator.EQ, "qrscene_"+userId));
 		Specification<WeiXinUser> spec = DynamicSpecifications.bySearchFilter(filters.values(), WeiXinUser.class);
 		return spec;
 	}

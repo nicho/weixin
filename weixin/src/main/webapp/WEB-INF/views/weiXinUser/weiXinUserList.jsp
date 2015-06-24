@@ -29,7 +29,7 @@
 			<tr>
 				<td align="center">${vstatus.index+1}</td>
 				<td> ${task.fromUserName} </td>
-				<td>${task.eventKey}</td>
+				<td><c:if test="${task.event eq 'subscribe' }">关注</c:if><c:if test="${task.event eq 'SCAN' }">扫码</c:if></td>
 				<td>${task.createDate}</td>
 				  
 			</tr>

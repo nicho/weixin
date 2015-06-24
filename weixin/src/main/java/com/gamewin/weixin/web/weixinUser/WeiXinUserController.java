@@ -76,6 +76,24 @@ public class WeiXinUserController {
 
 		return "weiXinUser/weiXinUserList";
 	}
+	
+	@RequestMapping(value = "initUser/{id}", method = RequestMethod.GET)
+	public String initUser(@PathVariable("id") Long id,@RequestParam(value = "page", defaultValue = "1") int pageNumber,
+			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
+			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
+			ServletRequest request) {
+		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
+		 
+
+		Page<WeiXinUser> weiXinUsers = weiXinUserService.getUserWeiXinUser(id, searchParams, pageNumber, pageSize, sortType);
+
+		model.addAttribute("weiXinUsers", weiXinUsers);
+		model.addAttribute("sortType", sortType);
+		model.addAttribute("sortTypes", sortTypes);
+		// 将搜索条件编码成字符串，用于排序，分页的URL
+		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
+		return "weiXinUser/weiXinUserList";
+	}
 	/**
 	 * 取出Shiro中的当前用户Id.
 	 */

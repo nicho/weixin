@@ -30,7 +30,7 @@
 				<td align="center">${vstatus.index+1}</td>
 				<td> ${task.title} </td>
 				<td>${task.subscribeCount}</td>
-				<td><a href="${ctx}/task/update/${task.id}">查看</a> <a href="${ctx}/weixinUser">查看用户</a></td>
+				<td><a href="${ctx}/task/update/${task.id}">查看</a> &nbsp;&nbsp;&nbsp;&nbsp;<a href="${ctx}/weixinUser/initUser/${task.user.id}">详情</a></td>
 				 
 				 
 			</tr>
