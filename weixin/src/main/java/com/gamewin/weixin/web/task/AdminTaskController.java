@@ -5,11 +5,9 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.task;
 
-import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.shiro.SecurityUtils;
@@ -29,7 +27,7 @@ import com.gamewin.weixin.entity.Task;
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.TaskService;
-import com.gamewin.weixin.util.MobileHttpClient;
+import com.gamewin.weixin.service.weixinUser.WeiXinUserService;
 import com.google.common.collect.Maps;
 
 /**
@@ -58,7 +56,9 @@ public class AdminTaskController {
 
 	@Autowired
 	private TaskService taskService;
-
+	@Autowired
+	private WeiXinUserService weiXinUserService;
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
@@ -68,7 +68,13 @@ public class AdminTaskController {
 		Long userId = getCurrentUserId();
 
 		Page<Task> tasks = taskService.getUserTask(userId, searchParams, pageNumber, pageSize, sortType);
-
+		
+		for (int i = 0; i < tasks.getContent().size(); i++) {
+			int x=weiXinUserService.selectSubscribeByUserId("qrscene_"+tasks.getContent().get(i).getUser().getId());
+			 tasks.getContent().get(i).setSubscribeCount(x);
+		}
+		
+	 
 		model.addAttribute("tasks", tasks);
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);

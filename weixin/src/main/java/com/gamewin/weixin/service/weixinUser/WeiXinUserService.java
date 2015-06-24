@@ -120,4 +120,8 @@ public class WeiXinUserService {
 		else
 			return null;
 	}
+	
+	public int selectSubscribeByUserId(String key){
+		return weiXinUserDao.selectSubscribeByUserId(key);
+	}
 }

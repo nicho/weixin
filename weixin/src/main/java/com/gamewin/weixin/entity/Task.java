@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -22,6 +23,16 @@ public class Task extends IdEntity {
 	private String description;
 	private String imageUrl;
 	private User user;
+ 
+	private Integer subscribeCount;
+	@Transient 
+	public Integer getSubscribeCount() {
+		return subscribeCount;
+	}
+	@Transient 
+	public void setSubscribeCount(Integer subscribeCount) {
+		this.subscribeCount = subscribeCount;
+	}
 
 	// JSR303 BeanValidator的校验规则
 	@NotBlank
