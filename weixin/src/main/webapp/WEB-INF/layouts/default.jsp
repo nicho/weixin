@@ -16,17 +16,28 @@
 <link href="${ctx}/static/bootstrap/2.3.2/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
 <link href="${ctx}/static/styles/default.min.css" type="text/css" rel="stylesheet" />
 <script src="${ctx}/static/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
-
+<script src="${ctx}/static/jquery-validation/1.11.1/jquery.validate.min.js" type="text/javascript"></script>
+<script src="${ctx}/static/jquery-validation/1.11.1/messages_bs_zh.js" type="text/javascript"></script>
+<link href="${ctx}/static/jquery-validation/1.11.1/validate.css" type="text/css" rel="stylesheet" />
+<script language="javascript" type="text/javascript" src="${ctx}/static/My97DatePicker/WdatePicker.js"></script>
 <sitemesh:head />
-
+<script type="text/javascript">
+function confirmDelete(url)
+{
+	if(confirm("确认删除？"))
+	{
+		window.location.href=url;
+	}
+}
+</script>
 </head>
 
 <body>
-	<div class="container">
+	<div class="container" style="width:95%">
 		<%@ include file="/WEB-INF/layouts/header.jsp"%>
 		<div class="row">
 			<%@ include file="/WEB-INF/layouts/left.jsp"%>
-			<div id="main" class="span10">
+			<div id="main" class="span10" style="width:88%">
 			  		  <sitemesh:body />  
 			</div>
 		</div>

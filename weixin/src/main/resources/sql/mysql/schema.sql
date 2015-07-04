@@ -34,3 +34,16 @@ CREATE TABLE wx_weixinuser (
 	create_Date TIMESTAMP NOT NULL DEFAULT 0,
 	PRIMARY KEY (id)
 ) ENGINE=INNODB;
+
+
+CREATE TABLE wx_manage_task (
+	id BIGINT AUTO_INCREMENT,
+	title VARCHAR(128) NOT NULL,
+	description VARCHAR(255),
+	user_id BIGINT NOT NULL,
+	start_date TIMESTAMP DEFAULT 0,
+	end_Date TIMESTAMP DEFAULT 0,
+	create_Date TIMESTAMP  DEFAULT 0,
+	task_Count BIGINT DEFAULT 0,
+    PRIMARY KEY (id)
+) ENGINE=INNODB;
