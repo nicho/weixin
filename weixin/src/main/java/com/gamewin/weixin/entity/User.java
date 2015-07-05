@@ -29,7 +29,24 @@ public class User extends IdEntity {
 	private String password;
 	private String salt;
 	private String roles;
+	private Integer isdelete;
 	private Date registerDate;
+	private String status;
+	public Integer getIsdelete() {
+		return isdelete;
+	}
+
+	public void setIsdelete(Integer isdelete) {
+		this.isdelete = isdelete;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public User() {
 	}

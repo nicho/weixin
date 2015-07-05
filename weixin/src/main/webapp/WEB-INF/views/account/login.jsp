@@ -55,16 +55,24 @@
 </div>
 		<div id="content">
 			<form id="loginForm" action="${ctx}/login" method="post" class="form-horizontal">
-	<%
-	String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
-	if(error != null){
-	%>
-		<div class="alert alert-error input-medium controls">
-			<button class="close" data-dismiss="alert">×</button>登录失败，请重试.
-		</div>
-	<%
-	}
-	%>
+		<%
+			String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+			if(error != null){
+		%>
+				<div class="alert alert-error controls input-large">
+					<button class="close" data-dismiss="alert">×</button>
+		<%
+				if(error.contains("DisabledAccountException")){
+					out.print("用户已被屏蔽,请登录其他用户.");
+				}
+				else{
+					out.print("登录失败，请重试.");
+				}
+		%>		
+				</div>
+		<%
+			}
+		%>
 		<div class="control-group">
 			<label for="username" class="control-label">名称:</label>
 			<div class="controls">

@@ -29,6 +29,14 @@ function confirmDelete(url)
 		window.location.href=url;
 	}
 }
+function confirmDisabled(url)
+{
+	if(confirm("确认失效？"))
+	{
+		window.location.href=url;
+	}
+}
+
 </script>
 </head>
 

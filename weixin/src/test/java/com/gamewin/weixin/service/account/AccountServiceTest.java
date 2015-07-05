@@ -43,7 +43,7 @@ public class AccountServiceTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		ShiroTestUtils.mockSubject(new ShiroUser(3L, "foo", "Foo"));
+		ShiroTestUtils.mockSubject(new ShiroUser(3L, "foo", "Foo","admin"));
 	}
 
 	@Test
@@ -75,20 +75,5 @@ public class AccountServiceTest {
 		assertThat(user2.getSalt()).isNull();
 	}
 
-	@Test
-	public void deleteUser() {
-		// 正常删除用户.
-		accountService.deleteUser(2L);
-		Mockito.verify(mockUserDao).delete(2L);
-
-		// 删除超级管理用户抛出异常, userDao没有被执行
-		try {
-			accountService.deleteUser(1L);
-			failBecauseExceptionWasNotThrown(ServiceException.class);
-		} catch (ServiceException e) {
-			// expected exception
-		}
-		Mockito.verify(mockUserDao, Mockito.never()).delete(1L);
-	}
-
+ 
 }

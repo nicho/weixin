@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -20,7 +21,9 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+
 import com.gamewin.weixin.entity.User;
+
 import org.springside.modules.utils.Encodes;
 
 import com.google.common.base.Objects;
@@ -37,8 +40,11 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 		User user = accountService.findUserByLoginName(token.getUsername());
 		if (user != null) {
+			if ("disabled".equals(user.getStatus())) {
+				throw new DisabledAccountException();
+			}
 			byte[] salt = Encodes.decodeHex(user.getSalt());
-			return new SimpleAuthenticationInfo(new ShiroUser(user.getId(), user.getLoginName(), user.getName()),
+			return new SimpleAuthenticationInfo(new ShiroUser(user.getId(), user.getLoginName(), user.getName(),user.getRoles()),
 					user.getPassword(), ByteSource.Util.bytes(salt), getName());
 		} else {
 			return null;
@@ -80,17 +86,21 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		public Long id;
 		public String loginName;
 		public String name;
+		public String roles;
 
-		public ShiroUser(Long id, String loginName, String name) {
+		public ShiroUser(Long id, String loginName, String name,String roles) {
 			this.id = id;
 			this.loginName = loginName;
 			this.name = name;
+			this.roles=roles;
 		}
 
 		public String getName() {
 			return name;
 		}
-
+		public String getRoles() {
+			return roles;
+		}
 		/**
 		 * 本函数输出将作为默认的<shiro:principal/>输出.
 		 */

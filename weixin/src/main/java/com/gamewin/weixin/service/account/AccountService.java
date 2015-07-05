@@ -6,22 +6,32 @@
 package com.gamewin.weixin.service.account;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springside.modules.persistence.DynamicSpecifications;
+import org.springside.modules.persistence.SearchFilter;
+import org.springside.modules.persistence.SearchFilter.Operator;
+import org.springside.modules.security.utils.Digests;
+import org.springside.modules.utils.Clock;
+import org.springside.modules.utils.Encodes;
+
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.repository.TaskDao;
 import com.gamewin.weixin.repository.UserDao;
 import com.gamewin.weixin.service.ServiceException;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
-import org.springside.modules.security.utils.Digests;
-import org.springside.modules.utils.Clock;
-import org.springside.modules.utils.Encodes;
 
 /**
  * 用户管理类.
@@ -62,7 +72,12 @@ public class AccountService {
 
 		userDao.save(user);
 	}
+	public void createUser(User user) {
+		entryptPassword(user); 
+		user.setRegisterDate(clock.getCurrentDate());
 
+		userDao.save(user);
+	}
 	public void updateUser(User user) {
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			entryptPassword(user);
@@ -70,14 +85,13 @@ public class AccountService {
 		userDao.save(user);
 	}
 
-	public void deleteUser(Long id) {
-		if (isSupervisor(id)) {
+	public void deleteUser(User user) {
+		if (isSupervisor(user.getId())) {
 			logger.warn("操作员{}尝试删除超级管理员用户", getCurrentUserName());
 			throw new ServiceException("不能删除超级管理员用户");
 		}
-		userDao.delete(id);
-		taskDao.deleteByUserId(id);
-
+		user.setIsdelete(1);
+		userDao.save(user);
 	}
 
 	/**
@@ -118,5 +132,38 @@ public class AccountService {
 
 	public void setClock(Clock clock) {
 		this.clock = clock;
+	}
+	
+	public Page<User> getUser(String usertype, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
+		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
+		Specification<User> spec = buildSpecification(usertype, searchParams);
+
+		return userDao.findAll(spec, pageRequest);
+	}
+	
+	/**
+	 * 创建分页请求.
+	 */
+	private PageRequest buildPageRequest(int pageNumber, int pagzSize, String sortType) {
+		Sort sort = null;
+		if ("auto".equals(sortType)) {
+			sort = new Sort(Direction.DESC, "id");
+		} else if ("title".equals(sortType)) {
+			sort = new Sort(Direction.ASC, "registerDate");
+		}
+
+		return new PageRequest(pageNumber - 1, pagzSize, sort);
+	}
+
+	/**
+	 * 创建动态查询条件组合.
+	 */
+	private Specification<User> buildSpecification(String usertype, Map<String, Object> searchParams) {
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+	//	filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
+		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
+		Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
+		return spec;
 	}
 }
