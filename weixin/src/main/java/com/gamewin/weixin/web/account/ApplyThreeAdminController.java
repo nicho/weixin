@@ -109,6 +109,7 @@ public class ApplyThreeAdminController {
 		{  
 			newApplyThreeAdmin.setUpuser(upuser);
 			applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
+			redirectAttributes.addFlashAttribute("applyThreeAdmin", newApplyThreeAdmin);
 			redirectAttributes.addFlashAttribute("message", "申请任务成功,待上级分销商审批");
 			return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
 		}

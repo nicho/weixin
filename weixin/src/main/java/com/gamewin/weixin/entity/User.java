@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -32,6 +34,20 @@ public class User extends IdEntity {
 	private Integer isdelete;
 	private Date registerDate;
 	private String status;
+	private User upuser; 
+	
+	
+	// JPA 基于USER_ID列的多对一关系定义
+	@ManyToOne
+	@JoinColumn(name = "upuser_id")
+	public User getUpuser() {
+		return upuser;
+	}
+
+	public void setUpuser(User upuser) {
+		this.upuser = upuser;
+	}
+
 	public Integer getIsdelete() {
 		return isdelete;
 	}

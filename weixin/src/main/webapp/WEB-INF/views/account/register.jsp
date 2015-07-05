@@ -35,12 +35,20 @@
 				rules: {
 					loginName: {
 						remote: "${ctx}/register/checkLoginName"
+					},
+					upuserName: {
+						remote: "${ctx}/register/checkUpuserName"
 					}
+			
 				},
 				messages: {
 					loginName: {
 						remote: "用户登录名已存在"
+					},
+					upuserName: {
+						remote: "上级分销商不存在"
 					}
+				
 				}
 			});
 		});
@@ -68,6 +76,12 @@
 				<label for="name" class="control-label">用户名:</label>
 				<div class="controls">
 					<input type="text" id="name" name="name" class="input-large required"/>
+				</div>
+			</div>
+		   <div class="control-group">
+				<label for="plainPassword" class="control-label">上级分销商:</label>
+				<div class="controls">
+					<input type="text" id="upuserName" name="upuserName" class="input-large required"/>
 				</div>
 			</div>
 			<div class="control-group">

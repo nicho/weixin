@@ -14,7 +14,7 @@
 			$("#inputForm").validate({
 				rules: {
 					upuserName: {
-						remote: "${ctx}/ApplyThreeAdmin/checkUpuserName"
+						remote: "${ctx}/register/checkUpuserName"
 					}
 				},
 				messages: {

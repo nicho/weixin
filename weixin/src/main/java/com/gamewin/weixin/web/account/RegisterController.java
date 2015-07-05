@@ -5,6 +5,7 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.account;
 
+import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.service.account.AccountService;
 
@@ -35,12 +37,25 @@ public class RegisterController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String register(@Valid User user, RedirectAttributes redirectAttributes) {
+	public String register(@Valid User user, RedirectAttributes redirectAttributes,ServletRequest request) {
 		user.setIsdelete(0);
 		user.setStatus("enabled");
-		accountService.registerUser(user);
-		redirectAttributes.addFlashAttribute("username", user.getLoginName());
-		return "redirect:/login";
+		
+		String upuserName =request.getParameter("upuserName");
+		User upuser=  accountService.findUserByLoginName(upuserName);
+		if(upuser!=null && ("TwoAdmin".equals(upuser.getRoles()) || "ThreeAdmin".equals(upuser.getRoles())))
+		{
+			user.setUpuser(upuser);
+			accountService.registerUser(user);
+			redirectAttributes.addFlashAttribute("username", user.getLoginName());
+			return "redirect:/login";
+		}
+		else
+		{
+			redirectAttributes.addFlashAttribute("message", "注册失败,上级分销商不存在");
+			return "redirect:/register";
+		}
+
 	}
 
 	/**
@@ -54,5 +69,23 @@ public class RegisterController {
 		} else {
 			return "false";
 		}
+	}
+	
+	/**
+	 * Ajax请求校验是否是二级经销商
+	 */
+	@RequestMapping(value = "checkUpuserName")
+	@ResponseBody
+	public String checkUpuserName(@RequestParam("upuserName") String upuserName) {
+		User upuser=  accountService.findUserByLoginName(upuserName);
+		if(upuser!=null && ("TwoAdmin".equals(upuser.getRoles()) || "ThreeAdmin".equals(upuser.getRoles())))
+		{  
+			return "true";
+		}
+		else
+		{
+			return "false";
+		}
+	 
 	}
 }
