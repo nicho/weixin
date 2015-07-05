@@ -79,10 +79,22 @@ public class ApplyThreeAdminController {
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.GET)
-	public String createForm(Model model) {
-		model.addAttribute("applyThreeAdmin", new ApplyThreeAdmin());
-		model.addAttribute("action", "create");
-		return "applyAdmin/applyThreeAdminFrom";
+	public String createForm(Model model,RedirectAttributes redirectAttributes) {
+		
+		ApplyThreeAdmin applyThreeAdmin=applyThreeAdminService.getApplyThreeAdminByUser(getCurrentUserId());
+		if(applyThreeAdmin!=null)
+		{
+			redirectAttributes.addFlashAttribute("applyThreeAdmin", applyThreeAdmin);
+			redirectAttributes.addFlashAttribute("message", "您的分销商申请正在审批,请等待审批完成.");
+			return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+		}else
+		{
+			
+			model.addAttribute("applyThreeAdmin", new ApplyThreeAdmin());
+			model.addAttribute("action", "create");
+			return "applyAdmin/applyThreeAdminFrom";
+		}
+
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.POST)
@@ -98,12 +110,12 @@ public class ApplyThreeAdminController {
 			newApplyThreeAdmin.setUpuser(upuser);
 			applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
 			redirectAttributes.addFlashAttribute("message", "申请任务成功,待上级分销商审批");
-			return "redirect:/applyAdmin/applyThreeAdminView";
+			return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
 		}
 		else
 		{
 			redirectAttributes.addFlashAttribute("message", "申请任务失败,上级分销商不存在");
-			return "redirect:/applyAdmin/applyThreeAdminView";
+			return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
 		}
 	
 	} 
