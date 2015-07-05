@@ -73,6 +73,7 @@
 		<%
 			}
 		%>
+		<br>
 		<div class="control-group">
 			<label for="username" class="control-label">名称:</label>
 			<div class="controls">

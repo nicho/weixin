@@ -5,8 +5,15 @@
 <div id="leftbar" class="span2">
 	<h1>系统管理</h1>
 	<div class="submenu">
-		<a id="account-tab"href="${ctx}/admin/user">帐号管理</a>
-		<a id="account-tab"href="${ctx}/admin/user">审核注册</a> 
+		<shiro:hasRole name="admin">
+			<a id="account-tab"href="${ctx}/admin/user">帐号管理</a>
+		</shiro:hasRole>
+		<shiro:hasRole name="user">
+			<a id="account-tab"href="${ctx}/admin/ApplyThreeAdmin">申请分销商</a>
+		</shiro:hasRole>
+		<shiro:hasAnyRoles name="TwoAdmin,ThreeAdmin">
+			<a id="account-tab"href="${ctx}/admin/user">审核注册</a> 
+		</shiro:hasAnyRoles>
 	</div>
 	<h1>任务管理</h1>
 	<div class="submenu">
