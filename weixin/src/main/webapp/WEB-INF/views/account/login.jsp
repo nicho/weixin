@@ -28,6 +28,9 @@
 </head>
 
 <body>
+	<c:if test="${not empty message}">
+		<div id="message" class="alert alert-success"><button data-dismiss="alert" class="close">×</button>${message}</div>
+	</c:if>
 	<div class="container">
 	<div id="header">
 	<div id="title">
@@ -65,6 +68,9 @@
 				if(error.contains("DisabledAccountException")){
 					out.print("用户已被屏蔽,请登录其他用户.");
 				}
+				else if(error.contains("ConcurrentAccessException")){
+					out.print("用户正在审批,请等待.");
+				} 
 				else{
 					out.print("登录失败，请重试.");
 				}

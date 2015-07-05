@@ -35,19 +35,21 @@ public class RegisterController {
 	public String registerForm() {
 		return "account/register";
 	}
-
+ 
+	
 	@RequestMapping(method = RequestMethod.POST)
 	public String register(@Valid User user, RedirectAttributes redirectAttributes,ServletRequest request) {
 		user.setIsdelete(0);
-		user.setStatus("enabled");
+		
 		
 		String upuserName =request.getParameter("upuserName");
 		User upuser=  accountService.findUserByLoginName(upuserName);
 		if(upuser!=null && ("TwoAdmin".equals(upuser.getRoles()) || "ThreeAdmin".equals(upuser.getRoles())))
 		{
 			user.setUpuser(upuser);
-			accountService.registerUser(user);
-			redirectAttributes.addFlashAttribute("username", user.getLoginName());
+			user.setStatus("Audit"); 
+			accountService.registerUser(user); 
+			redirectAttributes.addFlashAttribute("message", "注册申请已提交,待审核.");
 			return "redirect:/login";
 		}
 		else

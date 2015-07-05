@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.ConcurrentAccessException;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -27,7 +28,6 @@ import com.gamewin.weixin.entity.User;
 import org.springside.modules.utils.Encodes;
 
 import com.google.common.base.Objects;
-
 public class ShiroDbRealm extends AuthorizingRealm {
 
 	protected AccountService accountService;
@@ -42,6 +42,8 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		if (user != null) {
 			if ("disabled".equals(user.getStatus())) {
 				throw new DisabledAccountException();
+			}else if ("Audit".equals(user.getStatus())) {
+				throw new ConcurrentAccessException();
 			}
 			byte[] salt = Encodes.decodeHex(user.getSalt());
 			return new SimpleAuthenticationInfo(new ShiroUser(user.getId(), user.getLoginName(), user.getName(),user.getRoles()),
