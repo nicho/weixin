@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>《离恨天》微信公众号推广系统:</title>
+<title>《宝箱》微信公众号推广系统:</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="Cache-Control" content="no-store" />
 <meta http-equiv="Pragma" content="no-cache" />
