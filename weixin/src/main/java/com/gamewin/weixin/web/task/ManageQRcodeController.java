@@ -5,6 +5,8 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.task;
 
+import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -25,9 +27,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springside.modules.web.Servlets;
 
 import com.gamewin.weixin.entity.ManageQRcode;
+import com.gamewin.weixin.entity.ManageTask;
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.ManageQRcodeService;
+import com.gamewin.weixin.service.task.ManageTaskService;
 import com.google.common.collect.Maps;
 
 /**
@@ -54,7 +58,9 @@ public class ManageQRcodeController {
 
 	@Autowired
 	private ManageQRcodeService manageQRcodeService;
-
+	@Autowired
+	private ManageTaskService manageTaskService;
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
@@ -79,16 +85,33 @@ public class ManageQRcodeController {
 	public String createForm(Model model) {
 		model.addAttribute("manageQRcode", new ManageQRcode());
 		model.addAttribute("action", "create");
+		
+		//获取当前用户可以选择的任务列表
+		List<ManageTask> ManageTaskList=manageTaskService.getUserManageTask_createQr(getCurrentUserId());
+		model.addAttribute("ManageTaskList", ManageTaskList);
 		return "manageQRcode/manageQRcodeForm";
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.POST)
-	public String create(@Valid ManageQRcode newManageQRcode, RedirectAttributes redirectAttributes) {
+	public String create(@Valid ManageQRcode newManageQRcode, RedirectAttributes redirectAttributes, ServletRequest request) {
+		String qrValidityDateStr = request.getParameter("qrValidityDateStr");
 		User user = new User(getCurrentUserId());
+		String taskId=request.getParameter("taskId");
+		ManageTask manageTask = new ManageTask(Long.parseLong(taskId));
 		newManageQRcode.setUser(user);
 		newManageQRcode.setIsdelete(0);
+		newManageQRcode.setQrState("Y");
+		newManageQRcode.setQrSubscribeCount(0);
+		newManageQRcode.setTask(manageTask);
+		try {
+			newManageQRcode.setQrValidityDate(DateUtils.parseDate(qrValidityDateStr, "yyyy-MM-dd HH:mm:ss"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("message", "创建二维码失败");
+			return "redirect:/manageQRcode/"; 
+		}
 		manageQRcodeService.saveManageQRcode(newManageQRcode);
-		redirectAttributes.addFlashAttribute("message", "创建任务成功");
+		redirectAttributes.addFlashAttribute("message", "创建二维码成功");
 		return "redirect:/manageQRcode/";
 	}
 
@@ -96,23 +119,25 @@ public class ManageQRcodeController {
 	public String updateForm(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("task", manageQRcodeService.getManageQRcode(id));
 		model.addAttribute("action", "update");
+		//获取当前用户可以选择的任务列表
+		List<ManageTask> ManageTaskList=manageTaskService.getUserManageTask_createQr(getCurrentUserId());
+		model.addAttribute("ManageTaskList", ManageTaskList);
 		return "manageQRcode/manageQRcodeForm";
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(@Valid @ModelAttribute("manageQRcode") ManageQRcode manageQRcode,
 			RedirectAttributes redirectAttributes, ServletRequest request) {
-		String createDateStr = request.getParameter("createDateStr");
-		String endDateStr = request.getParameter("endDateStr");
-
-		try {
-			manageQRcode.setCreateDate(DateUtils.parseDate(createDateStr, "yyyy-MM-dd"));
-			manageQRcode.setEndDate(DateUtils.parseDate(endDateStr, "yyyy-MM-dd"));
+ 
+		try { 
+			String taskId=request.getParameter("taskId");
+			ManageTask manageTask = new ManageTask(Long.parseLong(taskId));
+			manageQRcode.setTask(manageTask);
 			manageQRcodeService.saveManageQRcode(manageQRcode);
-			redirectAttributes.addFlashAttribute("message", "更新任务成功");
+			redirectAttributes.addFlashAttribute("message", "更新二维码成功");
 		} catch (Exception e) {
 			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("message", "更新任务失败");
+			redirectAttributes.addFlashAttribute("message", "更新二维码失败");
 			return "redirect:/manageQRcode/";
 		}
 		return "redirect:/manageQRcode/";
@@ -123,7 +148,7 @@ public class ManageQRcodeController {
 		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
 		entity.setIsdelete(1);
 		manageQRcodeService.saveManageQRcode(entity);
-		redirectAttributes.addFlashAttribute("message", "删除任务成功");
+		redirectAttributes.addFlashAttribute("message", "删除二维码成功");
 		return "redirect:/manageQRcode/";
 	}
 

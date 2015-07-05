@@ -47,3 +47,25 @@ CREATE TABLE wx_manage_task (
 	task_Count BIGINT DEFAULT 0,
     PRIMARY KEY (id)
 ) ENGINE=INNODB;
+
+
+CREATE TABLE wx_manage_QRcode (
+	id BIGINT AUTO_INCREMENT,
+	title VARCHAR(128) NOT NULL,
+	description VARCHAR(255),
+	user_id BIGINT NOT NULL,
+	distribution_user_id BIGINT ,
+	task_id BIGINT ,
+	start_date TIMESTAMP DEFAULT 0,
+	end_Date TIMESTAMP DEFAULT 0,
+	create_Date TIMESTAMP  DEFAULT 0,
+	task_Count BIGINT DEFAULT 0,
+	qrcode_Type VARCHAR(50),
+	qr_Url VARCHAR(1000),
+	qr_Weixin_Type VARCHAR(50),
+	qr_State VARCHAR(50),
+	qr_Validity_Date TIMESTAMP DEFAULT 0,
+	qr_Subscribe_Count BIGINT DEFAULT 0,
+	isdelete INTEGER(1) DEFAULT 0,
+    PRIMARY KEY (id)
+) ENGINE=INNODB;

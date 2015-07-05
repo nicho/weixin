@@ -62,6 +62,13 @@ public class ManageTaskService {
 
 		return manageTaskDao.findAll(spec, pageRequest);
 	}
+	public List<ManageTask> getUserManageTask_createQr(Long userId) {  
+		Map<String, SearchFilter> filters =new HashMap<String, SearchFilter>();
+		filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
+		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
+		Specification<ManageTask> spec = DynamicSpecifications.bySearchFilter(filters.values(), ManageTask.class); 
+		return manageTaskDao.findAll(spec);
+	}
 
 	/**
 	 * 创建分页请求.

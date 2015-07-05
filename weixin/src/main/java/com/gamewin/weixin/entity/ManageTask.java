@@ -28,9 +28,25 @@ public class ManageTask extends IdEntity {
 	private Integer taskCount; 
 	private Integer isdelete; 
 	private User user;
-
+	private User distribution_user;
   
- 
+	public ManageTask() {
+	}
+
+	public ManageTask(Long id) {
+		this.id = id;
+	}
+	// JPA 基于USER_ID列的多对一关系定义
+	@ManyToOne
+	@JoinColumn(name = "distribution_user_id")
+	public User getDistribution_user() {
+		return distribution_user;
+	}
+
+	public void setDistribution_user(User distribution_user) {
+		this.distribution_user = distribution_user;
+	}
+
 	public Integer getIsdelete() {
 		return isdelete;
 	}

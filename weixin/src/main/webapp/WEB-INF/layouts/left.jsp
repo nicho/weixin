@@ -6,7 +6,7 @@
 	<h1>系统管理</h1>
 	<div class="submenu">
 		<a id="account-tab"href="${ctx}/admin/user">帐号管理</a>
-		<a id="account-tab2"href="${ctx}/admin/task">会员二维码管理</a>
+		<a id="account-tab"href="${ctx}/admin/user">审核注册</a> 
 	</div>
 	<h1>任务管理</h1>
 	<div class="submenu">
@@ -14,8 +14,9 @@
 		<a id="manageQRcode" href="${ctx}/manageQRcode">任务二维码列表</a> 
 		<a id="myTask" href="${ctx}/myTask">我的任务</a> 
 	</div>
-	<h1>二维码</h1>
+	<h1>分销商任务管理</h1>
 	<div class="submenu">
-		<a id="persistence-tab" href="${ctx}/story/persistence">持久化高级演示</a> 
+		<a id="ManageTaskController" href="${ctx}/manageTask">任务列表</a> 
+		<a id="ManageTaskController" href="${ctx}/manageTask">任务二维码列表</a> 
 	</div>
 </div>

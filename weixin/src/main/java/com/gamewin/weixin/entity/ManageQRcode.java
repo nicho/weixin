@@ -21,6 +21,12 @@ import org.hibernate.validator.constraints.NotBlank;
 public class ManageQRcode extends IdEntity {
 
 	private String title;
+	private String qrcodeType;//二维码类型
+	private String qrUrl;//二维码url
+	private String qrWeixinType;//微信二维码类型(永久,固定)
+	private String qrState;//二维码状态
+	private Date qrValidityDate;//二维码有效期
+	private Integer qrSubscribeCount; //二维码关注数
 	private Date startDate;
 	private Date endDate;
 	private Date createDate;
@@ -28,9 +34,57 @@ public class ManageQRcode extends IdEntity {
 	private Integer taskCount; 
 	private Integer isdelete; 
 	private User user;
-	private User createuser;
+	private User distributionUser;
 	private ManageTask task;
  
+	public String getQrUrl() {
+		return qrUrl;
+	}
+
+	public void setQrUrl(String qrUrl) {
+		this.qrUrl = qrUrl;
+	}
+
+	public String getQrWeixinType() {
+		return qrWeixinType;
+	}
+
+	public void setQrWeixinType(String qrWeixinType) {
+		this.qrWeixinType = qrWeixinType;
+	}
+
+	public String getQrState() {
+		return qrState;
+	}
+
+	public void setQrState(String qrState) {
+		this.qrState = qrState;
+	}
+
+	public Date getQrValidityDate() {
+		return qrValidityDate;
+	}
+
+	public void setQrValidityDate(Date qrValidityDate) {
+		this.qrValidityDate = qrValidityDate;
+	}
+
+	public Integer getQrSubscribeCount() {
+		return qrSubscribeCount;
+	}
+
+	public void setQrSubscribeCount(Integer qrSubscribeCount) {
+		this.qrSubscribeCount = qrSubscribeCount;
+	}
+
+	public String getQrcodeType() {
+		return qrcodeType;
+	}
+
+	public void setQrcodeType(String qrcodeType) {
+		this.qrcodeType = qrcodeType;
+	}
+
 	public Integer getIsdelete() {
 		return isdelete;
 	}
@@ -99,15 +153,8 @@ public class ManageQRcode extends IdEntity {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	@ManyToOne
-	@JoinColumn(name = "create_user_id")
-	public User getCreateuser() {
-		return createuser;
-	}
 
-	public void setCreateuser(User createuser) {
-		this.createuser = createuser;
-	}
+	 
 
 	@ManyToOne
 	@JoinColumn(name = "task_id")
@@ -115,8 +162,19 @@ public class ManageQRcode extends IdEntity {
 		return task;
 	}
 
+ 
+
 	public void setTask(ManageTask task) {
 		this.task = task;
+	}
+	@ManyToOne
+	@JoinColumn(name = "distribution_user_id")
+	public User getDistributionUser() {
+		return distributionUser;
+	}
+
+	public void setDistributionUser(User distributionUser) {
+		this.distributionUser = distributionUser;
 	}
 
 	@Override
