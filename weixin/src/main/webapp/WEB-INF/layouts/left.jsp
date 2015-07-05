@@ -9,7 +9,7 @@
 			<a id="account-tab"href="${ctx}/admin/user">帐号管理</a>
 		</shiro:hasRole>
 		<shiro:hasRole name="user">
-			<a id="account-tab"href="${ctx}/admin/ApplyThreeAdmin">申请分销商</a>
+			<a id="account-tab"href="${ctx}/ApplyThreeAdmin/create">申请分销商</a>
 		</shiro:hasRole>
 		<shiro:hasAnyRoles name="TwoAdmin,ThreeAdmin">
 			<a id="account-tab"href="${ctx}/admin/user">审核注册</a> 
