@@ -16,7 +16,7 @@
 	<div class="row">
 		<div class="span4 offset7">
 			<form class="form-search" action="#">
-				<label>名称</label> <input type="text" name="search_LIKE_title" class="input-medium" value="${param.search_LIKE_title}"> 
+				<label>激活码</label> <input type="text" name="search_LIKE_activationCode" class="input-medium" value="${param.search_LIKE_activationCode}"> 
 				<button type="submit" class="btn" id="search_btn">查询</button>
 		    </form>
 	    </div>

@@ -19,7 +19,7 @@
 		<div class="span4 offset7">
 			<form class="form-search" action="#">
 				<label>用户名</label> <input type="text" name="search_LIKE_name"
-					class="input-medium" value="${param.search_LIKE_title}">
+					class="input-medium" value="${param.search_LIKE_title}"> 
 				<button type="submit" class="btn" id="search_btn">查询</button>
 			</form>
 		</div>

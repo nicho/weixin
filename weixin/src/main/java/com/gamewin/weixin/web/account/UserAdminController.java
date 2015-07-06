@@ -91,8 +91,8 @@ public class UserAdminController {
 		{
 			users = accountService.getUser(usertype, searchParams, pageNumber, pageSize, sortType);
 		} else if ("TwoAdmin".equals(usertype)) {
-		  	 List<User> usersx = accountService.getUserByUpTwoAdminUserlist(user.id);
-			users = accountService.getUserByUpUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
+		 // 	 List<User> usersx = accountService.getUserByUpTwoAdminUserlist(user.id);
+			users = accountService.getUserByUpTwoAdminUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
 		} else if ("ThreeAdmin".equals(usertype)) {
 			users = accountService.getUserByUpUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
 		}

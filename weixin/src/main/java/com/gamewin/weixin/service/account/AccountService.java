@@ -8,6 +8,11 @@ package com.gamewin.weixin.service.account;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -32,6 +37,7 @@ import com.gamewin.weixin.repository.TaskDao;
 import com.gamewin.weixin.repository.UserDao;
 import com.gamewin.weixin.service.ServiceException;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
+import com.google.common.collect.Lists;
 
 /**
  * 用户管理类.
@@ -150,22 +156,62 @@ public class AccountService {
 		Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
 		return userDao.findAll(spec, pageRequest);
 	}
-	
+  
 	public List<User> getUserByUpTwoAdminUserlist(Long userId ) { 
-		List<User> userList=userDao.findByTwoAdmin(userId); 
-		return userList;
+	 
+		  
+		return null;
 	}
-	
 	public Page<User> getUserByAuditUserlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 	   	filters.put("upuser.id", new SearchFilter("upuser.id", Operator.EQ, userId));
 		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
-		filters.put("status", new SearchFilter("status", Operator.EQ, "Audit"));
+		filters.put("status", new SearchFilter("status", Operator.EQ, "Audit")); 
 		Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
  
 		return userDao.findAll(spec, pageRequest);
+	}
+	 
+	public Page<User> getUserByUpTwoAdminUserlist(final Long userId, final Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
+		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
+
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
+		final Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
+
+		return userDao.findAll(new Specification<User>() {
+
+			@Override
+			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				// SELECT t FROM User t WHERE upuser.id =?1 OR upuser.id IN
+				// (SELECT id FROM User WHERE upuser.id=?1)
+				// path转化
+				List<Predicate> orPredicates = Lists.newArrayList();
+
+				// Path<String> idPath = root.get("upuser").get("id");
+				// Path<String> parentIdsPath =
+				// root.get("channel").get("parentIds");
+
+				Predicate p1 = builder.equal(root.get("upuser").get("id"), userId);
+				orPredicates.add(builder.or(p1));
+
+				Predicate p2 = builder.equal(root.get("upuser").get("id"), 5);
+				orPredicates.add(builder.or(p2));
+
+				// 以下是springside3提供的方法
+				Predicate o = spec.toPredicate(root, query, builder);
+
+				Predicate p = builder.or(orPredicates.toArray(new Predicate[orPredicates.size()]));
+				query.where(p, o);
+
+				return null;
+
+			}
+
+		}, pageRequest);
 	}
 	/**
 	 * 创建分页请求.
