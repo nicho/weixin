@@ -102,6 +102,7 @@ public class ActivationCodeController {
 					 newActCode.setDescription(newActivationCode.getDescription());
 					 newActCode.setUser(user);
 					 newActCode.setIsdelete(0);
+					 newActCode.setStatus("N");
 					 activationCodeService.saveActivationCode(newActCode);
 				}
 			}

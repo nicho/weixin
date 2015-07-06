@@ -69,7 +69,12 @@ public class ActivationCodeService {
 		Specification<ActivationCode> spec = DynamicSpecifications.bySearchFilter(filters.values(), ActivationCode.class);
 		return activationCodeDao.findAll(spec);
 	}
-
+	public List<ActivationCode> getActivationCodeByCode(String code) {
+		Map<String, SearchFilter> filters = new HashMap<String, SearchFilter>();
+		filters.put("activationCode", new SearchFilter("activationCode", Operator.EQ, code));
+		Specification<ActivationCode> spec = DynamicSpecifications.bySearchFilter(filters.values(), ActivationCode.class);
+		return activationCodeDao.findAll(spec);
+	}
 	/**
 	 * 创建分页请求.
 	 */

@@ -96,6 +96,12 @@
 					<input type="password" id="confirmPassword" name="confirmPassword" class="input-large required" equalTo="#plainPassword"/>
 				</div>
 			</div>
+			 <div class="control-group">
+				<label for="plainPassword" class="control-label">激活码:</label>
+				<div class="controls">
+					<input type="text" id="activationCode" name="activationCode" class="input-large "/>
+				</div>
+			</div>
 			<div class="form-actions">
 				<input id="submit_btn" class="btn btn-primary" type="submit" value="提交"/>&nbsp;	
 				<input id="cancel_btn" class="btn" type="button" value="返回" onclick="history.back()"/>

@@ -49,6 +49,7 @@ public class UserAdminController {
 	static {
 		allStatus.put("enabled", "有效");
 		allStatus.put("disabled", "无效");
+		allStatus.put("Audit", "审批中");
 	}
 	
 	@Autowired
