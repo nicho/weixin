@@ -141,6 +141,20 @@ public class AccountService {
 
 		return userDao.findAll(spec, pageRequest);
 	}
+	public Page<User> getUserByUpUserlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
+		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+	   	filters.put("upuser.id", new SearchFilter("upuser.id", Operator.EQ, userId));
+		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0")); 
+		Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
+		return userDao.findAll(spec, pageRequest);
+	}
+	
+	public List<User> getUserByUpTwoAdminUserlist(Long userId ) { 
+		List<User> userList=userDao.findByTwoAdmin(userId); 
+		return userList;
+	}
 	
 	public Page<User> getUserByAuditUserlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
@@ -150,6 +164,7 @@ public class AccountService {
 		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
 		filters.put("status", new SearchFilter("status", Operator.EQ, "Audit"));
 		Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
+ 
 		return userDao.findAll(spec, pageRequest);
 	}
 	/**

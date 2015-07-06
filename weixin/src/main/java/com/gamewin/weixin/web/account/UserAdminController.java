@@ -5,6 +5,7 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.account;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -85,8 +86,17 @@ public class UserAdminController {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
 		ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
 		String usertype=user.getRoles();
-		Page<User> users = accountService.getUser(usertype, searchParams, pageNumber, pageSize, sortType);
-
+		Page<User> users =null;
+		if("admin".equals(usertype))
+		{
+			users = accountService.getUser(usertype, searchParams, pageNumber, pageSize, sortType);
+		} else if ("TwoAdmin".equals(usertype)) {
+		  	 List<User> usersx = accountService.getUserByUpTwoAdminUserlist(user.id);
+			users = accountService.getUserByUpUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
+		} else if ("ThreeAdmin".equals(usertype)) {
+			users = accountService.getUserByUpUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
+		}
+		 
 		model.addAttribute("users", users);
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);

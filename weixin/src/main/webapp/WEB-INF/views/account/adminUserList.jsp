@@ -33,6 +33,7 @@
 				<th>用户名</th>
 				<th>注册时间</th>
 				<th>状态</th>
+				<th>上级分销商</th>
 				<th>管理</th>
 			</tr>
 		</thead>
@@ -44,6 +45,7 @@
 					<td><fmt:formatDate value="${user.registerDate}"
 							pattern="yyyy-MM-dd  HH:mm:ss" /></td>
 					<td>${allStatus[user.status]}&nbsp;</td>
+					<td>${user.upuser.loginName}</td>
 					<td><a href="${ctx}/admin/user/update/${user.id}">修改</a>&nbsp;
 					<a href="#" onclick="confirmDisabled('${ctx}/admin/user/disabled/${user.id}')">失效</a>&nbsp;
 						&nbsp;&nbsp;&nbsp;<a href="#" onclick="confirmDelete('${ctx}/admin/user/delete/${user.id}')">删除</a>
