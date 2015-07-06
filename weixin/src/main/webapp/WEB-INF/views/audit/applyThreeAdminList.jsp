@@ -6,7 +6,7 @@
 
 <html>
 <head>
-<title>用户管理</title>
+<title>待审批用户</title>
 </head>
 
 <body>
@@ -18,7 +18,7 @@
 	<div class="row">
 		<div class="span4 offset7">
 			<form class="form-search" action="#">
-				<label>用户名</label> <input type="text" name="search_LIKE_name"
+				<label>姓名</label> <input type="text" name="search_LIKE_userName"
 					class="input-medium" value="${param.search_LIKE_title}">
 				<button type="submit" class="btn" id="search_btn">查询</button>
 			</form>
@@ -31,31 +31,32 @@
 			<tr>
 				<th>登录名</th>
 				<th>用户名</th>
-				<th>注册时间</th>
+				<th>姓名</th>
+				<th>申请时间</th>
 				<th>状态</th>
 				<th>管理</th>
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${users.content}" var="user">
+			<c:forEach items="${applyThreeAdmins.content}" var="user">
 				<tr>
-					<td><a href="${ctx}/admin/user/update/${user.id}">${user.loginName}</a></td>
-					<td>${user.name}</td>
-					<td><fmt:formatDate value="${user.registerDate}"
-							pattern="yyyy-MM-dd  HH:mm:ss" /></td>
-					<td>${allStatus[user.status]}&nbsp;</td>
-					<td><a href="${ctx}/admin/user/update/${user.id}">修改</a>&nbsp;
-					<a href="#" onclick="confirmDisabled('${ctx}/admin/user/disabled/${user.id}')">失效</a>&nbsp;
-						&nbsp;&nbsp;&nbsp;<a href="#" onclick="confirmDelete('${ctx}/admin/user/delete/${user.id}')">删除</a>
-						&nbsp;</td>
+					<td> ${user.user.loginName} </td>
+					<td>${user.user.name}</td>
+					<td>${user.userName}</td>
+					<td><fmt:formatDate value="${user.createDate}"	pattern="yyyy-MM-dd  HH:mm:ss" /></td>
+					<td>
+					 <c:if test="${user.status eq 'submit'}">审批中</c:if>
+					 <c:if test="${user.status eq 'PASS'}">审批通过</c:if>
+					&nbsp;</td>
+					<td> 
+					<a href="${ctx}/ApplyThreeAdmin/auditView/${user.id}" >审批</a>&nbsp; 
+					</td>
 
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
-	<tags:pagination page="${users}" paginationSize="5" />
-	<div>
-		<a class="btn" href="${ctx}/admin/cteateUser">创建用户</a>
-	</div>
+	<tags:pagination page="${applyThreeAdmins}" paginationSize="5" />
+ 
 </body>
 </html>

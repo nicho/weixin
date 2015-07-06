@@ -4,13 +4,29 @@
 <html>
 <head>
 <title>主页</title>
+<script type="text/javascript">
+function updateStatus(fal)
+{
+	$("#status").val(fal);
+	$("#inputForm").submit();
+	
+}
+
+$(document).ready(function() {
+	//聚焦第一个输入框
+	$("#approvalOpinion").focus();
+	//为inputForm注册validate函数
+	$("#inputForm").validate();
+});
+</script>
 </head>
 
 <body>
 	<c:if test="${not empty message}">
 		<div id="message" class="alert alert-success"><button data-dismiss="alert" class="close">×</button>${message}</div>
 	</c:if>
-	<form id="inputForm"   class="form-horizontal">
+		<form id="inputForm" action="${ctx}/ApplyThreeAdmin/auditPass" method="post" class="form-horizontal">
+		<input type="hidden" name="id" value="${applyThreeAdmin.id}"/>
  <fieldset>
 			<legend><small>正在审批的资料</small></legend>
 			<div class="control-group">
@@ -40,16 +56,25 @@
 			 <div class="control-group">
 				<label for="plainPassword" class="control-label">申请理由:</label>
 				<div class="controls"> 
-					<textarea rows="5" cols="5" style="  width: 500px;" name="description" class="required" disabled="disabled"> ${applyThreeAdmin.description } </textarea>
+					<textarea rows="5" cols="5" name="description" class="required" disabled="disabled" style="  width: 500px;"> ${applyThreeAdmin.description } </textarea>
 				</div>
 			</div>
-		    <div class="control-group">
+			
+		
+			<input type="hidden" id="status" name="status" value="" >
+			 <div class="control-group">
 				<label for="plainPassword" class="control-label">审批意见:</label>
 				<div class="controls"> 
-					<textarea rows="5" cols="5" name="approvalOpinion" class="required" style="  width: 500px;"  disabled="disabled"> ${applyThreeAdmin.approvalOpinion } </textarea>
+					<textarea rows="5" cols="5" name="approvalOpinion" class="required" style="  width: 500px;">  </textarea>
 				</div>
 			</div>
+			<div class="form-actions">
+				<input id="submit_btn1" class="btn btn-primary" type="button" value="通过" onclick="updateStatus('pass')"/>&nbsp;	
+				<input id="submit_btn2" class="btn btn-primary" type="button" value="驳回" onclick="updateStatus('reject')"/>&nbsp;	
+				<input id="cancel_btn" class="btn" type="button" value="返回" onclick="history.back()"/>
+			</div>
+	
 		</fieldset>
-		</form>
+				</form>
 </body>
 </html>

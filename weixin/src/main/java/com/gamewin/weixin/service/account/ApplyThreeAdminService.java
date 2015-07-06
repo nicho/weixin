@@ -69,7 +69,17 @@ public class ApplyThreeAdminService {
 		Specification<ApplyThreeAdmin> spec = DynamicSpecifications.bySearchFilter(filters.values(), ApplyThreeAdmin.class); 
 		return applyThreeAdminDao.findAll(spec);
 	}
-
+	public Page<ApplyThreeAdmin> getUserApplyThreeAdminAudit(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
+		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType); 
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		filters.put("upuser.id", new SearchFilter("upuser.id", Operator.EQ, userId));
+		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
+		filters.put("status", new SearchFilter("status", Operator.EQ, "submit"));
+		Specification<ApplyThreeAdmin> spec = DynamicSpecifications.bySearchFilter(filters.values(), ApplyThreeAdmin.class);
+		return applyThreeAdminDao.findAll(spec, pageRequest);
+	}
+ 
 	/**
 	 * 创建分页请求.
 	 */
@@ -121,7 +131,6 @@ public class ApplyThreeAdminService {
 	public ApplyThreeAdmin getApplyThreeAdminByUser(Long userid) {
 		Map<String, SearchFilter> filters = new HashMap<String, SearchFilter>();
 		filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userid));
-		filters.put("status", new SearchFilter("status", Operator.EQ, "submit"));
 		Specification<ApplyThreeAdmin> spec = DynamicSpecifications.bySearchFilter(filters.values(), ApplyThreeAdmin.class);
 		List<ApplyThreeAdmin> list = applyThreeAdminDao.findAll(spec);
 		if (list != null && list.size() > 0)

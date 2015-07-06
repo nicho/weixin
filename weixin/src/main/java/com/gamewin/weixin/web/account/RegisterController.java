@@ -61,6 +61,11 @@ public class RegisterController {
 				if(codeList!=null && codeList.size()>0)
 				{
 					ActivationCode code=codeList.get(0);
+					if("disabled".equals(code.getStatus()))
+					{
+						redirectAttributes.addFlashAttribute("message", "注册失败,激活码已失效");
+						return "redirect:/register";
+					}
 					if(!"N".equals(code.getStatus()))
 					{
 						redirectAttributes.addFlashAttribute("message", "注册失败,激活码已使用");

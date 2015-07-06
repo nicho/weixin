@@ -58,7 +58,7 @@
 			 <div class="control-group">
 				<label for="plainPassword" class="control-label">申请理由:</label>
 				<div class="controls"> 
-					<textarea rows="5" cols="5" name="description" class="required"></textarea>
+					<textarea rows="5" cols="5" style="  width: 500px;" name="description" class="required"></textarea>
 				</div>
 			</div>
 			<div class="form-actions">

@@ -66,7 +66,7 @@ public class ApplyThreeAdminController {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
 		Long userId = getCurrentUserId();
 
-		Page<ApplyThreeAdmin> applyThreeAdmins = applyThreeAdminService.getUserApplyThreeAdmin(userId, searchParams, pageNumber, pageSize,
+		Page<ApplyThreeAdmin> applyThreeAdmins = applyThreeAdminService.getUserApplyThreeAdminAudit(userId, searchParams, pageNumber, pageSize,
 				sortType);
 
 		model.addAttribute("applyThreeAdmins", applyThreeAdmins);
@@ -75,7 +75,7 @@ public class ApplyThreeAdminController {
 		// 将搜索条件编码成字符串，用于排序，分页的URL
 		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-		return "applyThreeAdmin/applyThreeAdminList";
+		return "audit/applyThreeAdminList";
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.GET)
@@ -84,19 +84,77 @@ public class ApplyThreeAdminController {
 		ApplyThreeAdmin applyThreeAdmin=applyThreeAdminService.getApplyThreeAdminByUser(getCurrentUserId());
 		if(applyThreeAdmin!=null)
 		{
-			redirectAttributes.addFlashAttribute("applyThreeAdmin", applyThreeAdmin);
-			redirectAttributes.addFlashAttribute("message", "您的分销商申请正在审批,请等待审批完成.");
-			return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+			if("submit".equals(applyThreeAdmin.getStatus()))
+			{
+				redirectAttributes.addFlashAttribute("applyThreeAdmin", applyThreeAdmin);
+				redirectAttributes.addFlashAttribute("message", "您的分销商申请正在审批,请等待审批完成.");
+				return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+			}
+			else if("reject".equals(applyThreeAdmin.getStatus()))
+			{
+				redirectAttributes.addFlashAttribute("applyThreeAdmin", applyThreeAdmin);
+				redirectAttributes.addFlashAttribute("message", "您的分销商申请已被拒绝!");
+				return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+			}else if("pass".equals(applyThreeAdmin.getStatus()))
+			{
+				redirectAttributes.addFlashAttribute("applyThreeAdmin", applyThreeAdmin);
+				redirectAttributes.addFlashAttribute("message", "您的分销商申请已通过!");
+				return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+			}else
+			{
+				redirectAttributes.addFlashAttribute("applyThreeAdmin", applyThreeAdmin);
+				return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+			}
 		}else
-		{
-			
+		{ 
 			model.addAttribute("applyThreeAdmin", new ApplyThreeAdmin());
 			model.addAttribute("action", "create");
 			return "applyAdmin/applyThreeAdminFrom";
 		}
 
 	}
+	@RequestMapping(value = "auditView/{id}", method = RequestMethod.GET)
+	public String auditView(@PathVariable("id") Long id,Model model,RedirectAttributes redirectAttributes,ServletRequest request) {
+  
+		ApplyThreeAdmin applyThreeAdmin=applyThreeAdminService.getApplyThreeAdmin(id);
+		if(applyThreeAdmin!=null)
+		{ 
+			model.addAttribute("applyThreeAdmin",applyThreeAdmin);
+			return "audit/applyThreeAdminView";
+		}else
+		{ 
+			redirectAttributes.addFlashAttribute("message", "无法找到此申请.");
+			return "redirect:/ApplyThreeAdmin";
+		}
 
+	}
+	
+	/**
+	 * 审批 
+	 * @param id
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@RequestMapping(value = "auditPass" , method = RequestMethod.POST)
+	public String auditPass(Model model,RedirectAttributes redirectAttributes,ServletRequest request,ApplyThreeAdmin applyThreeAdmin) {
+		 
+		applyThreeAdminService.saveApplyThreeAdmin(applyThreeAdmin);
+		if("pass".equals(applyThreeAdmin.getStatus()))
+		{
+			ApplyThreeAdmin applyThree =applyThreeAdminService.getApplyThreeAdmin(applyThreeAdmin.getId());
+			User applyUser=accountService.getUser(applyThree.getUser().getId());
+			applyUser.setRoles("ThreeAdmin");
+			accountService.updateUser(applyUser);
+			redirectAttributes.addFlashAttribute("message", "审批成功,"+applyThree.getUserName()+",已成为分销商");
+		}else
+		{
+			redirectAttributes.addFlashAttribute("message", "已拒绝");
+		}
+	 
+		return "redirect:/ApplyThreeAdmin";
+	}
+	
+	 
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String create(@Valid ApplyThreeAdmin newApplyThreeAdmin, RedirectAttributes redirectAttributes,ServletRequest request) {
 		User user = new User(getCurrentUserId());
