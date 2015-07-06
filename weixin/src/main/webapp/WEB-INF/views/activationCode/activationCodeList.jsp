@@ -29,9 +29,17 @@
 		<c:forEach items="${activationCodes.content}" var="task">
 			<tr>
 				<td>${task.title}</td>
-				<td>${task.activationCodeType}</td>
+				<td>
+						<c:if test="${task.activationCodeType eq 'CREATEUSER'}">用户注册</c:if>
+						<c:if test="${task.activationCodeType eq 'CREATETHREEADMIN'}">分销商注册</c:if>
+				
+				</td>
 				<td>${task.activationCode}</td>
-				<td>${task.status}</td>
+				<td>
+					<c:if test="${task.status eq 'N'}">未使用</c:if>
+					 <c:if test="${task.status eq 'Y'}">已使用</c:if>
+					 <c:if test="${task.status eq 'disabled'}">已失效</c:if>
+				</td>
 				<td><fmt:formatDate  value="${task.createDate}" type="both" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 				<td><fmt:formatDate  value="${task.activationDate}" type="both" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 				<td>${task.activationUser.loginName}</td> 

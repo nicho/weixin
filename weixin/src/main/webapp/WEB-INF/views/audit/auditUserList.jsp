@@ -39,7 +39,7 @@
 		<tbody>
 			<c:forEach items="${users.content}" var="user">
 				<tr>
-					<td><a href="${ctx}/admin/user/update/${user.id}">${user.loginName}</a></td>
+					<td> ${user.loginName} </td>
 					<td>${user.name}</td>
 					<td><fmt:formatDate value="${user.registerDate}"
 							pattern="yyyy-MM-dd  HH:mm:ss" /></td>
@@ -53,8 +53,6 @@
 		</tbody>
 	</table>
 	<tags:pagination page="${users}" paginationSize="5" />
-	<div>
-		<a class="btn" href="${ctx}/admin/cteateUser">创建用户</a>
-	</div>
+ 
 </body>
 </html>

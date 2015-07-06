@@ -83,7 +83,7 @@ public class RegisterController {
 						code.setStatus("Y");
 						code.setActivationDate(new Date());
 						code.setActivationUser(user);
-						
+						activationCodeService.saveActivationCode(code);
 						
 						redirectAttributes.addFlashAttribute("message", "注册成功.");
 						return "redirect:/login";

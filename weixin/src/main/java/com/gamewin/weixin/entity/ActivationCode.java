@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 //JPA标识
 @Entity
-@Table(name = "wx_ActivationCode")
+@Table(name = "wx_activationcode")
 public class ActivationCode extends IdEntity {
 
 	private String title;
@@ -78,7 +78,9 @@ public class ActivationCode extends IdEntity {
 	public void setActivationDate(Date activationDate) {
 		this.activationDate = activationDate;
 	}
-
+	// JPA 基于USER_ID列的多对一关系定义
+	@ManyToOne
+	@JoinColumn(name = "activation_user_id")
 	public User getActivationUser() {
 		return activationUser;
 	}

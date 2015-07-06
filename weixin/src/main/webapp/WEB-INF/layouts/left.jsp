@@ -5,9 +5,9 @@
 <div id="leftbar" class="span2">
 	<h1>系统管理</h1>
 	<div class="submenu">
-		<shiro:hasRole name="admin">
+		<shiro:hasAnyRoles name="admin,TwoAdmin,ThreeAdmin">
 			<a id="account-tab"href="${ctx}/admin/user">帐号管理</a>
-		</shiro:hasRole>
+		</shiro:hasAnyRoles>
 		<shiro:hasRole name="user">
 			<a id="account-tab"href="${ctx}/ApplyThreeAdmin/create">申请分销商</a>
 		</shiro:hasRole>

@@ -8,7 +8,7 @@
 </head>
 
 <body>
-	<form id="inputForm" action="${ctx}/manageTask/create" method="post" class="form-horizontal">
+	<form id="inputForm" action="${ctx}/activationCode/create" method="post" class="form-horizontal">
 	 
 		<fieldset>
 			<legend><small>新增激活码</small></legend>

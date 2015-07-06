@@ -56,6 +56,9 @@
 </head>
 
 <body>
+	<c:if test="${not empty message}">
+		<div id="message" class="alert alert-success"><button data-dismiss="alert" class="close">×</button>${message}</div>
+	</c:if>
 <div class="container">
 	<div id="header">
 	<div id="title">

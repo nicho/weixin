@@ -129,11 +129,12 @@ public class UserAdminController {
 			user.setStatus("enabled");
 			accountService.updateUser(user);
 			redirectAttributes.addFlashAttribute("message", "用户" + user.getLoginName() + "注册成功");
-			return "redirect:/admin/user";
+		 
+			return "redirect:/admin/user/auditUserlist";
 		}else
 		{
 			redirectAttributes.addFlashAttribute("message", "非法操作!");
-			return "redirect:/admin/user";
+			return "redirect:/admin/user/auditUserlist";
 		}
 
 	}
