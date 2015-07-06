@@ -15,10 +15,10 @@
 			<a id="account-tab"href="${ctx}/admin/user">审核-分销商申请</a> 
 		</shiro:hasAnyRoles>
 		<shiro:hasAnyRoles name="TwoAdmin,ThreeAdmin">
-			<a id="account-tab"href="${ctx}/admin/user">审核-用户注册申请</a> 
+			<a id="account-tab"href="${ctx}/admin/user/auditUserlist">审核-用户注册申请</a> 
 		</shiro:hasAnyRoles>
 		<shiro:hasAnyRoles name="TwoAdmin,ThreeAdmin">
-			<a id="account-tab"href="${ctx}/admin/user">激活码管理</a> 
+			<a id="account-tab"href="${ctx}/activationCode">激活码管理</a> 
 		</shiro:hasAnyRoles>
 	</div>
 	<h1>任务管理</h1>

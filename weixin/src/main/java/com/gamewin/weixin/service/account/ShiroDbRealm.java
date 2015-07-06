@@ -100,6 +100,9 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		public String getName() {
 			return name;
 		}
+		public String getLoginName() {
+			return loginName;
+		}
 		public String getRoles() {
 			return roles;
 		}

@@ -33,7 +33,7 @@ import com.gamewin.weixin.service.task.ActivationCodeService;
 @Controller
 @RequestMapping(value = "/register")
 public class RegisterController {
-
+ 
 	@Autowired
 	private AccountService accountService;
 	@Autowired
@@ -43,8 +43,8 @@ public class RegisterController {
 	public String registerForm() {
 		return "account/register";
 	}
- 
 	
+	 
 	@RequestMapping(method = RequestMethod.POST)
 	public String register(@Valid User user, RedirectAttributes redirectAttributes,ServletRequest request) {
 		user.setIsdelete(0);

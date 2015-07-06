@@ -29,7 +29,7 @@
 				/api/** = anon
 				/register/** = anon
 				/ReceiveServlet=anon
-				/admin/** = roles[admin] 
+				/admin/** = roles["admin,TwoAdmin,ThreeAdmin"] 
 				/** = user
 			</value>
 		</property>

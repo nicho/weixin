@@ -55,7 +55,28 @@ public class UserAdminController {
 	@Autowired
 	private AccountService accountService;
 
-  
+	
+	@RequestMapping(value = "auditUserlist",method = RequestMethod.GET)
+	public String auditUserlist(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
+			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
+			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
+			ServletRequest request) {
+		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
+		ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+	 
+		Page<User> users = accountService.getUserByAuditUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
+
+		model.addAttribute("users", users);
+		model.addAttribute("sortType", sortType);
+		model.addAttribute("sortTypes", sortTypes);
+		model.addAttribute("allStatus", allStatus);
+		// 将搜索条件编码成字符串，用于排序，分页的URL
+		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
+
+		return "audit/auditUserList";
+	}
+	
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
@@ -99,6 +120,24 @@ public class UserAdminController {
 		return "redirect:/admin/user";
 	}
 	
+	@RequestMapping(value = "auditPass/{id}")
+	public String auditPass(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+		User user = accountService.getUser(id);
+		ShiroUser nowuser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+		if(user.getUpuser().getLoginName().equals(nowuser.getLoginName()))
+		{
+			user.setStatus("enabled");
+			accountService.updateUser(user);
+			redirectAttributes.addFlashAttribute("message", "用户" + user.getLoginName() + "注册成功");
+			return "redirect:/admin/user";
+		}else
+		{
+			redirectAttributes.addFlashAttribute("message", "非法操作!");
+			return "redirect:/admin/user";
+		}
+
+	}
+ 
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		User user = accountService.getUser(id);

@@ -36,6 +36,13 @@ function confirmDisabled(url)
 		window.location.href=url;
 	}
 }
+function confirmPass(url)
+{
+	if(confirm("确认通过？"))
+	{
+		window.location.href=url;
+	}
+}
 
 </script>
 </head>
