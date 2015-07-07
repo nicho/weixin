@@ -35,6 +35,7 @@ import org.springside.modules.utils.Encodes;
 
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.model.UserDto;
+import com.gamewin.weixin.mybatis.UserMybatisDao;
 import com.gamewin.weixin.repository.TaskDao;
 import com.gamewin.weixin.repository.UserDao;
 import com.gamewin.weixin.service.ServiceException;
@@ -50,6 +51,8 @@ import com.google.common.collect.Lists;
 @Component
 @Transactional
 public class AccountService {
+	@Autowired
+	private UserMybatisDao userMybatisDao;
 
 	public static final String HASH_ALGORITHM = "SHA-1";
 	public static final int HASH_INTERATIONS = 1024;
@@ -197,8 +200,8 @@ public class AccountService {
 		return userdto;
 	}
 	public List<User> getUserByUpTwoAdminUserlist(Long userId ) { 
-	 
-		  
+		List<User> userList=userMybatisDao.getUserList(userId);
+		   System.out.println(userList.size());
 		return null;
 	}
 	public Page<User> getUserByAuditUserlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
