@@ -50,12 +50,24 @@
 		<property name="typeAliasesPackage" value="com.gamewin.weixin.entity" />
 		<!-- 显式指定Mapper文件位置 -->
 		<property name="mapperLocations" value="classpath:/mybatis/*Mapper.xml" />
+			<property name="plugins">
+		    <array>
+		      <bean class="com.github.pagehelper.PageHelper">
+		        <property name="properties">
+		          <value>
+		            dialect=mysql
+		          </value>
+		        </property>
+		      </bean>
+		    </array>
+		  </property>
 	</bean>
 	<!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口-->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.gamewin.weixin" />
 		<property name="annotationClass" value="com.gamewin.weixin.mybatis.MyBatisRepository"/>
 	</bean>
+ 
 	<!-- Jpa 事务配置 -->
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory"/>

@@ -40,6 +40,7 @@ import com.gamewin.weixin.repository.TaskDao;
 import com.gamewin.weixin.repository.UserDao;
 import com.gamewin.weixin.service.ServiceException;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 
 /**
@@ -200,6 +201,7 @@ public class AccountService {
 		return userdto;
 	}
 	public List<User> getUserByUpTwoAdminUserlist(Long userId ) { 
+		PageHelper.startPage(1, 10);
 		List<User> userList=userMybatisDao.getUserList(userId);
 		   System.out.println(userList.size());
 		return null;
