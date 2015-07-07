@@ -4,6 +4,41 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
+<script src="${ctx}/static/liger/lib/jquery/jquery-1.3.2.min.js" type="text/javascript"></script>
+<link href="${ctx}/static/liger/lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css">
+<script src="${ctx}/static/liger/lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+<script src="${ctx}/static/liger/lib/ligerUI/js/plugins/ligerTree.js" type="text/javascript"></script>
+<script type="text/javascript">
+        var data = [];
+          
+          data.push({ id: 1, pid: 0, text: '1' });
+        data.push({ id: 2, pid: 1, text: '1.1' });
+        data.push({ id: 4, pid: 2, text: '1.1.2' });
+         data.push({ id: 5, pid: 2, text: '1.1.2' });      
+ 
+        data.push({ id: 10, pid: 8, text: 'wefwfwfe' });
+         data.push({ id: 11, pid: 8, text: 'wgegwgwg' });
+        data.push({ id: 12, pid: 8, text: 'gwegwg' });
+ 
+         data.push({ id: 6, pid: 2, text: '1.1.3', ischecked: true });
+        data.push({ id: 7, pid: 2, text: '1.1.4' });
+        data.push({ id: 8, pid: 7, text: '1.1.5' });
+        data.push({ id: 9, pid: 7, text: '1.1.6' });
+      
+    $(function ()
+    {
+        var tree = $("#tree1").ligerTree({  
+        data:data, 
+         idFieldName :'id',
+         slide : false,
+         parentIDFieldName :'pid'
+         });
+         treeManager = $("#tree1").ligerGetTreeManager();
+         treeManager.collapseAll();
+        
+    });
+</script>
+
 	<title>任务管理</title>
 </head>
 
@@ -42,6 +77,15 @@
 					<input type="radio" name="viewrangeType" value="ALL" <c:if test="${task.viewrangeType eq 'ALL'}">checked</c:if>> 全部 &nbsp;&nbsp;&nbsp; <input type="radio" name="viewrangeType" value="SELECT" <c:if test="${task.viewrangeType eq 'SELECT'}">checked</c:if>>指定 	 
 				</div>
 			</div>	
+			<div class="control-group">
+<div style="margin: 10px; border: 1px solid rgb(204, 204, 204); border-image: none; width: 200px; height: 300px; overflow: auto; float: left;">
+<ul class="l-tree" id="tree1" style="width: 244px;" ligeruiid="tree1"><li class="l-first l-last l-onlychild " id="1" outlinelevel="1" treedataindex="0" isexpand="undefined"><div class="l-body"><div class="l-box l-expandable-close"></div><div class="l-box l-checkbox l-checkbox-unchecked"></div><div class="l-box l-tree-icon  l-tree-icon-folder"></div><span>1</span></div><ul class="l-children" style="display: none;"><li class="l-first l-last l-onlychild " id="2" outlinelevel="2" treedataindex="1" isexpand="undefined"><div class="l-body"><div class="l-box"></div><div class="l-box l-expandable-close"></div><div class="l-box l-checkbox l-checkbox-unchecked"></div><div class="l-box l-tree-icon  l-tree-icon-folder"></div><span>1.1</span></div><ul class="l-children" style="display: none;"><li class="l-first " id="4" outlinelevel="3" treedataindex="2" isexpand="undefined"><div class="l-body"><div class="l-box"></div><div class="l-box"></div><div class="l-box l-note"></div><div class="l-box l-checkbox l-checkbox-unchecked"></div><div class="l-box l-tree-icon l-tree-icon-leaf "></div><span>1.1.2</span></div></li><li id="5" outlinelevel="3" treedataindex="3" isexpand="undefined"><div class="l-body"><div class="l-box"></div><div class="l-box"></div><div class="l-box l-note"></div><div class="l-box l-checkbox l-checkbox-unchecked"></div><div class="l-box l-tree-icon l-tree-icon-leaf "></div><span>1.1.2</span></div></li><li id="6" outlinelevel="3" treedataindex="4" isexpand="undefined"><div class="l-body"><div class="l-box"></div><div class="l-box"></div><div class="l-box l-note"></div><div class="l-box l-checkbox l-checkbox-checked"></div><div class="l-box l-tree-icon l-tree-icon-leaf "></div><span>1.1.3</span></div></li><li class="l-last " id="7" outlinelevel="3" treedataindex="5" isexpand="undefined"><div class="l-body"><div class="l-box"></div><div class="l-box"></div><div class="l-box l-expandable-close"></div><div class="l-box l-checkbox l-checkbox-unchecked"></div><div class="l-box l-tree-icon  l-tree-icon-folder"></div><span>1.1.4</span></div><ul class="l-children" style="display: none;"><li class="l-first " id="8" outlinelevel="4" treedataindex="6" isexpand="undefined"><div class="l-body"><div class="l-box"></div><div class="l-box"></div><div class="l-box"></div><div class="l-box l-expandable-close"></div><div class="l-box l-checkbox l-checkbox-unchecked"></div><div class="l-box l-tree-icon  l-tree-icon-folder"></div><span>1.1.5</span></div><ul class="l-children" style="display: none;"><li class="l-first " id="10" outlinelevel="5" treedataindex="7" isexpand="undefined"><div class="l-body"><div class="l-box"></div><div class="l-box"></div><div class="l-box"></div><div class="l-box l-line"></div><div class="l-box l-note"></div><div class="l-box l-checkbox l-checkbox-unchecked"></div><div class="l-box l-tree-icon l-tree-icon-leaf "></div><span>wefwfwfe</span></div></li><li id="11" outlinelevel="5" treedataindex="8" isexpand="undefined"><div class="l-body"><div class="l-box"></div><div class="l-box"></div><div class="l-box"></div><div class="l-box l-line"></div><div class="l-box l-note"></div><div class="l-box l-checkbox l-checkbox-unchecked"></div><div class="l-box l-tree-icon l-tree-icon-leaf "></div><span>wgegwgwg</span></div></li><li class="l-last " id="12" outlinelevel="5" treedataindex="9" isexpand="undefined"><div class="l-body"><div class="l-box"></div><div class="l-box"></div><div class="l-box"></div><div class="l-box l-line"></div><div class="l-box l-note-last"></div><div class="l-box l-checkbox l-checkbox-unchecked"></div><div class="l-box l-tree-icon l-tree-icon-leaf "></div><span>gwegwg</span></div></li></ul></li><li class="l-last " id="9" outlinelevel="4" treedataindex="10" isexpand="undefined"><div class="l-body"><div class="l-box"></div><div class="l-box"></div><div class="l-box"></div><div class="l-box l-note-last"></div><div class="l-box l-checkbox l-checkbox-unchecked"></div><div class="l-box l-tree-icon l-tree-icon-leaf "></div><span>1.1.6</span></div></li></ul></li></ul></li></ul></li></ul><div class="l-tree-loading"></div>
+</div> 
+ 
+    <div style="display: none;"></div>
+
+			</div>	
+			
 		    <div class="control-group">
 				<label for="task_title" class="control-label">任务二维码类型:</label>
 				<div class="controls">
