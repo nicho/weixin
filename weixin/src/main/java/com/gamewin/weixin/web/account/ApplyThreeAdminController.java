@@ -5,11 +5,13 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.account;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import org.springside.modules.web.Servlets;
 
 import com.gamewin.weixin.entity.ApplyThreeAdmin;
 import com.gamewin.weixin.entity.User;
+import com.gamewin.weixin.model.UserDto;
 import com.gamewin.weixin.service.account.AccountService;
 import com.gamewin.weixin.service.account.ApplyThreeAdminService;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
@@ -107,6 +110,8 @@ public class ApplyThreeAdminController {
 			}
 		}else
 		{ 
+			List<UserDto> userdto=accountService.getUserByTwoUpAdminUserlist();
+			model.addAttribute("userdto", userdto);
 			model.addAttribute("applyThreeAdmin", new ApplyThreeAdmin());
 			model.addAttribute("action", "create");
 			return "applyAdmin/applyThreeAdminFrom";
@@ -161,21 +166,34 @@ public class ApplyThreeAdminController {
 		newApplyThreeAdmin.setUser(user);
 		newApplyThreeAdmin.setIsdelete(0);
 		newApplyThreeAdmin.setStatus("submit");
-		String upuserName =request.getParameter("upuserName");
-		User upuser=  accountService.findUserByLoginName(upuserName);
-		if(upuser!=null && "TwoAdmin".equals(upuser.getRoles()))
-		{  
-			newApplyThreeAdmin.setUpuser(upuser);
+		
+ 	
+		String upuserId =request.getParameter("upuserId");
+		if(!StringUtils.isEmpty(upuserId))
+		{
+			User upuser=  accountService.getUser(Long.parseLong(upuserId));
+			if(upuser!=null && "TwoAdmin".equals(upuser.getRoles()))
+			{  
+				newApplyThreeAdmin.setUpuser(upuser);
+				applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
+				redirectAttributes.addFlashAttribute("applyThreeAdmin", newApplyThreeAdmin);
+				redirectAttributes.addFlashAttribute("message", "申请任务成功,待上级分销商审批");
+				return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+			}
+			else
+			{
+				applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
+				redirectAttributes.addFlashAttribute("applyThreeAdmin", newApplyThreeAdmin);
+				redirectAttributes.addFlashAttribute("message", "申请任务成功,待总经销商审批");
+				return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+			}
+		}else { 
 			applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
 			redirectAttributes.addFlashAttribute("applyThreeAdmin", newApplyThreeAdmin);
-			redirectAttributes.addFlashAttribute("message", "申请任务成功,待上级分销商审批");
+			redirectAttributes.addFlashAttribute("message", "申请任务成功,待总经销商审批");
 			return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
 		}
-		else
-		{
-			redirectAttributes.addFlashAttribute("message", "申请任务失败,上级分销商不存在");
-			return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
-		}
+		
 	
 	} 
 	@RequestMapping(value = "applyThreeAdminView", method = RequestMethod.GET)

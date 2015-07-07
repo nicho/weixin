@@ -34,9 +34,18 @@ public class User extends IdEntity {
 	private Integer isdelete;
 	private Date registerDate;
 	private String status;
+	private String manageAddress;
 	private User upuser; 
 	
 	
+	public String getManageAddress() {
+		return manageAddress;
+	}
+
+	public void setManageAddress(String manageAddress) {
+		this.manageAddress = manageAddress;
+	}
+
 	// JPA 基于USER_ID列的多对一关系定义
 	@ManyToOne
 	@JoinColumn(name = "upuser_id")

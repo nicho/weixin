@@ -11,13 +11,13 @@
 		<shiro:hasRole name="user">
 			<a id="account-tab"href="${ctx}/ApplyThreeAdmin/create">申请分销商</a>
 		</shiro:hasRole>
-		<shiro:hasAnyRoles name="TwoAdmin">
+		<shiro:hasAnyRoles name="admin,TwoAdmin">
 			<a id="account-tab"href="${ctx}/ApplyThreeAdmin">审核-分销商申请</a> 
 		</shiro:hasAnyRoles>
-		<shiro:hasAnyRoles name="TwoAdmin,ThreeAdmin">
+		<shiro:hasAnyRoles name="admin,TwoAdmin,ThreeAdmin">
 			<a id="account-tab"href="${ctx}/admin/user/auditUserlist">审核-用户注册申请</a> 
 		</shiro:hasAnyRoles>
-		<shiro:hasAnyRoles name="TwoAdmin,ThreeAdmin">
+		<shiro:hasAnyRoles name="admin,TwoAdmin,ThreeAdmin">
 			<a id="account-tab"href="${ctx}/activationCode">激活码管理</a> 
 		</shiro:hasAnyRoles>
 	</div>

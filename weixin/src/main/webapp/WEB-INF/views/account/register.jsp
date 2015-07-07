@@ -35,19 +35,13 @@
 				rules: {
 					loginName: {
 						remote: "${ctx}/register/checkLoginName"
-					},
-					upuserName: {
-						remote: "${ctx}/register/checkUpuserName"
-					}
+					} 
 			
 				},
 				messages: {
 					loginName: {
 						remote: "用户登录名已存在"
-					},
-					upuserName: {
-						remote: "上级分销商不存在"
-					}
+					}  
 				
 				}
 			});
@@ -83,8 +77,13 @@
 			</div>
 		   <div class="control-group">
 				<label for="plainPassword" class="control-label">上级分销商:</label>
-				<div class="controls">
-					<input type="text" id="upuserName" name="upuserName" class="input-large required"/>
+				<div class="controls"> 
+					<select name="upuserId">
+						<option value="">请选择</option>
+						 <c:forEach var="list" items="${userdto}" varStatus="name">
+							<option value="${list.id}" >${list.manageAddress}</option>
+						</c:forEach>
+					</select>
 				</div>
 			</div>
 			<div class="control-group">

@@ -18,4 +18,9 @@ public interface UserDao extends PagingAndSortingRepository<User, Long>, JpaSpec
 	
 	@Query("SELECT t FROM User t WHERE upuser.id =?1 OR upuser.id IN (SELECT id FROM User WHERE upuser.id=?1)")
 	List<User> findByTwoAdmin(Long id);
+	
+	@Query("SELECT t FROM User t WHERE (roles ='TwoAdmin' OR roles ='ThreeAdmin') AND isdelete=0")
+	List<User> findByUpAdmin();
+	@Query("SELECT t FROM User t WHERE roles ='TwoAdmin' AND isdelete=0")
+	List<User> findByTwoAdmin();
 }

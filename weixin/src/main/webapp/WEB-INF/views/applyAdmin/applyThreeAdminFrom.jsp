@@ -11,18 +11,7 @@
 			//聚焦第一个输入框
 			$("#userName").focus();
 			//为inputForm注册validate函数
-			$("#inputForm").validate({
-				rules: {
-					upuserName: {
-						remote: "${ctx}/register/checkUpuserName"
-					}
-				},
-				messages: {
-					upuserName: {
-						remote: "上级分销商不存在"
-					}
-				}
-			});
+			$("#inputForm").validate();
 		});
 	</script>
 </head>
@@ -52,7 +41,12 @@
 			<div class="control-group">
 				<label for="plainPassword" class="control-label">上级分销商:</label>
 				<div class="controls">
-					<input type="text" id="upuserName" name="upuserName" class="input-large required"/>
+				    <select name="upuserId">
+						<option value="">请选择</option>
+						 <c:forEach var="list" items="${userdto}" varStatus="name">
+							<option value="${list.id}" >${list.manageAddress}</option>
+						</c:forEach>
+					</select>
 				</div>
 			</div>
 			 <div class="control-group">
