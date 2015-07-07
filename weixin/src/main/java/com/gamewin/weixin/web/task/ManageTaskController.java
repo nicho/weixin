@@ -5,6 +5,7 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.task;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -24,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springside.modules.web.Servlets;
 
+import com.gamewin.weixin.entity.ManageQRcode;
 import com.gamewin.weixin.entity.ManageTask;
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.ManageTaskService;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 
 /**
@@ -54,7 +57,7 @@ public class ManageTaskController {
 
 	@Autowired
 	private ManageTaskService manageTaskService;
-
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
@@ -74,7 +77,30 @@ public class ManageTaskController {
 
 		return "manageTask/manageTaskList";
 	}
+	
+	
+	@RequestMapping(value = "myTask" ,method = RequestMethod.GET)
+	public String myTask(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
+			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
+			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
+			ServletRequest request) {
+		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
+		Long userId = getCurrentUserId();
 
+		List<ManageTask> manageTasks = manageTaskService.getUserMyManageTask(userId, searchParams, pageNumber, pageSize,
+				sortType);
+		PageInfo<ManageTask> page = new PageInfo<ManageTask>(manageTasks);
+	  	model.addAttribute("page", page);
+		model.addAttribute("manageTasks", manageTasks);
+		model.addAttribute("sortType", sortType);
+		model.addAttribute("sortTypes", sortTypes);
+		// 将搜索条件编码成字符串，用于排序，分页的URL
+		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
+
+		return "myTask/myTaskList";
+	}
+	
+	
 	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String createForm(Model model) {
 		model.addAttribute("manageTask", new ManageTask());
@@ -87,6 +113,7 @@ public class ManageTaskController {
 		User user = new User(getCurrentUserId());
 		newManageTask.setUser(user);
 		newManageTask.setIsdelete(0);
+		newManageTask.setState("Y");
 		manageTaskService.saveManageTask(newManageTask);
 		redirectAttributes.addFlashAttribute("message", "创建任务成功");
 		return "redirect:/manageTask/";
@@ -122,11 +149,19 @@ public class ManageTaskController {
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		ManageTask entity = manageTaskService.getManageTask(id);
 		entity.setIsdelete(1);
+		entity.setState("N");
 		manageTaskService.saveManageTask(entity);
 		redirectAttributes.addFlashAttribute("message", "删除任务成功");
 		return "redirect:/manageTask/";
 	}
-
+	@RequestMapping(value = "disabled/{id}")
+	public String disabled(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+		ManageTask entity = manageTaskService.getManageTask(id);
+		entity.setState("N");
+		manageTaskService.saveManageTask(entity);
+		redirectAttributes.addFlashAttribute("message", "失效任务成功");
+		return "redirect:/manageTask/";
+	}
 	/**
 	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2
 	 * Preparable二次部分绑定的效果,先根据form的id从数据库查出ManageTask对象,再把Form提交的内容绑定到该对象上。

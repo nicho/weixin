@@ -28,28 +28,91 @@ public class ManageTask extends IdEntity {
 	private Integer taskCount; 
 	private Integer isdelete; 
 	private User user;
-	private User distribution_user;
-  
+	private String viewrangeType;
+	private String weixinGd;
+	private String weixinLs;
+	private String weixinApk;
+	private String weixinOther;
+	private String apkUrl;
+	private String otherUrl;
+	private String state;
+	 
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getWeixinGd() {
+		return weixinGd;
+	}
+
+	public void setWeixinGd(String weixinGd) {
+		this.weixinGd = weixinGd;
+	}
+
+	public String getWeixinLs() {
+		return weixinLs;
+	}
+
+	public void setWeixinLs(String weixinLs) {
+		this.weixinLs = weixinLs;
+	}
+
+	public String getWeixinApk() {
+		return weixinApk;
+	}
+
+	public void setWeixinApk(String weixinApk) {
+		this.weixinApk = weixinApk;
+	}
+
+	public String getWeixinOther() {
+		return weixinOther;
+	}
+
+	public void setWeixinOther(String weixinOther) {
+		this.weixinOther = weixinOther;
+	}
+
+	public String getApkUrl() {
+		return apkUrl;
+	}
+
+	public void setApkUrl(String apkUrl) {
+		this.apkUrl = apkUrl;
+	}
+
+	public String getOtherUrl() {
+		return otherUrl;
+	}
+
+	public void setOtherUrl(String otherUrl) {
+		this.otherUrl = otherUrl;
+	}
+
 	public ManageTask() {
 	}
 
 	public ManageTask(Long id) {
 		this.id = id;
 	}
-	// JPA 基于USER_ID列的多对一关系定义
-	@ManyToOne
-	@JoinColumn(name = "distribution_user_id")
-	public User getDistribution_user() {
-		return distribution_user;
+ 
+	public String getViewrangeType() {
+		return viewrangeType;
 	}
 
-	public void setDistribution_user(User distribution_user) {
-		this.distribution_user = distribution_user;
+	public void setViewrangeType(String viewrangeType) {
+		this.viewrangeType = viewrangeType;
 	}
 
 	public Integer getIsdelete() {
 		return isdelete;
 	}
+	 
 
 	public void setIsdelete(Integer isdelete) {
 		this.isdelete = isdelete;

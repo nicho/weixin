@@ -21,36 +21,32 @@ import org.hibernate.validator.constraints.NotBlank;
 public class ManageQRcode extends IdEntity {
 
 	private String title;
-	private String qrcodeType;//二维码类型
-	private String qrUrl;//二维码url
-	private String qrWeixinType;//微信二维码类型(永久,固定)
-	private String qrState;//二维码状态
-	private Date qrValidityDate;//二维码有效期
-	private Integer qrSubscribeCount; //二维码关注数
-	private Date startDate;
-	private Date endDate;
+	private String qrcodeType;// 二维码类型
+	private String qrUrl;// 二维码url
+	private String qrState;// 二维码状态
+	private Date qrValidityDate;// 二维码有效期
+	private Integer qrSubscribeCount; // 二维码关注数
 	private Date createDate;
-	private String description; 
-	private Integer taskCount; 
-	private Integer isdelete; 
+	private String description;
+	private Integer isdelete;
 	private User user;
-	private User distributionUser;
-	private ManageTask task;//主任务
- 
+	private ManageTask task;// 主任务
+	private String imageUrl;
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
 	public String getQrUrl() {
 		return qrUrl;
 	}
 
 	public void setQrUrl(String qrUrl) {
 		this.qrUrl = qrUrl;
-	}
-
-	public String getQrWeixinType() {
-		return qrWeixinType;
-	}
-
-	public void setQrWeixinType(String qrWeixinType) {
-		this.qrWeixinType = qrWeixinType;
 	}
 
 	public String getQrState() {
@@ -93,30 +89,6 @@ public class ManageQRcode extends IdEntity {
 		this.isdelete = isdelete;
 	}
 
-	public Integer getTaskCount() {
-		return taskCount;
-	}
-
-	public void setTaskCount(Integer taskCount) {
-		this.taskCount = taskCount;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -154,27 +126,14 @@ public class ManageQRcode extends IdEntity {
 		this.user = user;
 	}
 
-	 
-
 	@ManyToOne
 	@JoinColumn(name = "task_id")
 	public ManageTask getTask() {
 		return task;
 	}
 
- 
-
 	public void setTask(ManageTask task) {
 		this.task = task;
-	}
-	@ManyToOne
-	@JoinColumn(name = "distribution_user_id")
-	public User getDistributionUser() {
-		return distributionUser;
-	}
-
-	public void setDistributionUser(User distributionUser) {
-		this.distributionUser = distributionUser;
 	}
 
 	@Override

@@ -3,6 +3,11 @@
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <div id="leftbar" class="span2">
+	<h1>任务管理</h1>
+	<div class="submenu"> 
+		<a id="myTask" href="${ctx}/manageTask/myTask">我的任务</a> 
+		<a id="ManageTaskController" href="${ctx}/manageTask">任务列表</a>  
+	</div>
 	<h1>系统管理</h1>
 	<div class="submenu">
 		<shiro:hasAnyRoles name="admin,TwoAdmin,ThreeAdmin">
@@ -21,15 +26,6 @@
 			<a id="account-tab"href="${ctx}/activationCode">激活码管理</a> 
 		</shiro:hasAnyRoles>
 	</div>
-	<h1>任务管理</h1>
-	<div class="submenu">
-		<a id="ManageTaskController" href="${ctx}/manageTask">任务列表</a> 
-		<a id="manageQRcode" href="${ctx}/manageQRcode">任务二维码列表</a> 
-		<a id="myTask" href="${ctx}/myTask">我的任务</a> 
-	</div>
-	<h1>分销商任务管理</h1>
-	<div class="submenu">
-		<a id="ManageTaskController" href="${ctx}/manageTask">任务列表</a> 
-		<a id="ManageTaskController" href="${ctx}/manageTask">任务二维码列表</a> 
-	</div>
+
+ 
 </div>

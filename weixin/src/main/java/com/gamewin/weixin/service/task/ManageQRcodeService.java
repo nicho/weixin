@@ -24,9 +24,11 @@ import org.springside.modules.persistence.SearchFilter;
 import org.springside.modules.persistence.SearchFilter.Operator;
 
 import com.gamewin.weixin.entity.ManageQRcode;
+import com.gamewin.weixin.mybatis.ManageQRcodeMybatisDao;
 import com.gamewin.weixin.repository.ManageQRcodeDao;
 import com.gamewin.weixin.util.MemcachedObjectType;
 import com.gamewin.weixin.util.MobileHttpClient;
+import com.github.pagehelper.PageHelper;
 
 // Spring Bean的标识.
 @Component
@@ -38,7 +40,9 @@ public class ManageQRcodeService {
 
 	@Autowired(required = false)
 	private SpyMemcachedClient memcachedClient;
-
+	@Autowired
+	private ManageQRcodeMybatisDao manageQRcodeMybatisDao;
+	
 	public ManageQRcode getManageQRcode(Long id) {
 		return manageQRcodeDao.findOne(id);
 	}
@@ -54,8 +58,22 @@ public class ManageQRcodeService {
 	public List<ManageQRcode> getAllManageQRcode() {
 		return (List<ManageQRcode>) manageQRcodeDao.findAll();
 	}
-
-	public Page<ManageQRcode> getUserManageQRcode(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+	
+	public List<ManageQRcode> getUserManageQRcodeByTaskId(Long taskId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
+		PageHelper.startPage(pageNumber, pageSize); 
+		return manageQRcodeMybatisDao.getUserManageQRcodeByTaskId(taskId);
+	}
+	public List<ManageQRcode> getMyUserManageQRcodeByTaskId(Long taskId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
+		PageHelper.startPage(pageNumber, pageSize); 
+		return manageQRcodeMybatisDao.getUserManageQRcodeByTaskId(taskId);
+	}
+	public Integer getUserManageQRcodeByTaskIdAndQrType(Long taskId,String qrType) {
+		return manageQRcodeMybatisDao.getUserManageQRcodeByTaskIdAndQrType(taskId, qrType);
+	}
+	
+	 	public Page<ManageQRcode> getUserManageQRcode(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
 		Specification<ManageQRcode> spec = buildSpecification(userId, searchParams);

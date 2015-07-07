@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.gamewin.weixin.mybatis.ManageQRcodeMybatisDao">
+	<resultMap id="ManageQRcodeMap" type="ManageQRcode">
+		<id property="id" column="id" />
+		<result property="title" column="title" /> 
+		<result property="qrUrl" column="qr_Url" /> 
+		<result property="qrcodeType" column="qrcode_Type" /> 
+		<result property="qrState" column="qr_State" /> 
+		<result property="qrValidityDate" column="qr_Validity_Date" /> 
+		<result property="qrSubscribeCount" column="qr_Subscribe_Count" /> 
+		<result property="createDate" column="create_Date" />  
+		<result property="description" column="description" />   
+		
+		 <association property="user" column="user_id" javaType="User">
+			<id property="id" column="user_id" />
+			<result property="loginName" column="user_loginName" /> 
+			<result property="name" column="user_name" /> 
+		</association>
+		
+	  <association property="task" column="task_id" javaType="ManageTask">
+			<id property="id" column="task_id" />
+			<result property="title" column="task_title" /> 
+		</association>
+	</resultMap>
+ 
+	
+
+
+	<!-- 获取部门详细信息, 输出用resultMap关联嵌套对象 -->
+	<select id="getUserManageQRcodeByTaskId" parameterType="long" resultMap="ManageQRcodeMap">
+	 	SELECT t.*,u.login_name AS user_loginName ,u.name AS user_name,m.title AS task_title   
+	 	 FROM wx_manage_QRcode t,wx_user u,wx_manage_task m WHERE u.id=t.user_id AND m.id=t.task_id AND t.task_id=#{taskId} and t.isdelete=0
+	</select>
+	
+	 <select id="getUserManageQRcodeByTaskIdAndQrType"  resultType="java.lang.Integer">
+	 	SELECT count(*)  FROM wx_manage_QRcode t WHERE  t.task_id=#{taskId} and t.qrcode_Type=#{qrType} and t.isdelete=0
+	</select>
+</mapper> 

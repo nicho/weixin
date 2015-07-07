@@ -5,17 +5,16 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.task;
 
-import java.text.ParseException;
+import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
-import javax.validation.Valid;
 
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,6 +31,9 @@ import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.ManageQRcodeService;
 import com.gamewin.weixin.service.task.ManageTaskService;
+import com.gamewin.weixin.service.task.TaskService;
+import com.gamewin.weixin.util.MobileHttpClient;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 
 /**
@@ -60,19 +62,21 @@ public class ManageQRcodeController {
 	private ManageQRcodeService manageQRcodeService;
 	@Autowired
 	private ManageTaskService manageTaskService;
+	@Autowired
+	private TaskService taskService;
 	
-	@RequestMapping(method = RequestMethod.GET)
-	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
+	@RequestMapping(value = "showTaskQRcode/{id}",method = RequestMethod.GET)
+	public String showTaskQRcode(@PathVariable("id") Long id,@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
 			ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
-		Long userId = getCurrentUserId();
+ 
 
-		Page<ManageQRcode> manageQRcodes = manageQRcodeService.getUserManageQRcode(userId, searchParams, pageNumber, pageSize,
-				sortType);
-
-		model.addAttribute("manageQRcodes", manageQRcodes);
+		List<ManageQRcode> manageQRcodes = manageQRcodeService.getUserManageQRcodeByTaskId(id, searchParams, pageNumber, pageSize,sortType);
+		PageInfo<ManageQRcode> page = new PageInfo<ManageQRcode>(manageQRcodes);
+	  	model.addAttribute("page", page);
+	  	model.addAttribute("manageQRcodes", manageQRcodes); 
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);
 		// 将搜索条件编码成字符串，用于排序，分页的URL
@@ -81,77 +85,114 @@ public class ManageQRcodeController {
 		return "manageQRcode/manageQRcodeList";
 	}
 
-	@RequestMapping(value = "create", method = RequestMethod.GET)
-	public String createForm(Model model) {
-		model.addAttribute("manageQRcode", new ManageQRcode());
-		model.addAttribute("action", "create");
+	@RequestMapping(value = "showMyTaskQRcode/{id}",method = RequestMethod.GET)
+	public String showMyTaskQRcode(@PathVariable("id") Long id,@RequestParam(value = "page", defaultValue = "1") int pageNumber,
+			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
+			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
+			ServletRequest request) {
+		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
+		ShiroUser shiroUser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+		User user = new User(getCurrentUserId()); 
+		//查询当前任务的类型
+		ManageTask manageTask=manageTaskService.getManageTask(id);
+		if("Y".equals(manageTask.getWeixinGd()))
+		{
+			Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinGd");
+			if(weixinGdCount==0)
+			{ 
+				ManageQRcode newManageQRcode = new ManageQRcode();
+				newManageQRcode.setUser(user);
+				newManageQRcode.setIsdelete(0);
+				newManageQRcode.setQrState("Y");
+				newManageQRcode.setQrSubscribeCount(0);
+				newManageQRcode.setTask(manageTask);
+				newManageQRcode.setTitle(manageTask.getTitle()+"-微信固定-"+shiroUser.getName());
+				newManageQRcode.setQrcodeType("WeixinGd");
+				newManageQRcode.setCreateDate(new Date()); 
+				manageQRcodeService.saveManageQRcode(newManageQRcode);
+			}
+		}
+	    if("Y".equals(manageTask.getWeixinLs()))
+		{
+			Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinLs");
+			if(weixinGdCount==0)
+			{ 
+				ManageQRcode newManageQRcode = new ManageQRcode();
+				newManageQRcode.setUser(user);
+				newManageQRcode.setIsdelete(0);
+				newManageQRcode.setQrState("Y");
+				newManageQRcode.setQrSubscribeCount(0);
+				newManageQRcode.setTask(manageTask);
+				newManageQRcode.setTitle(manageTask.getTitle()+"-微信临时-"+shiroUser.getName());
+				newManageQRcode.setQrcodeType("WeixinLs");
+				newManageQRcode.setCreateDate(new Date()); 
+				manageQRcodeService.saveManageQRcode(newManageQRcode);
+			}
+		}
+		if("Y".equals(manageTask.getWeixinApk()))
+		{
+			Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinApk");
+			if(weixinGdCount==0)
+			{ 
+				ManageQRcode newManageQRcode = new ManageQRcode();
+				newManageQRcode.setUser(user);
+				newManageQRcode.setIsdelete(0);
+				newManageQRcode.setQrState("Y");
+				newManageQRcode.setQrSubscribeCount(0);
+				newManageQRcode.setTask(manageTask);
+				newManageQRcode.setTitle(manageTask.getTitle()+"-应用APK-"+shiroUser.getName());
+				newManageQRcode.setQrcodeType("WeixinApk");
+				newManageQRcode.setCreateDate(new Date()); 
+				manageQRcodeService.saveManageQRcode(newManageQRcode);
+			}
+		}
+		if("Y".equals(manageTask.getWeixinOther()))
+		{
+			Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinOther");
+			if(weixinGdCount==0)
+			{ 
+				ManageQRcode newManageQRcode = new ManageQRcode();
+				newManageQRcode.setUser(user);
+				newManageQRcode.setIsdelete(0);
+				newManageQRcode.setQrState("Y");
+				newManageQRcode.setQrSubscribeCount(0);
+				newManageQRcode.setTask(manageTask);
+				newManageQRcode.setTitle(manageTask.getTitle()+"-外部跳转-"+shiroUser.getName());
+				newManageQRcode.setQrcodeType("WeixinOther");
+				newManageQRcode.setCreateDate(new Date()); 
+				manageQRcodeService.saveManageQRcode(newManageQRcode);
+			}
+		}
+		List<ManageQRcode> manageQRcodes = manageQRcodeService.getMyUserManageQRcodeByTaskId(id,getCurrentUserId(), searchParams, pageNumber, pageSize,sortType);
 		
-		//获取当前用户可以选择的任务列表
-		List<ManageTask> ManageTaskList=manageTaskService.getUserManageTask_createQr(getCurrentUserId());
-		model.addAttribute("ManageTaskList", ManageTaskList);
-		return "manageQRcode/manageQRcodeForm";
-	}
+		
+		PageInfo<ManageQRcode> page = new PageInfo<ManageQRcode>(manageQRcodes);
+	  	model.addAttribute("page", page);
+	  	model.addAttribute("manageQRcodes", manageQRcodes); 
+		model.addAttribute("sortType", sortType);
+		model.addAttribute("sortTypes", sortTypes);
+		// 将搜索条件编码成字符串，用于排序，分页的URL
+		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
 
-	@RequestMapping(value = "create", method = RequestMethod.POST)
-	public String create(@Valid ManageQRcode newManageQRcode, RedirectAttributes redirectAttributes, ServletRequest request) {
-		String qrValidityDateStr = request.getParameter("qrValidityDateStr");
-		User user = new User(getCurrentUserId());
-		String taskId=request.getParameter("taskId");
-		ManageTask manageTask = new ManageTask(Long.parseLong(taskId));
-		newManageQRcode.setUser(user);
-		newManageQRcode.setIsdelete(0);
-		newManageQRcode.setQrState("Y");
-		newManageQRcode.setQrSubscribeCount(0);
-		newManageQRcode.setTask(manageTask);
-		try {
-			newManageQRcode.setQrValidityDate(DateUtils.parseDate(qrValidityDateStr, "yyyy-MM-dd HH:mm:ss"));
-		} catch (ParseException e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("message", "创建二维码失败");
-			return "redirect:/manageQRcode/"; 
-		}
-		manageQRcodeService.saveManageQRcode(newManageQRcode);
-		redirectAttributes.addFlashAttribute("message", "创建二维码成功");
-		return "redirect:/manageQRcode/";
-	}
-
-	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
-	public String updateForm(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("task", manageQRcodeService.getManageQRcode(id));
-		model.addAttribute("action", "update");
-		//获取当前用户可以选择的任务列表
-		List<ManageTask> ManageTaskList=manageTaskService.getUserManageTask_createQr(getCurrentUserId());
-		model.addAttribute("ManageTaskList", ManageTaskList);
-		return "manageQRcode/manageQRcodeForm";
-	}
-
-	@RequestMapping(value = "update", method = RequestMethod.POST)
-	public String update(@Valid @ModelAttribute("manageQRcode") ManageQRcode manageQRcode,
-			RedirectAttributes redirectAttributes, ServletRequest request) {
- 
-		try { 
-			String taskId=request.getParameter("taskId");
-			ManageTask manageTask = new ManageTask(Long.parseLong(taskId));
-			manageQRcode.setTask(manageTask);
-			manageQRcodeService.saveManageQRcode(manageQRcode);
-			redirectAttributes.addFlashAttribute("message", "更新二维码成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("message", "更新二维码失败");
-			return "redirect:/manageQRcode/";
-		}
-		return "redirect:/manageQRcode/";
-	}
-
+		return "manageQRcode/manageQRcodeList";
+	} 
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
 		entity.setIsdelete(1);
+		entity.setQrState("N");
 		manageQRcodeService.saveManageQRcode(entity);
 		redirectAttributes.addFlashAttribute("message", "删除二维码成功");
-		return "redirect:/manageQRcode/";
+		return "redirect:/manageQRcode/showTaskQRcode/"+entity.getTask().getId();
 	}
-
+	@RequestMapping(value = "disabled/{id}")
+	public String disabled(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
+		entity.setQrState("N");
+		manageQRcodeService.saveManageQRcode(entity);
+		redirectAttributes.addFlashAttribute("message", "失效二维码成功");
+		return "redirect:/manageQRcode/showTaskQRcode/"+entity.getTask().getId();
+	}
 	/**
 	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2
 	 * Preparable二次部分绑定的效果,先根据form的id从数据库查出ManageQRcode对象,再把Form提交的内容绑定到该对象上。
@@ -171,5 +212,31 @@ public class ManageQRcodeController {
 		ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
 		return user.id;
 	}
-
+	
+	@RequestMapping(value = "viewManageQRcode/{id}")
+	public String viewManageQRcode(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,Model model,ServletRequest request) {
+		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
+		
+		if(StringUtils.isEmpty(entity.getImageUrl()))
+		{
+			String imageUrl=entity.getTask().getId()+"-"+entity.getQrcodeType()+"-"+entity.getId()+".jpg";
+			String AccessToken=taskService.getAccessToken();
+			System.out.println(AccessToken);
+			String ticket;
+			try {
+				ticket = MobileHttpClient.getJsapi_ticket(AccessToken,entity.getId());
+				System.out.println(ticket);
+				String url=request.getServletContext().getRealPath("/")+"\\image\\"+imageUrl;
+				MobileHttpClient.getticketImage(URLEncoder.encode(ticket,"UTF-8"),url);
+				
+			} catch (Exception e) { 
+				e.printStackTrace();
+			}
+			entity.setImageUrl(imageUrl);
+			manageQRcodeService.saveManageQRcode(entity);
+		} 
+		 
+		model.addAttribute("entity",entity);
+		return "myTask/manageQRcodeView";
+	}
 }

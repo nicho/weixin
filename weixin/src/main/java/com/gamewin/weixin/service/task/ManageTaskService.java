@@ -24,9 +24,11 @@ import org.springside.modules.persistence.SearchFilter;
 import org.springside.modules.persistence.SearchFilter.Operator;
 
 import com.gamewin.weixin.entity.ManageTask;
+import com.gamewin.weixin.mybatis.ManageTaskMybatisDao;
 import com.gamewin.weixin.repository.ManageTaskDao;
 import com.gamewin.weixin.util.MemcachedObjectType;
 import com.gamewin.weixin.util.MobileHttpClient;
+import com.github.pagehelper.PageHelper;
 
 // Spring Bean的标识.
 @Component
@@ -38,7 +40,8 @@ public class ManageTaskService {
 
 	@Autowired(required = false)
 	private SpyMemcachedClient memcachedClient;
-
+	@Autowired
+	private ManageTaskMybatisDao manageTaskMybatisDao;
 	public ManageTask getManageTask(Long id) {
 		return manageTaskDao.findOne(id);
 	}
@@ -69,7 +72,12 @@ public class ManageTaskService {
 		Specification<ManageTask> spec = DynamicSpecifications.bySearchFilter(filters.values(), ManageTask.class); 
 		return manageTaskDao.findAll(spec);
 	}
-
+	public List<ManageTask> getUserMyManageTask(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) { 
+		PageHelper.startPage(pageNumber, pageSize); 
+		return manageTaskMybatisDao.getUserMyManageTask(userId);
+	}
+	
 	/**
 	 * 创建分页请求.
 	 */
