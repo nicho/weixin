@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>《宝箱》微信公众号推广系统:</title>
+<title>《宝箱》推广系统:</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="Cache-Control" content="no-store" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -19,45 +19,16 @@
 <link type="image/x-icon" href="${ctx}/static/images/favicon.ico" rel="shortcut icon">
 <link href="${ctx}/static/bootstrap/2.3.2/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
 <link href="${ctx}/static/jquery-validation/1.11.1/validate.css" type="text/css" rel="stylesheet" />
-<link href="${ctx}/static/styles/default.css" type="text/css" rel="stylesheet" />
 <script src="${ctx}/static/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
 <script src="${ctx}/static/jquery-validation/1.11.1/jquery.validate.min.js" type="text/javascript"></script>
-<script src="${ctx}/static/jquery-validation/1.11.1/messages_bs_zh.js" type="text/javascript"></script>
-
- 
+<script src="${ctx}/static/jquery-validation/1.11.1/messages_bs_zh.js" type="text/javascript"></script> 
+ <link rel="stylesheet" type="text/css" href="${ctx}/static/styles/loginstyle.css" />
 </head>
 
+
+
 <body>
-	<c:if test="${not empty message}">
-		<div id="message" class="alert alert-success"><button data-dismiss="alert" class="close">×</button>${message}</div>
-	</c:if>
-	<div class="container">
-	<div id="header">
-	<div id="title">
-	    <h1><a href="${ctx}">《宝箱》微信公众号推广系统</a><small>--二维码</small>
-	    <shiro:user>
-			<div class="btn-group pull-right">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-user"></i> <shiro:principal property="name"/>
-					<span class="caret"></span>
-				</a>
-			
-				<ul class="dropdown-menu">
-					<shiro:hasRole name="admin">
-						<li><a href="${ctx}/admin/user">管理会员</a></li>
-						<li><a href="${ctx}/admin/task">管理会员二维码</a></li>
-						<li class="divider"></li>
-					</shiro:hasRole>
-					<li><a href="${ctx}/index">我的二维码</a></li> 
-					<li><a href="${ctx}/logout">退出</a></li>
-				</ul>
-			</div>
-		</shiro:user>
-		</h1>
-	</div>
-</div>
-		<div id="content">
-			<form id="loginForm" action="${ctx}/login" method="post" class="form-horizontal">
+<form id="loginForm" action="${ctx}/login" method="post" class="form-horizontal">
 		<%
 			String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
 			if(error != null){
@@ -79,39 +50,21 @@
 		<%
 			}
 		%>
-		<br>
-		<div class="control-group">
-			<label for="username" class="control-label">名称:</label>
-			<div class="controls">
-				<input type="text" id="username" name="username"  value="${username}" class="input-medium required"/>
-			</div>
-		</div>
-		<div class="control-group">
-			<label for="password" class="control-label">密码:</label>
-			<div class="controls">
-				<input type="password" id="password" name="password" class="input-medium required"/>
-			</div>
-		</div>
-				
-		<div class="control-group">
-			<div class="controls">
-				<label class="checkbox" for="rememberMe"><input type="checkbox" id="rememberMe" name="rememberMe"/> 记住我</label>
-				<input id="submit_btn" class="btn btn-primary" type="submit" value="登录"/> <a class="btn" href="${ctx}/register">注册</a>
-			 	 
-			</div>
-		</div>
-	</form>
-
-	<script>
-		$(document).ready(function() {
-			$("#loginForm").validate();
-		});
-	</script>
-		</div>
-		<div id="footer">
-	Copyright &copy; 2005-2020 <a href="http://gamewin.taobao.com">gamewin.taobao.com</a>
-</div>
-	</div>
-	<script src="${ctx}/static/bootstrap/2.3.2/js/bootstrap.min.js" type="text/javascript"></script>
+  <fieldset>
+  <legend>登&nbsp;录</legend>
+  <label for="login">登录名</label>
+<input type="text" id="username" name="username"  value="${username}" class="input-medium required"/>
+  <div class="clear"></div>
+  <label for="password">密码</label>
+  <input type="password" id="password" name="password" class="input-medium required"/>
+  <div class="clear"></div>
+  <label for="remember_me" style="padding: 0;"> 记住我</label> 
+  <input type="checkbox"  id="rememberMe" name="rememberMe" style="position: relative; top: 3px; margin: 0; " name="remember_me"/>
+  <div class="clear"></div>
+  <br />
+  <input type="submit" style="margin: -20px 0 0 287px;" class="button" name="commit" value="登录"/>
+  </fieldset>
+</form>
+<p align="center"><strong>&copy; http://bbs.lihentian.com</strong></p>
 </body>
 </html>

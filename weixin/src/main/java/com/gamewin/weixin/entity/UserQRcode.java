@@ -17,8 +17,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 //JPA标识
 @Entity
-@Table(name = "wx_manage_QRcode")
-public class ManageQRcode extends IdEntity {
+@Table(name = "wx_user_QRcode")
+public class UserQRcode extends IdEntity {
 
 	private String title;
 	private String qrcodeType;//二维码类型
@@ -26,16 +26,13 @@ public class ManageQRcode extends IdEntity {
 	private String qrWeixinType;//微信二维码类型(永久,固定)
 	private String qrState;//二维码状态
 	private Date qrValidityDate;//二维码有效期
-	private Integer qrSubscribeCount; //二维码关注数
-	private Date startDate;
-	private Date endDate;
+	private Integer qrSubscribeCount; //二维码关注数 
 	private Date createDate;
-	private String description; 
-	private Integer taskCount; 
+	private String description;  
 	private Integer isdelete; 
 	private User user;
-	private User distributionUser;
 	private ManageTask task;//主任务
+	private ManageQRcode taskqr;//二维码
  
 	public String getQrUrl() {
 		return qrUrl;
@@ -92,30 +89,7 @@ public class ManageQRcode extends IdEntity {
 	public void setIsdelete(Integer isdelete) {
 		this.isdelete = isdelete;
 	}
-
-	public Integer getTaskCount() {
-		return taskCount;
-	}
-
-	public void setTaskCount(Integer taskCount) {
-		this.taskCount = taskCount;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+ 
 
 	public Date getCreateDate() {
 		return createDate;
@@ -167,16 +141,7 @@ public class ManageQRcode extends IdEntity {
 	public void setTask(ManageTask task) {
 		this.task = task;
 	}
-	@ManyToOne
-	@JoinColumn(name = "distribution_user_id")
-	public User getDistributionUser() {
-		return distributionUser;
-	}
-
-	public void setDistributionUser(User distributionUser) {
-		this.distributionUser = distributionUser;
-	}
-
+ 
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
