@@ -9,11 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -41,7 +36,6 @@ import com.gamewin.weixin.repository.UserDao;
 import com.gamewin.weixin.service.ServiceException;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.github.pagehelper.PageHelper;
-import com.google.common.collect.Lists;
 
 /**
  * 用户管理类.
@@ -203,8 +197,7 @@ public class AccountService {
 	public List<User> getUserByUpTwoAdminUserlist(Long userId,Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) { 
 		PageHelper.startPage(pageNumber, pageSize);
-		List<User> userList=userMybatisDao.getUserList(userId);
-		System.out.println(userList.size());
+		List<User> userList=userMybatisDao.getUserList(userId); 
 		return userList;
 	}
 	public Page<User> getUserByAuditUserlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
