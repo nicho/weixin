@@ -6,10 +6,21 @@
 	<resultMap id="userMap" type="User">
 		<id property="id" column="id" />
 		<result property="loginName" column="login_Name" /> 
+		<result property="name" column="name" /> 
+		<result property="roles" column="roles" /> 
+		<result property="registerDate" column="register_Date" /> 
+		<result property="status" column="status" /> 
+		<result property="manageAddress" column="manage_Address" /> 
+		<result property="loginName" column="login_Name" />  
+		
+		 <association property="upuser" column="upuser_id" javaType="User">
+			<id property="id" column="upuser_user_id" />
+			<result property="loginName" column="upuser_login_Name" /> 
+		</association>
 	</resultMap>
 
 	<!-- 获取部门详细信息, 输出用resultMap关联嵌套对象 -->
 	<select id="getUserList" parameterType="long" resultMap="userMap">
-		select * from wx_user
+		select u.*,m.id as upuser_user_id,m.login_Name as upuser_login_Name  from wx_user u ,wx_user m where u.upuser_id=m.id and u.isdelete=0
 	</select>
 </mapper> 

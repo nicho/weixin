@@ -38,7 +38,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${users.content}" var="user">
+			<c:forEach items="${usersx}" var="user">
 				<tr>
 					<td><a href="${ctx}/admin/user/update/${user.id}">${user.loginName}</a></td>
 					<td>${user.name}</td>
@@ -55,7 +55,7 @@
 			</c:forEach>
 		</tbody>
 	</table>
-	<tags:pagination page="${users}" paginationSize="5" />
+	<tags:paginationMybatis  />
 	<div>
 		<a class="btn" href="${ctx}/admin/cteateUser">创建用户</a>
 	</div>

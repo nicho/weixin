@@ -73,3 +73,10 @@
 
 #footer a {color: #999;}
 .row {margin-left: -20px;  margin-top: 5px;}
+/***************此部分样式无需拷贝******************/
+*{margin:0px; padding:0px;}
+body{margin:0 auto; font-size:12px; color:#666; font-family:"微软雅黑", Simsun;}
+li{list-style:none;}
+img{border:none;}
+a, a:visited{text-decoration:none;}
+.wrap{ width:auto; max-width:320px; margin:0 auto;}

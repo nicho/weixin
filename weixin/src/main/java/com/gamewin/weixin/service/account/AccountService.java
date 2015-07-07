@@ -200,11 +200,12 @@ public class AccountService {
 		  }
 		return userdto;
 	}
-	public List<User> getUserByUpTwoAdminUserlist(Long userId ) { 
-		PageHelper.startPage(1, 10);
+	public List<User> getUserByUpTwoAdminUserlist(Long userId,Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) { 
+		PageHelper.startPage(pageNumber, pageSize);
 		List<User> userList=userMybatisDao.getUserList(userId);
-		   System.out.println(userList.size());
-		return null;
+		System.out.println(userList.size());
+		return userList;
 	}
 	public Page<User> getUserByAuditUserlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
@@ -218,45 +219,7 @@ public class AccountService {
 		return userDao.findAll(spec, pageRequest);
 	}
 	 
-	public Page<User> getUserByUpTwoAdminUserlist(final Long userId, final Map<String, Object> searchParams, int pageNumber, int pageSize,
-			String sortType) {
-		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
-
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
-		final Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
-
-		return userDao.findAll(new Specification<User>() {
-
-			@Override
-			public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-				// SELECT t FROM User t WHERE upuser.id =?1 OR upuser.id IN
-				// (SELECT id FROM User WHERE upuser.id=?1)
-				// path转化
-				List<Predicate> orPredicates = Lists.newArrayList();
-
-				// Path<String> idPath = root.get("upuser").get("id");
-				// Path<String> parentIdsPath =
-				// root.get("channel").get("parentIds");
-
-				Predicate p1 = builder.equal(root.get("upuser").get("id"), userId);
-				orPredicates.add(builder.or(p1));
-
-				Predicate p2 = builder.equal(root.get("upuser").get("id"), 5);
-				orPredicates.add(builder.or(p2));
-
-				// 以下是springside3提供的方法
-				Predicate o = spec.toPredicate(root, query, builder);
-
-				Predicate p = builder.or(orPredicates.toArray(new Predicate[orPredicates.size()]));
-				query.where(p, o);
-
-				return null;
-
-			}
-
-		}, pageRequest);
-	}
+	 
 	/**
 	 * 创建分页请求.
 	 */

@@ -27,6 +27,7 @@ import org.springside.modules.web.Servlets;
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.service.account.AccountService;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 
 /**
@@ -91,12 +92,15 @@ public class UserAdminController {
 		{
 			users = accountService.getUser(usertype, searchParams, pageNumber, pageSize, sortType);
 		} else if ("TwoAdmin".equals(usertype)) {
-		  	 List<User> usersx = accountService.getUserByUpTwoAdminUserlist(user.id);
-			users = accountService.getUserByUpTwoAdminUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
+		  	 List<User> usersx = accountService.getUserByUpTwoAdminUserlist(user.id,searchParams, pageNumber, pageSize, sortType);
+		  	 PageInfo<User> page = new PageInfo<User>(usersx);
+		  	model.addAttribute("page", page);
+		  	model.addAttribute("usersx", usersx);
+			//users = accountService.getUserByUpTwoAdminUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
 		} else if ("ThreeAdmin".equals(usertype)) {
 			users = accountService.getUserByUpUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
 		}
-		 
+		
 		model.addAttribute("users", users);
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);
