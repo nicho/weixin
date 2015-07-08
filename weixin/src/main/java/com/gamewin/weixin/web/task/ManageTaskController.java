@@ -15,6 +15,8 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -60,6 +62,7 @@ public class ManageTaskController {
 	@Autowired
 	private ManageTaskService manageTaskService;
 	
+	@RequiresRoles("admin")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
@@ -102,14 +105,14 @@ public class ManageTaskController {
 		return "myTask/myTaskList";
 	}
 	
-	
+	@RequiresRoles("admin")
 	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String createForm(Model model) {
 		model.addAttribute("manageTask", new ManageTask());
 		model.addAttribute("action", "create");
 		return "manageTask/manageTaskForm";
 	}
-
+	@RequiresRoles("admin")
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String create(@Valid ManageTask newManageTask, RedirectAttributes redirectAttributes,ServletRequest request) {
 		User user = new User(getCurrentUserId());

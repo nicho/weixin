@@ -27,6 +27,7 @@
 				/logout = logout
 				/static/** = anon
 				/api/** = anon
+				/readurl/** = anon
 				/register/** = anon
 				/ReceiveServlet=anon
 				/** = user

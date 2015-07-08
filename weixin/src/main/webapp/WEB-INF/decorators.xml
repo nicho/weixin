@@ -5,6 +5,7 @@
 		<pattern>/api/*</pattern>
 		<pattern>/login*</pattern>
 		<pattern>/register</pattern>
+		<pattern>/readurl/*</pattern>
 	</excludes>
 	
 	<decorator name="default" page="default.jsp">
