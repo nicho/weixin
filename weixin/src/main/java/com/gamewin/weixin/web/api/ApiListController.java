@@ -57,6 +57,11 @@ public class ApiListController {
 		return accountService.getUserTree2(id); 
 	}
 	
+	@RequestMapping(value="readUrl" ,method ={ RequestMethod.GET, RequestMethod.POST })
+	public String readUrl(HttpServletRequest request, HttpServletResponse response,Model model) {
+		model.addAttribute("redirectUrl","http://www.baidu.com");
+		return "readUrl/redirectUrl";
+	}
 	@RequestMapping(method ={ RequestMethod.GET, RequestMethod.POST })
 	public void list(HttpServletRequest request, HttpServletResponse response) {
 		  System.out.println("进入chat");  
