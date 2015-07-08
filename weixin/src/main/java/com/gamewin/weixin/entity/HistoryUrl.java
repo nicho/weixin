@@ -15,13 +15,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Entity
 @Table(name = "wx_history_url")
 public class HistoryUrl extends IdEntity {
-	private String toUserName;
-	private String fromUserName;
-	private String createTime;
-	private String msgType;
-	private String event;
-	private String eventKey;
-	private String ticket;
+	private String userid;
+	private String taskId;
+	private String userIp;
 	private Date createDate;
 
 	public HistoryUrl() {
@@ -31,65 +27,7 @@ public class HistoryUrl extends IdEntity {
 		this.id = id;
 	}
 
-	 
-
-	public String getToUserName() {
-		return toUserName;
-	}
-
-	public void setToUserName(String toUserName) {
-		this.toUserName = toUserName;
-	}
-
-	public String getFromUserName() {
-		return fromUserName;
-	}
-
-	public void setFromUserName(String fromUserName) {
-		this.fromUserName = fromUserName;
-	}
-
-	 
-
-	public String getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
-	}
-
-	public String getMsgType() {
-		return msgType;
-	}
-
-	public void setMsgType(String msgType) {
-		this.msgType = msgType;
-	}
-
-	public String getEvent() {
-		return event;
-	}
-
-	public void setEvent(String event) {
-		this.event = event;
-	}
-
-	public String getEventKey() {
-		return eventKey;
-	}
-
-	public void setEventKey(String eventKey) {
-		this.eventKey = eventKey;
-	}
-
-	public String getTicket() {
-		return ticket;
-	}
-
-	public void setTicket(String ticket) {
-		this.ticket = ticket;
-	}
+	  
 
 	public Date getCreateDate() {
 		return createDate;
