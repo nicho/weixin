@@ -5,12 +5,14 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.task;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +27,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springside.modules.web.Servlets;
 
-import com.gamewin.weixin.entity.ManageQRcode;
 import com.gamewin.weixin.entity.ManageTask;
 import com.gamewin.weixin.entity.User;
+import com.gamewin.weixin.entity.ViewRange;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.ManageTaskService;
 import com.github.pagehelper.PageInfo;
@@ -109,12 +111,34 @@ public class ManageTaskController {
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.POST)
-	public String create(@Valid ManageTask newManageTask, RedirectAttributes redirectAttributes) {
+	public String create(@Valid ManageTask newManageTask, RedirectAttributes redirectAttributes,ServletRequest request) {
 		User user = new User(getCurrentUserId());
 		newManageTask.setUser(user);
 		newManageTask.setIsdelete(0);
 		newManageTask.setState("Y");
 		manageTaskService.saveManageTask(newManageTask);
+		
+		if("newManageTask".equals(newManageTask.getViewrangeType()))
+		{
+			//设置可见范围
+			String viewrangeUsers=request.getParameter("viewrangeUsers");
+			if(!StringUtils.isEmpty(viewrangeUsers))
+			{
+				String [] viewrangeUserArray=viewrangeUsers.split(",");
+				for (int i = 0; i < viewrangeUserArray.length; i++) {
+					Long userId=Long.parseLong(viewrangeUserArray[i]);  
+					User user_vr = new User(userId);
+					ViewRange vr=new ViewRange();
+					vr.setCreateDate(new Date());
+					vr.setIsdelete(0);
+					vr.setTask(newManageTask);
+					vr.setUser(user_vr);
+					manageTaskService.saveViewRange(vr);
+				}
+			}
+		}
+		  
+		
 		redirectAttributes.addFlashAttribute("message", "创建任务成功");
 		return "redirect:/manageTask/";
 	}

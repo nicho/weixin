@@ -24,8 +24,10 @@ import org.springside.modules.persistence.SearchFilter;
 import org.springside.modules.persistence.SearchFilter.Operator;
 
 import com.gamewin.weixin.entity.ManageTask;
+import com.gamewin.weixin.entity.ViewRange;
 import com.gamewin.weixin.mybatis.ManageTaskMybatisDao;
 import com.gamewin.weixin.repository.ManageTaskDao;
+import com.gamewin.weixin.repository.ViewRangeDao;
 import com.gamewin.weixin.util.MemcachedObjectType;
 import com.gamewin.weixin.util.MobileHttpClient;
 import com.github.pagehelper.PageHelper;
@@ -42,12 +44,18 @@ public class ManageTaskService {
 	private SpyMemcachedClient memcachedClient;
 	@Autowired
 	private ManageTaskMybatisDao manageTaskMybatisDao;
+	@Autowired
+	private ViewRangeDao viewRangeDao;
+	
+	
 	public ManageTask getManageTask(Long id) {
 		return manageTaskDao.findOne(id);
 	}
-
 	public void saveManageTask(ManageTask entity) {
 		manageTaskDao.save(entity);
+	}
+	public void saveViewRange(ViewRange entity) {
+		viewRangeDao.save(entity);
 	}
 
 	public void deleteManageTask(Long id) {
