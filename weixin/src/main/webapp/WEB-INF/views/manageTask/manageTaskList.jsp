@@ -49,8 +49,8 @@
 					<c:otherwise>指定</c:otherwise>
 				</c:choose>
 				</td>
-				<td></td>
-				<td></td>
+				<td>${task.finishTaskCount}</td>
+				<td>${task.finishTaskAdminCount}</td>
 				<td><a href="${ctx}/manageQRcode/showTaskQRcode/${task.id}">二维码管理</a> &nbsp;
 				<c:if test="${task.state eq 'Y'}"><a href="#" onclick ="confirmDisabled('${ctx}/disabled/${task.id}')">失效</a> &nbsp;</c:if>
 				<a href="#" onclick="confirmDelete('${ctx}/manageTask/delete/${task.id}')">删除</a></td>

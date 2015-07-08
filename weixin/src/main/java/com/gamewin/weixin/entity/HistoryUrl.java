@@ -15,10 +15,43 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Entity
 @Table(name = "wx_history_url")
 public class HistoryUrl extends IdEntity {
-	private String userid;
+	private String userId;
 	private String taskId;
 	private String userIp;
+	private String qrcodeId;
 	private Date createDate;
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
+	public String getUserIp() {
+		return userIp;
+	}
+
+	public void setUserIp(String userIp) {
+		this.userIp = userIp;
+	}
+
+	public String getQrcodeId() {
+		return qrcodeId;
+	}
+
+	public void setQrcodeId(String qrcodeId) {
+		this.qrcodeId = qrcodeId;
+	}
 
 	public HistoryUrl() {
 	}

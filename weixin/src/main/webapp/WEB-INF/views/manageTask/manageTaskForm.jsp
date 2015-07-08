@@ -5,6 +5,10 @@
 <html>
 <head>
 
+	<link rel="stylesheet" type="text/css" href="${ctx}/static/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="${ctx}/static/easyui/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="${ctx}/static/easyui/demo.css">
+	<script type="text/javascript" src="${ctx}/static/easyui/jquery.easyui.min.js"></script>
 
 	<title>任务管理</title>
 </head>
@@ -12,6 +16,7 @@
 <body>
 	<form id="inputForm" action="${ctx}/manageTask/${action}" method="post" class="form-horizontal">
 		<input type="hidden" name="id" value="${task.id}"/>
+		<input type="hidden" id="viewrangeUsers" name="viewrangeUsers" value=""/>
 		<fieldset>
 			<legend><small>管理任务</small></legend>
 			<div class="control-group">
@@ -41,10 +46,15 @@
 		    <div class="control-group">
 				<label for="task_title" class="control-label">任务范围:</label>
 				<div class="controls">
-					<input type="radio" name="viewrangeType" value="ALL" <c:if test="${task.viewrangeType eq 'ALL'}">checked</c:if>> 全部 &nbsp;&nbsp;&nbsp; <input type="radio" name="viewrangeType" value="SELECT" <c:if test="${task.viewrangeType eq 'SELECT'}">checked</c:if>>指定 	 
+					<input type="radio" id="viewrangeType1" name="viewrangeType" value="ALL" <c:if test="${task.viewrangeType eq 'ALL'}">checked</c:if> onclick="changeselectUser(1)"> 全部 &nbsp;&nbsp;&nbsp; <input type="radio" id="viewrangeType2"  name="viewrangeType" value="SELECT" <c:if test="${task.viewrangeType eq 'SELECT'}">checked</c:if> onclick="changeselectUser(2)">指定 	 
 				</div>
 			</div>	
-
+		    <div class="control-group" id="selectDiv" style="display: none;">
+				<label for="task_title" class="control-label">选择人员:</label>
+				<div class="controls">
+						<select id="cc" class="easyui-combotree"   multiple  style="width:200px;"    ></select>
+				</div>
+			</div>	
 			
 		    <div class="control-group">
 				<label for="task_title" class="control-label">任务二维码类型:</label>
@@ -100,6 +110,17 @@
 			$("#otherUrlDiv").attr("style","display: none;");
 		}
 	}
+	function changeselectUser(fal)
+	{
+		if(fal==1)
+		{
+			$("#selectDiv").attr("style","display: none;");
+		}
+		else if(fal==2)
+		{
+			$("#selectDiv").attr("style","");
+		}
+	}
 		$(document).ready(function() {
 			
 			if($("#weixinApk").attr("checked")=="checked")
@@ -110,12 +131,26 @@
 			{
 				$("#otherUrlDiv").attr("style","");
 			}
+			if($("#viewrangeType2").attr("checked")=="checked")
+			{
+				$("#selectDiv").attr("style","");
+			}
+			
+			$('#cc').combotree({  
+				url: "${ctx}/admin/user/findUserTree?id=1",  
+				onBeforeExpand: function(node, param) { 
+					$('#cc').combotree("tree").tree("options").url = "${ctx}/admin/user/findUserTree?id="+node.id; 
+				}
+			});
+			
 			//聚焦第一个输入框
 			$("#task_title").focus();
 			//为inputForm注册validate函数
 			$("#inputForm").validate({
 				  submitHandler: function(form) {  //通过之后回调 
 					 $("input[type='submit']").attr("disabled","disabled");
+					 var val = $('#cc').combotree('getValues'); 
+					 $('#viewrangeUsers').val(val);
 				  	form.submit();
 				 } 
 			});

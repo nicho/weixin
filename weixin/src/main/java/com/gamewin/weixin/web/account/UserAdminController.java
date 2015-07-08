@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springside.modules.web.Servlets;
 
@@ -58,7 +59,14 @@ public class UserAdminController {
 	
 	@Autowired
 	private AccountService accountService;
-
+	
+	@RequestMapping(value = "findUserTree")
+	@ResponseBody 
+	public String findUserTree(@RequestParam("id") Long id) { 
+		//UserTree
+		return accountService.getUserTree2(id); 
+	}
+	
 	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "auditUserlist",method = RequestMethod.GET)
 	public String auditUserlist(@RequestParam(value = "page", defaultValue = "1") int pageNumber,

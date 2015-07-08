@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 //JPA标识
 @Entity
-@Table(name = "wx_user_viewRange")
+@Table(name = "wx_user_viewrange")
 public class ViewRange extends IdEntity {
   
 	private Date updateDate;

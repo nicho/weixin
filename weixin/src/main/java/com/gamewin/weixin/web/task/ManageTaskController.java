@@ -119,9 +119,11 @@ public class ManageTaskController {
 		newManageTask.setUser(user);
 		newManageTask.setIsdelete(0);
 		newManageTask.setState("Y");
+		newManageTask.setFinishTaskAdminCount(0);
+		newManageTask.setFinishTaskCount(0);
 		manageTaskService.saveManageTask(newManageTask);
 		
-		if("newManageTask".equals(newManageTask.getViewrangeType()))
+		if("SELECT".equals(newManageTask.getViewrangeType()))
 		{
 			//设置可见范围
 			String viewrangeUsers=request.getParameter("viewrangeUsers");

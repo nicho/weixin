@@ -36,7 +36,24 @@ public class ManageTask extends IdEntity {
 	private String apkUrl;
 	private String otherUrl;
 	private String state;
-	 
+	private Integer finishTaskCount; 
+	private Integer finishTaskAdminCount; 
+	
+	public Integer getFinishTaskCount() {
+		return finishTaskCount;
+	}
+
+	public void setFinishTaskCount(Integer finishTaskCount) {
+		this.finishTaskCount = finishTaskCount;
+	}
+
+	public Integer getFinishTaskAdminCount() {
+		return finishTaskAdminCount;
+	}
+
+	public void setFinishTaskAdminCount(Integer finishTaskAdminCount) {
+		this.finishTaskAdminCount = finishTaskAdminCount;
+	}
 
 	public String getState() {
 		return state;

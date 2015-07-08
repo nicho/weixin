@@ -50,12 +50,7 @@ public class ApiListController {
 			return "index/index"; 
 	}
 	
-	@RequestMapping(value = "findUserTree")
-	@ResponseBody 
-	public String findUserTree(@RequestParam("id") Long id) { 
-		//UserTree
-		return accountService.getUserTree2(id); 
-	}
+
 	
  
 	@RequestMapping(method ={ RequestMethod.GET, RequestMethod.POST })
