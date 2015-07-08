@@ -72,15 +72,67 @@ public class MobileHttpClient {
 		return access_token;
 
 	}
-
 	/**
-	 * 创建二维码ticket
+	 * 创建临时二维码ticket
 	 * 
 	 * @param access_token
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getJsapi_ticket(String access_token,Long userId) throws Exception {
+	public static String getJsapi_ticket_WeixinLs(String access_token,Long manageQRcodeId) throws Exception {
+		String jsapi_ticket = "";
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		try {
+			HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=" + access_token);
+
+			JSONObject jsonObj = new JSONObject(); 
+			jsonObj.put("action_name", "QR_SCENE"); 
+			jsonObj.put("expire_seconds", 604800); 
+			jsonObj.put("action_info", new JSONObject().put("scene", new JSONObject().put("scene_id", manageQRcodeId))); 
+			
+			StringEntity entity = new StringEntity(jsonObj.toString(), "UTF-8");
+
+			httpPost.setEntity(entity);
+			
+			CloseableHttpResponse response1 = httpclient.execute(httpPost);
+			JSONObject resultJsonObject = null;
+			try {
+				System.out.println(response1.getStatusLine());
+				HttpEntity httpEntity = response1.getEntity();
+
+				if (httpEntity != null) {
+					try {
+						BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpEntity.getContent(), "UTF-8"), 8 * 1024);
+						StringBuilder entityStringBuilder = new StringBuilder();
+						String line = null;
+						while ((line = bufferedReader.readLine()) != null) {
+							entityStringBuilder.append(line);
+						}
+						// 利用从HttpEntity中得到的String生成JsonObject
+						resultJsonObject = new JSONObject(entityStringBuilder.toString());
+						jsapi_ticket = resultJsonObject.get("ticket") + "";
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+			} finally {
+				response1.close();
+			}
+		} finally {
+			httpclient.close();
+		}
+		return jsapi_ticket;
+
+	}
+	/**
+	 * 创建永久二维码ticket
+	 * 
+	 * @param access_token
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getJsapi_ticket_WeixinGd(String access_token,Long manageQRcodeId) throws Exception {
 		String jsapi_ticket = "";
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
@@ -88,7 +140,7 @@ public class MobileHttpClient {
 
 			JSONObject jsonObj = new JSONObject(); 
 			jsonObj.put("action_name", "QR_LIMIT_SCENE"); 
-			jsonObj.put("action_info", new JSONObject().put("scene", new JSONObject().put("scene_id", userId))); 
+			jsonObj.put("action_info", new JSONObject().put("scene", new JSONObject().put("scene_id", manageQRcodeId))); 
 			
 			StringEntity entity = new StringEntity(jsonObj.toString(), "UTF-8");
 

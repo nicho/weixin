@@ -23,8 +23,12 @@ import org.springside.modules.persistence.DynamicSpecifications;
 import org.springside.modules.persistence.SearchFilter;
 import org.springside.modules.persistence.SearchFilter.Operator;
 
+import com.gamewin.weixin.entity.HistoryUrl;
+import com.gamewin.weixin.entity.HistoryWeixin;
 import com.gamewin.weixin.entity.ManageQRcode;
 import com.gamewin.weixin.mybatis.ManageQRcodeMybatisDao;
+import com.gamewin.weixin.repository.HistoryUrlDao;
+import com.gamewin.weixin.repository.HistoryWeixinDao;
 import com.gamewin.weixin.repository.ManageQRcodeDao;
 import com.gamewin.weixin.util.MemcachedObjectType;
 import com.gamewin.weixin.util.MobileHttpClient;
@@ -42,6 +46,11 @@ public class ManageQRcodeService {
 	private SpyMemcachedClient memcachedClient;
 	@Autowired
 	private ManageQRcodeMybatisDao manageQRcodeMybatisDao;
+	@Autowired
+	private HistoryUrlDao historyUrlDao;
+	@Autowired
+	private HistoryWeixinDao historyWeixinDao;
+	
 	
 	public ManageQRcode getManageQRcode(Long id) {
 		return manageQRcodeDao.findOne(id);
@@ -50,7 +59,20 @@ public class ManageQRcodeService {
 	public void saveManageQRcode(ManageQRcode entity) {
 		manageQRcodeDao.save(entity);
 	}
-
+	public void saveHistoryWeixin(HistoryWeixin entity) {
+		historyWeixinDao.save(entity);
+	}
+	public void saveHistoryUrl(HistoryUrl entity) {
+		historyUrlDao.save(entity);
+	}
+	
+	public Integer selectHistoryUrlByuserIpAndqrcodeId(String userIp,Long qrcodeId) {
+		return historyUrlDao.selectHistoryUrlByuserIpAndqrcodeId(userIp,qrcodeId);
+	}
+	public Integer selectHistoryWeixinBytaskId(Long taskId,String fromUserName) {
+		return historyWeixinDao.selectHistoryWeixinBytaskId(taskId,fromUserName);
+	}
+	
 	public void deleteManageQRcode(Long id) {
 		manageQRcodeDao.delete(id);
 	}

@@ -15,27 +15,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Entity
 @Table(name = "wx_history_url")
 public class HistoryUrl extends IdEntity {
-	private String userId;
-	private String taskId;
+	private Long taskId;
 	private String userIp;
-	private String qrcodeId;
+	private Long qrcodeId;
 	private Date createDate;
 
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getTaskId() {
-		return taskId;
-	}
-
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
-	}
+ 
 
 	public String getUserIp() {
 		return userIp;
@@ -44,12 +29,21 @@ public class HistoryUrl extends IdEntity {
 	public void setUserIp(String userIp) {
 		this.userIp = userIp;
 	}
+ 
 
-	public String getQrcodeId() {
+	public Long getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Long taskId) {
+		this.taskId = taskId;
+	}
+
+	public Long getQrcodeId() {
 		return qrcodeId;
 	}
 
-	public void setQrcodeId(String qrcodeId) {
+	public void setQrcodeId(Long qrcodeId) {
 		this.qrcodeId = qrcodeId;
 	}
 

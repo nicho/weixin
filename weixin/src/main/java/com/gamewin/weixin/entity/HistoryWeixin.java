@@ -22,7 +22,25 @@ public class HistoryWeixin extends IdEntity {
 	private String event;
 	private String eventKey;
 	private String ticket;
+	private Long qrcodeId;
+	private Long taskId; 
 	private Date createDate;
+
+	public Long getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Long taskId) {
+		this.taskId = taskId;
+	}
+
+	public Long getQrcodeId() {
+		return qrcodeId;
+	}
+
+	public void setQrcodeId(Long qrcodeId) {
+		this.qrcodeId = qrcodeId;
+	}
 
 	public HistoryWeixin() {
 	}

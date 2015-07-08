@@ -32,7 +32,9 @@ import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.ManageQRcodeService;
 import com.gamewin.weixin.service.task.ManageTaskService;
 import com.gamewin.weixin.service.task.TaskService;
+import com.gamewin.weixin.util.FinalString;
 import com.gamewin.weixin.util.MobileHttpClient;
+import com.gamewin.weixin.web.util.QRCodeUtil;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 
@@ -142,6 +144,7 @@ public class ManageQRcodeController {
 				newManageQRcode.setTask(manageTask);
 				newManageQRcode.setTitle(manageTask.getTitle()+"-应用APK-"+shiroUser.getName());
 				newManageQRcode.setQrcodeType("WeixinApk");
+				newManageQRcode.setQrUrl(manageTask.getApkUrl());
 				newManageQRcode.setCreateDate(new Date()); 
 				manageQRcodeService.saveManageQRcode(newManageQRcode);
 			}
@@ -159,6 +162,7 @@ public class ManageQRcodeController {
 				newManageQRcode.setTask(manageTask);
 				newManageQRcode.setTitle(manageTask.getTitle()+"-外部跳转-"+shiroUser.getName());
 				newManageQRcode.setQrcodeType("WeixinOther");
+				newManageQRcode.setQrUrl(manageTask.getOtherUrl());
 				newManageQRcode.setCreateDate(new Date()); 
 				manageQRcodeService.saveManageQRcode(newManageQRcode);
 			}
@@ -216,24 +220,34 @@ public class ManageQRcodeController {
 	@RequestMapping(value = "viewManageQRcode/{id}")
 	public String viewManageQRcode(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,Model model,ServletRequest request) {
 		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
-		
+		 
 		if(StringUtils.isEmpty(entity.getImageUrl()))
 		{
-			String imageUrl=entity.getTask().getId()+"-"+entity.getQrcodeType()+"-"+entity.getId()+".jpg";
-			String AccessToken=taskService.getAccessToken();
-			System.out.println(AccessToken);
-			String ticket;
+			String imageUrl = entity.getTask().getId() + "-" + entity.getQrcodeType() + "-" + entity.getId() + ".jpg";
+			String url = request.getServletContext().getRealPath("/") + "\\image\\" + imageUrl;
+			String filePath = request.getServletContext().getRealPath("/") + "\\image\\" ;
 			try {
-				ticket = MobileHttpClient.getJsapi_ticket(AccessToken,entity.getId());
-				System.out.println(ticket);
-				String url=request.getServletContext().getRealPath("/")+"\\image\\"+imageUrl;
-				MobileHttpClient.getticketImage(URLEncoder.encode(ticket,"UTF-8"),url);
-				
+				if ("WeixinGd".equals(entity.getQrcodeType())) {
+					String AccessToken = taskService.getAccessToken(); 
+					String ticket = MobileHttpClient.getJsapi_ticket_WeixinGd(AccessToken, entity.getId());
+					MobileHttpClient.getticketImage(URLEncoder.encode(ticket, "UTF-8"), url);
+
+				} else if ("WeixinLs".equals(entity.getQrcodeType())) {
+					String AccessToken = taskService.getAccessToken(); 
+					String ticket = MobileHttpClient.getJsapi_ticket_WeixinLs(AccessToken, entity.getId());
+					MobileHttpClient.getticketImage(URLEncoder.encode(ticket, "UTF-8"), url);
+				} else if ("WeixinApk".equals(entity.getQrcodeType())) {
+					QRCodeUtil.createEncode(FinalString.YM+"/readurl/redirectUrl?taskid="+entity.getTask().getId()+"&qrcodeId="+entity.getId(), entity.getUser().getName(), filePath, imageUrl);
+				} else if ("WeixinOther".equals(entity.getQrcodeType())) {
+					QRCodeUtil.createEncode(FinalString.YM+"/readurl/redirectUrl?taskid="+entity.getTask().getId()+"&qrcodeId="+entity.getId(), entity.getUser().getName(), filePath, imageUrl);
+				}
 			} catch (Exception e) { 
 				e.printStackTrace();
 			}
+			
 			entity.setImageUrl(imageUrl);
 			manageQRcodeService.saveManageQRcode(entity);
+			
 		} 
 		 
 		model.addAttribute("entity",entity);

@@ -19,15 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.gamewin.weixin.entity.WeiXinUser;
+import com.gamewin.weixin.entity.HistoryWeixin;
+import com.gamewin.weixin.entity.ManageQRcode;
 import com.gamewin.weixin.service.account.AccountService;
-import com.gamewin.weixin.service.weixinUser.WeiXinUserService;
+import com.gamewin.weixin.service.task.ManageQRcodeService;
 import com.gamewin.weixin.util.InputMessage;
 import com.gamewin.weixin.util.OutputMessage;
 import com.gamewin.weixin.util.SHA1;
@@ -41,16 +39,10 @@ public class ApiListController {
 	private String Token = "DU2qERxP";  
 	
 	@Autowired
-	private WeiXinUserService weiXinUserService;
+	private ManageQRcodeService manageQRcodeService;
 	@Autowired
 	private AccountService accountService;
-	
-	@RequestMapping(value="index",method = RequestMethod.GET)
-	public String index(Model model,HttpServletRequest request) { 
-			return "index/index"; 
-	}
-	
-
+	 
 	
  
 	@RequestMapping(method ={ RequestMethod.GET, RequestMethod.POST })
@@ -157,37 +149,33 @@ public class ApiListController {
             System.out.println("消息EventKey：" + inputMsg.getEventKey());   
   
             
-//            if("subscribe".equals(inputMsg.getEvent()))
-//            {
-//
-//            }
-//            else if("SCAN".equals(inputMsg.getEvent()))
-//            {
-//            	
-//            }
-             
-        	WeiXinUser wxUser=new WeiXinUser();
-        	wxUser.setCreateDate(new Date());
-        	wxUser.setToUserName(inputMsg.getToUserName());
-        	wxUser.setFromUserName(inputMsg.getFromUserName());
-        	wxUser.setMsgType(msgType);
-        	wxUser.setEvent(inputMsg.getEvent());
-        	wxUser.setEventKey(inputMsg.getEventKey());
-        	wxUser.setCreateTime(inputMsg.getCreateTime().toString());
-        	weiXinUserService.saveWeiXinUser(wxUser);
+            if("subscribe".equals(inputMsg.getEvent()))
+            {
+            	Long qrCodeId= Long.parseLong(inputMsg.getEventKey().replaceAll("qrscene_", "").trim().toString());
+                HistoryWeixin wxUser=new HistoryWeixin();
+            	wxUser.setCreateDate(new Date());
+            	wxUser.setToUserName(inputMsg.getToUserName());
+            	wxUser.setFromUserName(inputMsg.getFromUserName());
+            	wxUser.setMsgType(msgType);
+            	wxUser.setEvent(inputMsg.getEvent());
+            	wxUser.setEventKey(inputMsg.getEventKey());
+            	wxUser.setCreateTime(inputMsg.getCreateTime().toString());
+            	wxUser.setQrcodeId(qrCodeId);
+            	manageQRcodeService.saveHistoryWeixin(wxUser);
+            	
+            	ManageQRcode manageQRcode=manageQRcodeService.getManageQRcode(qrCodeId);
+            	Integer count=manageQRcodeService.selectHistoryWeixinBytaskId(manageQRcode.getTask().getId(),inputMsg.getFromUserName());
+            	if(count==0)
+            	{ 
+                	manageQRcode.setQrSubscribeCount(manageQRcode.getQrSubscribeCount()+1);
+                	manageQRcodeService.saveManageQRcode(manageQRcode);
+            	}
             
-            
-            
+            } 
             
             
             StringBuffer str = new StringBuffer();  
-            str.append("OK");  
-//            str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>");  
-//            str.append("<FromUserName><![CDATA[" + servername + "]]></FromUserName>");  
-//            str.append("<CreateTime>" + returnTime + "</CreateTime>");  
-//            str.append("<MsgType><![CDATA[" + msgType + "]]></MsgType>");  
-//            str.append("<Content><![CDATA[你说的是：" + inputMsg.getContent() + "，吗？]]></Content>");  
-//            str.append("</xml>");  
+            str.append("OK");   
             System.out.println(str.toString());  
             response.getWriter().write(str.toString());  
         }  
