@@ -15,6 +15,12 @@
 </head>
 
 <body>
+	<div style="margin:20px 0">
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="getValue()">GetValue</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="setValue()">SetValue</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="disable()">Disable</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="enable()">Enable</a>
+	</div>
  		<h2>Multiple ComboTree</h2>
 	<p>Click the right arrow button to show the tree panel and select multiple nodes.</p>
 	<div style="margin:20px 0">
@@ -22,6 +28,20 @@
 		<input type="checkbox" checked onclick="$('#cc').combotree({cascadeCheck:$(this).is(':checked')})">
 	</div>
 	<select id="cc" class="easyui-combotree" data-options="url:'${ctx}/static/easyui/demo/combotree/tree_data1.json',method:'get'" multiple style="width:200px;"></select>
-
+	<script type="text/javascript">
+		function getValue(){
+			var val = $('#cc').combotree('getValues');
+			alert(val);
+		}
+		function setValue(){
+			$('#cc').combotree('setValues', [122,123]);
+		}
+		function disable(){
+			$('#cc').combotree('disable');
+		}
+		function enable(){
+			$('#cc').combotree('enable');
+		}
+	</script>
 </body>
 </html>
