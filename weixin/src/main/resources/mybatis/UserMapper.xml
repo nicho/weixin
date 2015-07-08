@@ -18,9 +18,29 @@
 			<result property="loginName" column="upuser_login_Name" /> 
 		</association>
 	</resultMap>
-
+	
+	
+	<resultMap id="userTreeDetailMap" type="com.gamewin.weixin.entity.UserTree">
+		<id property="id" column="upuser_id" />
+		<result property="text" column="upuser_name" />
+ 
+		<collection property="children" javaType="com.gamewin.weixin.entity.UserTree">
+			<id property="id" column="id" />
+			<result property="text" column="name" /> 
+		</collection>
+	</resultMap>
+	
+	
 	<!-- 获取部门详细信息, 输出用resultMap关联嵌套对象 -->
 	<select id="getUserList" parameterType="long" resultMap="userMap">
 		select u.*,m.id as upuser_user_id,m.login_Name as upuser_login_Name  from wx_user u ,wx_user m where u.upuser_id=m.id and u.isdelete=0
+	</select>
+	
+	<select id="getUserTree"  resultMap="userTreeDetailMap">
+	SELECT u.id,u.name,u.upuser_id,u.name upuser_name  FROM wx_user u WHERE FIND_IN_SET(id, queryChildrenUser(1)) AND u.upuser_id IS NOT NULL
+	</select>
+		
+	<select id="getUserTree2"  resultType="com.gamewin.weixin.entity.UserTree2" parameterType="long">
+		SELECT u.id AS id,u.name AS TEXT,CASE WHEN(SELECT COUNT(*) FROM wx_user WHERE upuser_id=u.id)>0 THEN 'closed' ELSE '' END AS state FROM wx_user u WHERE u.upuser_id=#{id}
 	</select>
 </mapper> 

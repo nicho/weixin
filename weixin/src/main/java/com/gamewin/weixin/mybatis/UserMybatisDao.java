@@ -8,6 +8,8 @@ package com.gamewin.weixin.mybatis;
 import java.util.List;
 
 import com.gamewin.weixin.entity.User;
+import com.gamewin.weixin.entity.UserTree;
+import com.gamewin.weixin.entity.UserTree2;
 
 /**
  * 通过@MapperScannerConfigurer扫描目录中的所有接口, 动态在Spring Context中生成实现.
@@ -19,4 +21,6 @@ import com.gamewin.weixin.entity.User;
 public interface UserMybatisDao {
 
 	List<User> getUserList(Long id);
+	List<UserTree> getUserTree();
+	List<UserTree2> getUserTree2(Long id);
 }

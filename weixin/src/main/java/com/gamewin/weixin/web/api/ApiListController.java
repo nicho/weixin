@@ -22,8 +22,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gamewin.weixin.entity.WeiXinUser;
+import com.gamewin.weixin.service.account.AccountService;
 import com.gamewin.weixin.service.weixinUser.WeiXinUserService;
 import com.gamewin.weixin.util.InputMessage;
 import com.gamewin.weixin.util.OutputMessage;
@@ -39,11 +42,21 @@ public class ApiListController {
 	
 	@Autowired
 	private WeiXinUserService weiXinUserService;
+	@Autowired
+	private AccountService accountService;
 	
 	@RequestMapping(value="index",method = RequestMethod.GET)
 	public String index(Model model,HttpServletRequest request) { 
 			return "index/index"; 
 	}
+	
+	@RequestMapping(value = "findUserTree")
+	@ResponseBody 
+	public String findUserTree(@RequestParam("id") Long id) { 
+		//UserTree
+		return accountService.getUserTree2(id); 
+	}
+	
 	@RequestMapping(method ={ RequestMethod.GET, RequestMethod.POST })
 	public void list(HttpServletRequest request, HttpServletResponse response) {
 		  System.out.println("进入chat");  

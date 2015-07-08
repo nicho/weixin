@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springside.modules.mapper.JsonMapper;
 import org.springside.modules.persistence.DynamicSpecifications;
 import org.springside.modules.persistence.SearchFilter;
 import org.springside.modules.persistence.SearchFilter.Operator;
@@ -29,9 +30,10 @@ import org.springside.modules.utils.Clock;
 import org.springside.modules.utils.Encodes;
 
 import com.gamewin.weixin.entity.User;
+import com.gamewin.weixin.entity.UserTree;
+import com.gamewin.weixin.entity.UserTree2;
 import com.gamewin.weixin.model.UserDto;
 import com.gamewin.weixin.mybatis.UserMybatisDao;
-import com.gamewin.weixin.repository.TaskDao;
 import com.gamewin.weixin.repository.UserDao;
 import com.gamewin.weixin.service.ServiceException;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
@@ -55,8 +57,7 @@ public class AccountService {
 
 	private static Logger logger = LoggerFactory.getLogger(AccountService.class);
 
-	private UserDao userDao;
-	private TaskDao taskDao;
+	private UserDao userDao; 
 	private Clock clock = Clock.DEFAULT;
 
 	public List<User> getAllUser() {
@@ -131,10 +132,7 @@ public class AccountService {
 		this.userDao = userDao;
 	}
 
-	@Autowired
-	public void setTaskDao(TaskDao taskDao) {
-		this.taskDao = taskDao;
-	}
+ 
 
 	public void setClock(Clock clock) {
 		this.clock = clock;
@@ -236,5 +234,20 @@ public class AccountService {
 		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
 		Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
 		return spec;
+	}
+	private static JsonMapper mapper = JsonMapper.nonDefaultMapper();
+	public String getUserTree()
+	{
+		List<UserTree> userTree=userMybatisDao.getUserTree();
+		String listString = mapper.toJson(userTree); 
+		System.out.println(listString);
+		return listString;
+	}
+	public String getUserTree2(Long id)
+	{
+		List<UserTree2> userTree=userMybatisDao.getUserTree2(id);
+		String listString = mapper.toJson(userTree); 
+		System.out.println(listString);
+		return listString;
 	}
 }

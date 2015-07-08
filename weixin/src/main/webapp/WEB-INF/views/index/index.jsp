@@ -27,7 +27,7 @@
 		<span>Cascade Check: </span>
 		<input type="checkbox" checked onclick="$('#cc').combotree({cascadeCheck:$(this).is(':checked')})">
 	</div>
-	<select id="cc" class="easyui-combotree" data-options="url:'${ctx}/static/easyui/demo/combotree/tree_data1.json',method:'get'" multiple style="width:200px;"></select>
+	<select id="cc" class="easyui-combotree"   multiple  style="width:200px;"    ></select>
 	<script type="text/javascript">
 		function getValue(){
 			var val = $('#cc').combotree('getValues');
@@ -42,6 +42,16 @@
 		function enable(){
 			$('#cc').combotree('enable');
 		}
+		$(document).ready(function() {
+			$('#cc').combotree({  
+				url: "${ctx}/api/findUserTree?id=1",  
+				onBeforeExpand: function(node, param) { 
+					$('#cc').combotree("tree").tree("options").url = "${ctx}/api/findUserTree?id="+node.id; 
+				}
+			});
+		});
+
+			 
 	</script>
 </body>
 </html>
