@@ -22,7 +22,7 @@
 	    </div>
 	    <tags:sort/>
 	</div>
-	
+	<div><a class="btn" href="${ctx}/activationCode/create">创建激活码</a></div><br>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead><tr><th>激活码名称</th><th>激活码类型</th><th>激活码</th><th>状态</th><th>创建时间</th><th>激活时间</th><th>激活用户</th><th>管理</th></tr></thead>
 		<tbody>
@@ -52,6 +52,6 @@
 	
 	<tags:pagination page="${activationCodes}" paginationSize="5"/>
 
-	<div><a class="btn" href="${ctx}/activationCode/create">创建激活码</a></div>
+	
 </body>
 </html>

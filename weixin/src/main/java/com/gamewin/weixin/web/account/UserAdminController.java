@@ -77,8 +77,12 @@ public class UserAdminController {
 			ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
 		ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
-	 
-		Page<User> users = accountService.getUserByAuditUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
+		Page<User> users =null;
+		if ("admin".equals(user.getRoles())) {
+			users = accountService.getUserByAuditUserAdminlist(user.id, searchParams, pageNumber, pageSize, sortType);
+		} else {
+			users = accountService.getUserByAuditUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
+		}
 
 		model.addAttribute("users", users);
 		model.addAttribute("sortType", sortType);
@@ -160,7 +164,7 @@ public class UserAdminController {
 	public String auditPass(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		User user = accountService.getUser(id);
 		ShiroUser nowuser = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
-		if(user.getUpuser().getLoginName().equals(nowuser.getLoginName()))
+		if("admin".equals(nowuser.getRoles()) || user.getUpuser().getLoginName().equals(nowuser.getLoginName()))
 		{
 			user.setStatus("enabled");
 			accountService.updateUser(user);

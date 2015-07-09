@@ -14,14 +14,14 @@ request.setAttribute("begin", begin);
 request.setAttribute("end", end);
 %>
 
-<div class="pagination">
+<div class="pagination" style=" float:right;">
 	<ul>
 		 <% if (page.hasPreviousPage()){%>
-               	<li><a href="?page=1&sortType=${sortType}&${searchParams}">&lt;&lt;</a></li>
-                <li><a href="?page=${current-1}&sortType=${sortType}&${searchParams}">&lt;</a></li>
+               	<li><a href="?page=1&sortType=${sortType}&${searchParams}">首页</a></li>
+                <li><a href="?page=${current-1}&sortType=${sortType}&${searchParams}">上一页</a></li>
          <%}else{%>
-                <li class="disabled"><a href="#">&lt;&lt;</a></li>
-                <li class="disabled"><a href="#">&lt;</a></li>
+                <li class="disabled"><a href="#">首页</a></li>
+                <li class="disabled"><a href="#">上一页</a></li>
          <%} %>
  
 		<c:forEach var="i" begin="${begin}" end="${end}">
@@ -36,11 +36,11 @@ request.setAttribute("end", end);
         </c:forEach>
 	  
 	  	 <% if (page.hasNextPage()){%>
-               	<li><a href="?page=${current+1}&sortType=${sortType}&${searchParams}">&gt;</a></li>
-                <li><a href="?page=${page.totalPages}&sortType=${sortType}&${searchParams}">&gt;&gt;</a></li>
+               	<li><a href="?page=${current+1}&sortType=${sortType}&${searchParams}">下一页</a></li>
+                <li><a href="?page=${page.totalPages}&sortType=${sortType}&${searchParams}">末页</a></li>
          <%}else{%>
-                <li class="disabled"><a href="#">&gt;</a></li>
-                <li class="disabled"><a href="#">&gt;&gt;</a></li>
+                <li class="disabled"><a href="#">下一页</a></li>
+                <li class="disabled"><a href="#">末页</a></li>
          <%} %>
 
 	</ul>

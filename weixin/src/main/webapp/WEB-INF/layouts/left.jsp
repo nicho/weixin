@@ -6,12 +6,13 @@
 	<h1>任务管理</h1>
 	<div class="submenu"> 
 		<a id="myTask" href="${ctx}/manageTask/myTask">我的任务</a> 
-		<shiro:hasRole name="user">
+		<shiro:hasRole name="admin">
 		<a id="ManageTaskController" href="${ctx}/manageTask">管理任务</a>  
 		</shiro:hasRole>
 	</div>
 	<h1>系统管理</h1>
 	<div class="submenu">
+	
 		<shiro:hasAnyRoles name="admin,TwoAdmin,ThreeAdmin">
 			<a id="account-tab"href="${ctx}/admin/user">帐号管理</a>
 		</shiro:hasAnyRoles>
@@ -27,7 +28,9 @@
 		<shiro:hasAnyRoles name="admin,TwoAdmin,ThreeAdmin">
 			<a id="account-tab"href="${ctx}/activationCode">激活码管理</a> 
 		</shiro:hasAnyRoles>
+			<a id="account-tab"href="${ctx}/profile">资料修改</a>
 	</div>
+	
 
  
 </div>

@@ -17,6 +17,7 @@
 	<form id="inputForm" action="${ctx}/manageTask/${action}" method="post" class="form-horizontal">
 		<input type="hidden" name="id" value="${task.id}"/>
 		<input type="hidden" id="viewrangeUsers" name="viewrangeUsers" value=""/>
+		<input type="hidden" id="userIdArray" name="userIdArray" value="${userIdArray}"/> 
 		<fieldset>
 			<legend><small>管理任务</small></legend>
 			<div class="control-group">
@@ -135,10 +136,7 @@
 			{
 				$("#selectDiv").attr("style","");
 			}
-			if('${userIdArray}'!=null && '${userIdArray}'!='')
-			{
-				$('#cc').combotree('setValues', '${userIdArray}');
-			}
+	
 			
 			$('#cc').combotree({  
 				url: "${ctx}/admin/user/findUserTree?id=1",  
@@ -147,6 +145,10 @@
 				}
 			});
 			
+			if($("#userIdArray").val()!=null && $("#userIdArray").val()!='')
+			{ 
+				$('#cc').combotree('setValues', eval($("#userIdArray").val()));
+			}
 			//聚焦第一个输入框
 			$("#task_title").focus();
 			//为inputForm注册validate函数

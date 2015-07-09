@@ -164,6 +164,7 @@ public class AccountService {
 				User user = userList.get(i);
 				UserDto dto = new UserDto();
 				dto.setId(user.getId() + "");
+				dto.setUserName(user.getLoginName());
 				dto.setManageAddress(user.getManageAddress());
 				userdto.add(dto);
 			}
@@ -198,7 +199,15 @@ public class AccountService {
 
 		return userDao.findAll(spec, pageRequest);
 	}
+	public Page<User> getUserByAuditUserAdminlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) {
+		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams); 
+		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
+		filters.put("status", new SearchFilter("status", Operator.EQ, "Audit"));
+		Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
 
+		return userDao.findAll(spec, pageRequest);
+	}
 	/**
 	 * 创建分页请求.
 	 */
@@ -217,15 +226,13 @@ public class AccountService {
 
 	public String getUserTree() {
 		List<UserTree> userTree = userMybatisDao.getUserTree();
-		String listString = mapper.toJson(userTree);
-		System.out.println(listString);
+		String listString = mapper.toJson(userTree); 
 		return listString;
 	}
 
 	public String getUserTree2(Long id) {
 		List<UserTree2> userTree = userMybatisDao.getUserTree2(id);
-		String listString = mapper.toJson(userTree);
-		System.out.println(listString);
+		String listString = mapper.toJson(userTree); 
 		return listString;
 	}
 }

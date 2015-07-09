@@ -31,9 +31,15 @@
 					<select name="upuserId">
 						<option value="">请选择</option>
 						 <c:forEach var="list" items="${userdto}" varStatus="name">
-							<option value="${list.id}" <c:if test="${list.id eq user.upuser.id}"> selected</c:if>>${list.manageAddress}</option>
+							<option value="${list.id}" <c:if test="${list.id eq user.upuser.id}"> selected</c:if>>${list.userName}</option>
 						</c:forEach>
 					</select>
+				</div>
+			</div>
+		    <div class="control-group">
+				<label class="control-label">地区:</label>
+				<div class="controls">
+					<input type="text" id="manageAddress" name="manageAddress" value="${user.manageAddress}" class="input-large"/>
 				</div>
 			</div>
 			<div class="control-group">

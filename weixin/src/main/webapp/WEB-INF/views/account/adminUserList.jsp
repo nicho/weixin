@@ -19,13 +19,15 @@
 	<div class="row">
 		<div class="span4 offset7">
 			<form class="form-search" action="#">
-				<label>用户名</label> <input type="text" name="search_LIKE_name"
-					class="input-medium" value="${param.search_LIKE_title}"> 
-				<button type="submit" class="btn" id="search_btn">查询</button>
 			</form>
 		</div>
-		<tags:sort />
+		
 	</div>
+		<div>
+		<shiro:hasAnyRoles name="admin">
+			<a class="btn" href="${ctx}/admin/cteateUser">创建用户</a>
+		</shiro:hasAnyRoles>
+	</div><br>
 	<table id="contentTable"
 		class="table table-striped table-bordered table-condensed">
 		<thead>
@@ -33,9 +35,11 @@
 				<th>登录名</th>
 				<th>用户名</th>
 				<th>注册时间</th>
+				<th>角色</th>
+				<th>地区</th>
 				<th>状态</th>
 				<th>上级分销商</th>
-				<shiro:hasAnyRoles name="admin,TwoAdmin">
+				<shiro:hasAnyRoles name="admin">
 				<th>管理</th>
 				</shiro:hasAnyRoles>
 			</tr>
@@ -43,29 +47,36 @@
 		<tbody>
 			<c:forEach items="${usersx}" var="user">
 				<tr>
-					<td><a href="${ctx}/admin/user/update/${user.id}">${user.loginName}</a></td>
+					<td> ${user.loginName} </td>
 					<td>${user.name}</td>
 					<td><fmt:formatDate value="${user.registerDate}"
 							pattern="yyyy-MM-dd  HH:mm:ss" /></td>
+					<td>
+					<c:choose>
+						<c:when test="${user.roles eq 'admin'}">管理员</c:when>
+						<c:when test="${user.roles eq 'TwoAdmin'}">二级分销商</c:when>
+						<c:when test="${user.roles eq 'ThreeAdmin'}">三级分销商</c:when>
+						<c:otherwise>用户</c:otherwise>
+					</c:choose> 
+					</td>
+					<td>${user.manageAddress}</td>
 					<td>${allStatus[user.status]}&nbsp;</td>
 					<td>${user.upuser.loginName}</td>
-					<td>
+					
 					<shiro:hasAnyRoles name="admin">
-						<a href="${ctx}/admin/user/update/${user.id}">修改</a>&nbsp;
-						<a href="#" onclick="confirmDisabled('${ctx}/admin/user/disabled/${user.id}')">失效</a>&nbsp;
-						<a href="#" onclick="confirmDelete('${ctx}/admin/user/delete/${user.id}')">删除</a>&nbsp;
+						<td>
+							<a href="${ctx}/admin/user/update/${user.id}">修改</a>&nbsp;
+							<a href="#" onclick="confirmDisabled('${ctx}/admin/user/disabled/${user.id}')">失效</a>&nbsp;
+							<a href="#" onclick="confirmDelete('${ctx}/admin/user/delete/${user.id}')">删除</a>&nbsp;
+						</td>
 					</shiro:hasAnyRoles>
-					</td>
+					
 
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
 	<tags:paginationMybatis  />
-	<div>
-		<shiro:hasAnyRoles name="admin">
-			<a class="btn" href="${ctx}/admin/cteateUser">创建用户</a>
-		</shiro:hasAnyRoles>
-	</div>
+
 </body>
 </html>

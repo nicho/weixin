@@ -4,7 +4,7 @@
 
 
 /***************分页样式******************/
-.fenye{ float:left; margin-top:10px;}
+.fenye{ float:right; margin-top:10px;}
 .fenye ul{ float:left; margin-left:32px; }
 .fenye ul li{ float:left; margin-left:5px;padding: 4px 6px; border:1px solid #ccc;font-weight:bold; cursor:pointer; color:#999;}
 .fenye ul li a{ color:#999;}
@@ -16,13 +16,19 @@
 
 
 
- 
- <div class="wrap"  >
+ <div  >
+ <div  >
 <!--分页开始--->
     <div class="fenye">
     	<ul>
         	<li id="first" ><a href="?page=1&sortType=${sortType}&${searchParams}">首页</a></li>
-            <li id="top" onClick="topclick()"><a href="?page=${page.prePage}&sortType=${sortType}&${searchParams}">上一页</a></li>
+            <li id="top" onClick="topclick()">
+            <c:choose>
+            	<c:when test="${page.prePage>0}"><a href="?page=${page.prePage}&sortType=${sortType}&${searchParams}">上一页</a></c:when>
+            	<c:otherwise><a href="#">上一页</a></c:otherwise>
+            </c:choose>
+            
+            </li>
             <li class="xifenye" id="xifenye">
             	<a id="xiye">${page.pageNum}</a>/<a id="mo">${page.pages}</a>
                 <div class="xab" id="xab" style="display:none">
@@ -30,11 +36,16 @@
                     </ul>
                 </div>
             </li>
-            <li id="down"  ><a href="?page=${page.nextPage}&sortType=${sortType}&${searchParams}">下一页</a></li>
+            <li id="down"  > 
+             <c:choose>
+            	<c:when test="${page.nextPage>0}"><a href="?page=${page.nextPage}&sortType=${sortType}&${searchParams}">下一页</a></c:when>
+            	<c:otherwise><a href="#">下一页</a></c:otherwise>
+            </c:choose>
+            </li>
             <li id="last"><a href="?page=${page.pages}&sortType=${sortType}&${searchParams}">末页</a></li>
         </ul>    
     </div>
 <!--分页结束--->	
 </div>
- 
+ </div>
  

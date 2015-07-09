@@ -26,6 +26,11 @@
 </head>
  
   <body>
+  <div id="header" class="row">
+	<div style="text-align:center"><h1><a href="${ctx}">《宝箱》微信公众号推广系统</a><small>--二维码</small></div>
+	 
+</div>
+ 
    <form id="loginForm" action="${ctx}/login" method="post" class="form-horizontal">
     <div class="container"> 
 		<%
@@ -55,6 +60,9 @@
 							<li class="active">
 								<a href="#panel-549981" data-toggle="tab">帐号登录</a>
 							</li>
+						     <li >
+								<a href="${ctx}/register" data-toggle="tab">注册</a>
+							</li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane" id="panel-60560">
@@ -66,7 +74,7 @@
 									<input type="password" name="password" placeholder="密码"  class="input-medium required"/><br>
 								</DIV>
 								 <DIV class="span6"><br><label><input type="checkbox" id="rememberMe" name="rememberMe"  />下次自动登录</label></DIV><br>
-									<DIV class="span1"><input type="submit" value=" 登录 " class="btn btn-primary"></DIV> <a style="margin-left: 30px;" class="btn" href="${ctx}/register">注册</a>
+									<DIV class="span1"><input type="submit" value=" 登录 " class="btn btn-primary"></DIV>  
 									
 							</div>
 						</div>

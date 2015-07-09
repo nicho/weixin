@@ -81,7 +81,7 @@
 					<select name="upuserId">
 						<option value="">请选择</option>
 						 <c:forEach var="list" items="${userdto}" varStatus="name">
-							<option value="${list.id}" >${list.manageAddress}</option>
+							<option value="${list.id}" >${list.userName}</option>
 						</c:forEach>
 					</select>
 				</div>

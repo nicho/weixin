@@ -47,7 +47,7 @@
                               WHERE FIND_IN_SET(u.id, queryUpUser(#{userId}))
                                 AND u.upuser_id IS NOT NULL))))
 
-
+order by t.create_Date desc
 	</select>
 	
 	
@@ -75,5 +75,6 @@
 	         WHERE k.task_id = t.id) finishTaskAdminCount 
 	  FROM wx_manage_task t
 	 WHERE t.isdelete = 0  
+	 order by t.create_Date desc
 	</select>
 </mapper> 

@@ -31,6 +31,7 @@
 			<tr>
 				<th>登录名</th>
 				<th>用户名</th>
+				<th>上级分销商</th>
 				<th>申请时间</th>
 				<th>状态</th>
 				<th>管理</th>
@@ -41,6 +42,7 @@
 				<tr>
 					<td> ${user.loginName} </td>
 					<td>${user.name}</td>
+					<td>${user.upuser.loginName}</td>
 					<td><fmt:formatDate value="${user.registerDate}"
 							pattern="yyyy-MM-dd  HH:mm:ss" /></td>
 					<td>${allStatus[user.status]}&nbsp;</td>

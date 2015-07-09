@@ -2,7 +2,15 @@ package com.gamewin.weixin.model;
 
 public class UserDto {
 	String id;
+	String userName;
 	String manageAddress;
+	
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	public String getId() {
 		return id;
 	}

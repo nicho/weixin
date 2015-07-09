@@ -16,11 +16,11 @@
 	<div class="row">
 		<div class="span4 offset7">
 			<form class="form-search" action="#">
-				<label>名称</label> <input type="text" name="search_LIKE_title" class="input-medium" value="${param.search_LIKE_title}"> 
-				<button type="submit" class="btn" id="search_btn">查询</button>
+				 
+				 
 		    </form>
 	    </div>
-	    <tags:sort/>
+	   
 	</div>
 	<div><a class="btn" href="${ctx}/manageTask/create">创建任务</a></div> <br>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
@@ -53,7 +53,7 @@
 				<td>${task.finishTaskAdminCount}</td>
 				<td><a href="${ctx}/manageQRcode/showTaskQRcode/${task.id}">二维码管理</a> &nbsp;
 				<c:if test="${task.state eq 'Y'}"><a href="#" onclick ="confirmDisabled('${ctx}/manageTask/disabled/${task.id}')">失效</a> &nbsp;
-				<a href="#" onclick ="confirmDisabled('${ctx}/manageTask/update/${task.id}')">任务变更</a> &nbsp;
+				<a href="${ctx}/manageTask/update/${task.id}"  >任务变更</a> &nbsp;
 				</c:if>
 				<a href="#" onclick="confirmDelete('${ctx}/manageTask/delete/${task.id}')">删除</a></td>
 			</tr>

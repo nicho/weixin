@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title>《离恨天》微信公众号推广系统:<sitemesh:title/></title>
+<title>《宝箱》微信公众号推广系统:<sitemesh:title/></title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="Cache-Control" content="no-store" />
 <meta http-equiv="Pragma" content="no-cache" />

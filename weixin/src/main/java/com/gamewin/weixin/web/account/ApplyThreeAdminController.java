@@ -68,9 +68,14 @@ public class ApplyThreeAdminController {
 			ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
 		Long userId = getCurrentUserId();
-
-		Page<ApplyThreeAdmin> applyThreeAdmins = applyThreeAdminService.getUserApplyThreeAdminAudit(userId, searchParams, pageNumber, pageSize,
-				sortType);
+		ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+		Page<ApplyThreeAdmin> applyThreeAdmins =null;
+		if ("admin".equals(user.getRoles())) {
+			applyThreeAdmins = applyThreeAdminService.getUserApplyThreeAdminAuditAdmin(userId, searchParams, pageNumber, pageSize,sortType);
+		} else {
+			applyThreeAdmins = applyThreeAdminService.getUserApplyThreeAdminAudit(userId, searchParams, pageNumber, pageSize,sortType);
+		}
+		 
 
 		model.addAttribute("applyThreeAdmins", applyThreeAdmins);
 		model.addAttribute("sortType", sortType);

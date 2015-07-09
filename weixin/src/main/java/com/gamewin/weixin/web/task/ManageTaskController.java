@@ -156,13 +156,15 @@ public class ManageTaskController {
 		if(!"ALL".equals(task.getViewrangeType()))
 		{
 			List<Long> userIdList=new ArrayList<Long>();
+			String userIdListStr="";
 			List<ViewRange> userList=manageTaskService.getViewRangeUserByTask(id);
 			if(userList!=null && userList.size()>0)
 			{
 				for (int i = 0; i < userList.size(); i++) {
 					userIdList.add(userList.get(i).getUser().getId());
+					userIdListStr+=userList.get(i).getUser().getId()+",";
 				}
-				model.addAttribute("userIdArray",userIdList.toArray());
+				model.addAttribute("userIdArray","["+userIdListStr.substring(0,userIdListStr.length()-1)+"]");
 			}
 		}
 		
@@ -177,6 +179,10 @@ public class ManageTaskController {
 		//判断人员变更
 		
 		try {
+			User user = new User(getCurrentUserId());
+			manageTask.setUser(user);
+			manageTask.setIsdelete(0);
+			manageTask.setState("Y");
 			manageTask.setCreateDate(DateUtils.parseDate(createDateStr, "yyyy-MM-dd"));
 			manageTask.setEndDate(DateUtils.parseDate(endDateStr, "yyyy-MM-dd"));
 			manageTaskService.saveManageTask(manageTask);

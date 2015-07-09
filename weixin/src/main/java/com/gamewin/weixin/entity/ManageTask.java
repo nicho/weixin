@@ -38,18 +38,19 @@ public class ManageTask extends IdEntity {
 	private String otherUrl;
 	private String state;
 	
-	@Transient
+	
 	private Integer finishTaskCount; 
 	
-	@Transient
+	 
 	private Integer finishTaskAdminCount; 
 	
-	@Transient
+	 
 	private Integer finishTaskMyCount;
 	
-	@Transient
+	 
 	private Integer finishTaskMyChildrenCount;
 	
+	@Transient
 	public Integer getFinishTaskMyChildrenCount() {
 		return finishTaskMyChildrenCount;
 	}
@@ -57,15 +58,15 @@ public class ManageTask extends IdEntity {
 	public void setFinishTaskMyChildrenCount(Integer finishTaskMyChildrenCount) {
 		this.finishTaskMyChildrenCount = finishTaskMyChildrenCount;
 	}
-
+	@Transient
 	public Integer getFinishTaskCount() {
 		return finishTaskCount;
 	}
-
+	
 	public void setFinishTaskCount(Integer finishTaskCount) {
 		this.finishTaskCount = finishTaskCount;
 	}
-
+	@Transient
 	public Integer getFinishTaskAdminCount() {
 		return finishTaskAdminCount;
 	}
@@ -216,7 +217,7 @@ public class ManageTask extends IdEntity {
 	}
 
 
-	 
+	@Transient
 	public Integer getFinishTaskMyCount() {
 		return finishTaskMyCount;
 	}
