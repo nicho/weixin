@@ -19,8 +19,9 @@ import com.gamewin.weixin.entity.UserTree2;
  */
 @MyBatisRepository
 public interface UserMybatisDao {
-
-	List<User> getUserList(Long id);
+ 
+	List<User> getUserByUpUserlist(Long id);
+	List<User> getUserAllUserlist();
 	List<UserTree> getUserTree();
 	List<UserTree2> getUserTree2(Long id);
 }

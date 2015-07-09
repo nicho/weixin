@@ -170,7 +170,7 @@ public class ManageTaskController {
 		}
 		return "redirect:/manageTask/";
 	}
-
+	@RequiresRoles("admin")
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		ManageTask entity = manageTaskService.getManageTask(id);
@@ -180,6 +180,7 @@ public class ManageTaskController {
 		redirectAttributes.addFlashAttribute("message", "删除任务成功");
 		return "redirect:/manageTask/";
 	}
+	@RequiresRoles("admin")
 	@RequestMapping(value = "disabled/{id}")
 	public String disabled(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		ManageTask entity = manageTaskService.getManageTask(id);
@@ -190,18 +191,7 @@ public class ManageTaskController {
 		redirectAttributes.addFlashAttribute("message", "失效任务成功,当前任务下所有二维码均已失效");
 		return "redirect:/manageTask/";
 	}
-	/**
-	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2
-	 * Preparable二次部分绑定的效果,先根据form的id从数据库查出ManageTask对象,再把Form提交的内容绑定到该对象上。
-	 * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.
-	 */
-	@ModelAttribute
-	public void getManageTask(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
-		if (id != -1) {
-			model.addAttribute("manageTask", manageTaskService.getManageTask(id));
-		}
-	}
-
+ 
 	/**
 	 * 取出Shiro中的当前用户Id.
 	 */

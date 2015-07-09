@@ -30,11 +30,22 @@
 		</collection>
 	</resultMap>
 	
-	
-	<!-- 获取部门详细信息, 输出用resultMap关联嵌套对象 -->
-	<select id="getUserList" parameterType="long" resultMap="userMap">
+	<select id="getUserAllUserlist" parameterType="long" resultMap="userMap">
 		select u.*,m.id as upuser_user_id,m.login_Name as upuser_login_Name  from wx_user u ,wx_user m where u.upuser_id=m.id and u.isdelete=0
 	</select>
+	
+	  
+	<select id="getUserByUpUserlist" parameterType="long" resultMap="userMap">
+			select u.*, m.id as upuser_user_id, m.login_Name as upuser_login_Name
+			  from wx_user u, wx_user m
+			 where u.upuser_id = m.id
+			   and u.isdelete = 0
+			   and u.id in (SELECT u.id
+			                  FROM wx_user u
+			                 WHERE FIND_IN_SET(u.id, queryChildrenUser(#{id}))
+			                   AND u.upuser_id IS NOT NULL) 
+	</select>
+	
 	
 	<select id="getUserTree"  resultMap="userTreeDetailMap">
 	SELECT u.id,u.name,u.upuser_id,u.name upuser_name  FROM wx_user u WHERE FIND_IN_SET(id, queryChildrenUser(1)) AND u.upuser_id IS NOT NULL

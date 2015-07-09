@@ -25,6 +25,17 @@
 					<input type="text" id="name" name="name" value="${user.name}" class="input-large required"/>
 				</div>
 			</div>
+		    <div class="control-group">
+				<label for="plainPassword" class="control-label">上级分销商:</label>
+				<div class="controls"> 
+					<select name="upuserId">
+						<option value="">请选择</option>
+						 <c:forEach var="list" items="${userdto}" varStatus="name">
+							<option value="${list.id}" <c:if test="${list.id eq user.upuser.id}"> selected</c:if>>${list.manageAddress}</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
 			<div class="control-group">
 				<label for="plainPassword" class="control-label">密码:</label>
 				<div class="controls">

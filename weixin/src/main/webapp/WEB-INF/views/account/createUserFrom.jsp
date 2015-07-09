@@ -43,7 +43,7 @@
 					<input type="text" id="name" name="name" class="input-large required"/>
 				</div>
 			</div>
-	 	<div class="control-group">
+	 		<div class="control-group">
 				<label for="name" class="control-label">角色:</label>
 				<div class="controls">
 					<select name="roles"> 

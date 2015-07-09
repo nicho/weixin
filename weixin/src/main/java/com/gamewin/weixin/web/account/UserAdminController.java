@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springside.modules.web.Servlets;
 
 import com.gamewin.weixin.entity.User;
+import com.gamewin.weixin.model.UserDto;
 import com.gamewin.weixin.service.account.AccountService;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.github.pagehelper.PageInfo;
@@ -97,21 +99,17 @@ public class UserAdminController {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
 		ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
 		String usertype=user.getRoles();
-		Page<User> users =null;
-		if("admin".equals(usertype))
-		{
-			users = accountService.getUser(usertype, searchParams, pageNumber, pageSize, sortType);
-		} else if ("TwoAdmin".equals(usertype)) {
-		  	 List<User> usersx = accountService.getUserByUpTwoAdminUserlist(user.id,searchParams, pageNumber, pageSize, sortType);
-		  	 PageInfo<User> page = new PageInfo<User>(usersx);
-		  	model.addAttribute("page", page);
-		  	model.addAttribute("usersx", usersx);
-			//users = accountService.getUserByUpTwoAdminUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
-		} else if ("ThreeAdmin".equals(usertype)) {
+	  	List<User> users =null;
+		if ("admin".equals(usertype)) {
+			users = accountService.getUserAllUserlist(searchParams, pageNumber, pageSize, sortType);
+		}else if ("TwoAdmin".equals(usertype) || "ThreeAdmin".equals(usertype)) {
 			users = accountService.getUserByUpUserlist(user.id, searchParams, pageNumber, pageSize, sortType);
 		}
-		
-		model.addAttribute("users", users);
+		 
+		PageInfo<User> page = new PageInfo<User>(users);
+	  	model.addAttribute("page", page);
+	  	model.addAttribute("usersx", users);
+		 
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);
 		model.addAttribute("allStatus", allStatus);
@@ -121,20 +119,33 @@ public class UserAdminController {
 		return "account/adminUserList";
 	}
 	
- 
+	@RequiresRoles("admin")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	public String updateForm(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("user", accountService.getUser(id));
+		List<UserDto> userdto=accountService.getUserByUpAdminUserlist();
+		model.addAttribute("userdto", userdto);
 		return "account/adminUserForm";
 	}
-
+	
+	@RequiresRoles("admin")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
-	public String update(@Valid @ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+	public String update(@Valid @ModelAttribute("user") User user, RedirectAttributes redirectAttributes,ServletRequest request) {
+		String upuserId =request.getParameter("upuserId");
+		if(!StringUtils.isEmpty(upuserId))
+		{
+			User upuser=  accountService.getUser(Long.parseLong(upuserId));
+			if(upuser!=null && ("TwoAdmin".equals(upuser.getRoles()) || "ThreeAdmin".equals(upuser.getRoles())))
+			{
+				user.setUpuser(upuser);
+			}
+		} 
 		accountService.updateUser(user);
 		redirectAttributes.addFlashAttribute("message", "更新用户" + user.getLoginName() + "成功");
 		return "redirect:/admin/user";
 	}
 	
+	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "disabled/{id}")
 	public String disabled(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		User user = accountService.getUser(id);
@@ -144,6 +155,7 @@ public class UserAdminController {
 		return "redirect:/admin/user";
 	}
 	
+	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "auditPass/{id}")
 	public String auditPass(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		User user = accountService.getUser(id);
@@ -162,7 +174,7 @@ public class UserAdminController {
 		}
 
 	}
- 
+	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		User user = accountService.getUser(id);

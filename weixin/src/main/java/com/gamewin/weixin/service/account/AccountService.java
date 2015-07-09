@@ -57,7 +57,7 @@ public class AccountService {
 
 	private static Logger logger = LoggerFactory.getLogger(AccountService.class);
 
-	private UserDao userDao; 
+	private UserDao userDao;
 	private Clock clock = Clock.DEFAULT;
 
 	public List<User> getAllUser() {
@@ -79,12 +79,14 @@ public class AccountService {
 
 		userDao.save(user);
 	}
+
 	public void createUser(User user) {
-		entryptPassword(user); 
+		entryptPassword(user);
 		user.setRegisterDate(clock.getCurrentDate());
 
 		userDao.save(user);
 	}
+
 	public void updateUser(User user) {
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			entryptPassword(user);
@@ -132,85 +134,71 @@ public class AccountService {
 		this.userDao = userDao;
 	}
 
- 
-
 	public void setClock(Clock clock) {
 		this.clock = clock;
 	}
-	
-	public Page<User> getUser(String usertype, Map<String, Object> searchParams, int pageNumber, int pageSize,
-			String sortType) {
-		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
-		Specification<User> spec = buildSpecification(usertype, searchParams);
 
-		return userDao.findAll(spec, pageRequest);
+	public List<User> getUserAllUserlist(Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) {
+		PageHelper.startPage(pageNumber, pageSize);
+		List<User> userList = userMybatisDao.getUserAllUserlist();
+		return userList;
 	}
-	public Page<User> getUserByUpUserlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
-			String sortType) {
-		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-	   	filters.put("upuser.id", new SearchFilter("upuser.id", Operator.EQ, userId));
-		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0")); 
-		Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
-		return userDao.findAll(spec, pageRequest);
+
+	public List<User> getUserByUpUserlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) {
+		PageHelper.startPage(pageNumber, pageSize);
+		List<User> userList = userMybatisDao.getUserByUpUserlist(userId);
+		return userList;
 	}
+
 	/**
 	 * 获取二级,三级用户列表
+	 * 
 	 * @param userId
 	 * @return
 	 */
-	public List<UserDto> getUserByUpAdminUserlist() { 
-		List<UserDto> userdto=new ArrayList<UserDto>();
-		List<User>  userList=userDao.findByUpAdmin();
-		  if(userList!=null && userList.size()>0)
-		  {
-			  for (int i = 0; i < userList.size(); i++) {
-				  User user=userList.get(i);
-				  UserDto dto=new UserDto();
-				  dto.setId(user.getId()+"");
-				  dto.setManageAddress(user.getManageAddress());
-				  userdto.add(dto);
+	public List<UserDto> getUserByUpAdminUserlist() {
+		List<UserDto> userdto = new ArrayList<UserDto>();
+		List<User> userList = userDao.findByUpAdmin();
+		if (userList != null && userList.size() > 0) {
+			for (int i = 0; i < userList.size(); i++) {
+				User user = userList.get(i);
+				UserDto dto = new UserDto();
+				dto.setId(user.getId() + "");
+				dto.setManageAddress(user.getManageAddress());
+				userdto.add(dto);
 			}
-			
-		  }
+
+		}
 		return userdto;
 	}
-	
-	public List<UserDto> getUserByTwoUpAdminUserlist() { 
-		List<UserDto> userdto=new ArrayList<UserDto>();
-		List<User>  userList=userDao.findByTwoAdmin();
-		  if(userList!=null && userList.size()>0)
-		  {
-			  for (int i = 0; i < userList.size(); i++) {
-				  User user=userList.get(i);
-				  UserDto dto=new UserDto();
-				  dto.setId(user.getId()+"");
-				  dto.setManageAddress(user.getManageAddress());
-				  userdto.add(dto);
+
+	public List<UserDto> getUserByTwoUpAdminUserlist() {
+		List<UserDto> userdto = new ArrayList<UserDto>();
+		List<User> userList = userDao.findByTwoAdmin();
+		if (userList != null && userList.size() > 0) {
+			for (int i = 0; i < userList.size(); i++) {
+				User user = userList.get(i);
+				UserDto dto = new UserDto();
+				dto.setId(user.getId() + "");
+				dto.setManageAddress(user.getManageAddress());
+				userdto.add(dto);
 			}
-			
-		  }
+
+		}
 		return userdto;
 	}
-	public List<User> getUserByUpTwoAdminUserlist(Long userId,Map<String, Object> searchParams, int pageNumber, int pageSize,
-			String sortType) { 
-		PageHelper.startPage(pageNumber, pageSize);
-		List<User> userList=userMybatisDao.getUserList(userId); 
-		return userList;
-	}
-	public Page<User> getUserByAuditUserlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
-			String sortType) {
+ 
+	public Page<User> getUserByAuditUserlist(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) {
 		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-	   	filters.put("upuser.id", new SearchFilter("upuser.id", Operator.EQ, userId));
+		filters.put("upuser.id", new SearchFilter("upuser.id", Operator.EQ, userId));
 		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
-		filters.put("status", new SearchFilter("status", Operator.EQ, "Audit")); 
+		filters.put("status", new SearchFilter("status", Operator.EQ, "Audit"));
 		Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
- 
+
 		return userDao.findAll(spec, pageRequest);
 	}
-	 
-	 
+
 	/**
 	 * 创建分页请求.
 	 */
@@ -225,28 +213,18 @@ public class AccountService {
 		return new PageRequest(pageNumber - 1, pagzSize, sort);
 	}
 
-	/**
-	 * 创建动态查询条件组合.
-	 */
-	private Specification<User> buildSpecification(String usertype, Map<String, Object> searchParams) {
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-	//	filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
-		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
-		Specification<User> spec = DynamicSpecifications.bySearchFilter(filters.values(), User.class);
-		return spec;
-	}
 	private static JsonMapper mapper = JsonMapper.nonDefaultMapper();
-	public String getUserTree()
-	{
-		List<UserTree> userTree=userMybatisDao.getUserTree();
-		String listString = mapper.toJson(userTree); 
+
+	public String getUserTree() {
+		List<UserTree> userTree = userMybatisDao.getUserTree();
+		String listString = mapper.toJson(userTree);
 		System.out.println(listString);
 		return listString;
 	}
-	public String getUserTree2(Long id)
-	{
-		List<UserTree2> userTree=userMybatisDao.getUserTree2(id);
-		String listString = mapper.toJson(userTree); 
+
+	public String getUserTree2(Long id) {
+		List<UserTree2> userTree = userMybatisDao.getUserTree2(id);
+		String listString = mapper.toJson(userTree);
 		System.out.println(listString);
 		return listString;
 	}

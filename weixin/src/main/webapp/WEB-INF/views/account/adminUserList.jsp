@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 <html>
@@ -34,7 +35,9 @@
 				<th>注册时间</th>
 				<th>状态</th>
 				<th>上级分销商</th>
+				<shiro:hasAnyRoles name="admin,TwoAdmin">
 				<th>管理</th>
+				</shiro:hasAnyRoles>
 			</tr>
 		</thead>
 		<tbody>
@@ -46,10 +49,13 @@
 							pattern="yyyy-MM-dd  HH:mm:ss" /></td>
 					<td>${allStatus[user.status]}&nbsp;</td>
 					<td>${user.upuser.loginName}</td>
-					<td><a href="${ctx}/admin/user/update/${user.id}">修改</a>&nbsp;
-					<a href="#" onclick="confirmDisabled('${ctx}/admin/user/disabled/${user.id}')">失效</a>&nbsp;
-						&nbsp;&nbsp;&nbsp;<a href="#" onclick="confirmDelete('${ctx}/admin/user/delete/${user.id}')">删除</a>
-						&nbsp;</td>
+					<td>
+					<shiro:hasAnyRoles name="admin">
+						<a href="${ctx}/admin/user/update/${user.id}">修改</a>&nbsp;
+						<a href="#" onclick="confirmDisabled('${ctx}/admin/user/disabled/${user.id}')">失效</a>&nbsp;
+						<a href="#" onclick="confirmDelete('${ctx}/admin/user/delete/${user.id}')">删除</a>&nbsp;
+					</shiro:hasAnyRoles>
+					</td>
 
 				</tr>
 			</c:forEach>
@@ -57,7 +63,9 @@
 	</table>
 	<tags:paginationMybatis  />
 	<div>
-		<a class="btn" href="${ctx}/admin/cteateUser">创建用户</a>
+		<shiro:hasAnyRoles name="admin">
+			<a class="btn" href="${ctx}/admin/cteateUser">创建用户</a>
+		</shiro:hasAnyRoles>
 	</div>
 </body>
 </html>
