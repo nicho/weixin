@@ -24,11 +24,10 @@
 <script src="${ctx}/static/jquery-validation/1.11.1/messages_bs_zh.js" type="text/javascript"></script> 
  <link rel="stylesheet" type="text/css" href="${ctx}/static/styles/loginstyle.css" />
 </head>
-
-
-
-<body>
-<form id="loginForm" action="${ctx}/login" method="post" class="form-horizontal">
+ 
+  <body>
+   <form id="loginForm" action="${ctx}/login" method="post" class="form-horizontal">
+    <div class="container"> 
 		<%
 			String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
 			if(error != null){
@@ -50,21 +49,35 @@
 		<%
 			}
 		%>
-  <fieldset>
-  <legend>登&nbsp;录</legend>
-  <label for="login">登录名</label>
-<input type="text" id="username" name="username"  value="${username}" class="input-medium required"/>
-  <div class="clear"></div>
-  <label for="password">密码</label>
-  <input type="password" id="password" name="password" class="input-medium required"/>
-  <div class="clear"></div>
-  <label for="remember_me" style="padding: 0;"> 记住我</label> 
-  <input type="checkbox"  id="rememberMe" name="rememberMe" style="position: relative; top: 3px; margin: 0; " name="remember_me"/>
-  <div class="clear"></div>
-  <br />
-  <input type="submit" style="margin: -20px 0 0 287px;" class="button" name="commit" value="登录"/>
-  </fieldset>
-</form>
-<p align="center"><strong>&copy; http://bbs.lihentian.com</strong></p>
-</body>
+			<section class="loginBox row-fluid">
+					<div class="tabbable" id="tabs-634549">
+						<ul class="nav nav-tabs"> 
+							<li class="active">
+								<a href="#panel-549981" data-toggle="tab">帐号登录</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane" id="panel-60560">
+							
+							</div>
+							<div class="tab-pane active" id="panel-549981">
+								<DIV><input type="text" name="username" placeholder="用户名" value="${username}" class="input-medium required"/></DIV><br>
+								<DIV>
+									<input type="password" name="password" placeholder="密码"  class="input-medium required"/><br>
+								</DIV>
+								 <DIV class="span6"><br><label><input type="checkbox" id="rememberMe" name="rememberMe"  />下次自动登录</label></DIV><br>
+									<DIV class="span1"><input type="submit" value=" 登录 " class="btn btn-primary"></DIV>
+							</div>
+						</div>
+					</div>
+        </section><!-- /loginBox -->
+    </div> <!-- /container -->
+    	<script>
+		$(document).ready(function() {
+			$("#loginForm").validate();
+		});
+	</script>
+    </form>
+    
+  </body>
 </html>
