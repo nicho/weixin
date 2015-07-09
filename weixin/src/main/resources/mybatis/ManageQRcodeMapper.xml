@@ -11,6 +11,7 @@
 		<result property="qrState" column="qr_State" /> 
 		<result property="qrValidityDate" column="qr_Validity_Date" /> 
 		<result property="qrSubscribeCount" column="qr_Subscribe_Count" /> 
+		<result property="qrSubscribeAdminCount" column="qr_Subscribe_Admin_Count" /> 
 		<result property="createDate" column="create_Date" />  
 		<result property="description" column="description" />   
 		
@@ -26,16 +27,17 @@
 		</association>
 	</resultMap>
  
-	
-
-
-	<!-- 获取部门详细信息, 输出用resultMap关联嵌套对象 -->
+	 
 	<select id="getUserManageQRcodeByTaskId" parameterType="long" resultMap="ManageQRcodeMap">
 	 	SELECT t.*,u.login_name AS user_loginName ,u.name AS user_name,m.title AS task_title   
-	 	 FROM wx_manage_QRcode t,wx_user u,wx_manage_task m WHERE u.id=t.user_id AND m.id=t.task_id AND t.task_id=#{taskId} and t.isdelete=0
+	 	 FROM wx_manage_QRcode t,wx_user u,wx_manage_task m WHERE u.id=t.user_id AND m.id=t.task_id AND t.task_id=#{taskId} and t.isdelete=0  
 	</select>
 	
+	<select id="getMyUserManageQRcodeByTaskId" parameterType="long" resultMap="ManageQRcodeMap">
+	 	SELECT t.*,u.login_name AS user_loginName ,u.name AS user_name,m.title AS task_title   
+	 	 FROM wx_manage_QRcode t,wx_user u,wx_manage_task m WHERE u.id=t.user_id AND m.id=t.task_id AND t.task_id=#{taskId} and t.isdelete=0 AND t.user_id=#{userId}
+	</select>
 	 <select id="getUserManageQRcodeByTaskIdAndQrType"  resultType="java.lang.Integer">
-	 	SELECT count(*)  FROM wx_manage_QRcode t WHERE  t.task_id=#{taskId} and t.qrcode_Type=#{qrType} and t.isdelete=0
+	 	SELECT count(*)  FROM wx_manage_QRcode t WHERE  t.task_id=#{taskId} AND t.user_id=#{userId} and t.qrcode_Type=#{qrType} and t.isdelete=0
 	</select>
 </mapper> 

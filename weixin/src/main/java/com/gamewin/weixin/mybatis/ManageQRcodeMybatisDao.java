@@ -20,7 +20,9 @@ import com.gamewin.weixin.entity.ManageQRcode;
 @MyBatisRepository
 public interface ManageQRcodeMybatisDao {
 
-	List<ManageQRcode> getUserManageQRcodeByTaskId(Long taskId);
+	List<ManageQRcode> getUserManageQRcodeByTaskId(@Param("taskId") Long taskId);
 	
-	Integer getUserManageQRcodeByTaskIdAndQrType(@Param("taskId") Long taskId,@Param("qrType") String qrType);
+	List<ManageQRcode> getMyUserManageQRcodeByTaskId(@Param("taskId") Long taskId,@Param("userId") Long userId );
+	
+	Integer getUserManageQRcodeByTaskIdAndQrType(@Param("taskId") Long taskId,@Param("qrType") String qrType,@Param("userId") Long userId );
 }

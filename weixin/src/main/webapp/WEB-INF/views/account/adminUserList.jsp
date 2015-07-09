@@ -8,6 +8,15 @@
 <html>
 <head>
 <title>用户管理</title>
+<script type="text/javascript">
+function confirmtisheng(url)
+{
+	if(confirm("确认提升为二级经销商？"))
+	{
+		window.location.href=url;
+	}
+}
+</script>
 </head>
 
 <body>
@@ -39,9 +48,7 @@
 				<th>地区</th>
 				<th>状态</th>
 				<th>上级分销商</th>
-				<shiro:hasAnyRoles name="admin">
 				<th>管理</th>
-				</shiro:hasAnyRoles>
 			</tr>
 		</thead>
 		<tbody>
@@ -62,16 +69,18 @@
 					<td>${user.manageAddress}</td>
 					<td>${allStatus[user.status]}&nbsp;</td>
 					<td>${user.upuser.loginName}</td>
-					
-					<shiro:hasAnyRoles name="admin">
-						<td>
-							<a href="${ctx}/admin/user/update/${user.id}">修改</a>&nbsp;
-							<a href="#" onclick="confirmDisabled('${ctx}/admin/user/disabled/${user.id}')">失效</a>&nbsp;
-							<a href="#" onclick="confirmDelete('${ctx}/admin/user/delete/${user.id}')">删除</a>&nbsp;
-						</td>
+					<td>
+					<shiro:hasAnyRoles name="admin"> 
+							<a href="${ctx}/admin/user/update/${user.id}">修改</a>&nbsp; 
+							<a href="#" onclick="confirmDelete('${ctx}/admin/user/delete/${user.id}')">删除</a>&nbsp; 
 					</shiro:hasAnyRoles>
-					
-
+					<a href="#" onclick="confirmDisabled('${ctx}/admin/user/disabled/${user.id}')">失效</a>&nbsp;
+						<shiro:hasAnyRoles name="admin"> 
+							<c:if test="${user.roles eq 'ThreeAdmin'}"> 
+								<a href="#" onclick="confirmtisheng('${ctx}/admin/user/upTwoAdmin/${user.id}')">提升为二级分销商</a>&nbsp;
+							</c:if> 
+						</shiro:hasAnyRoles>
+					</td>
 				</tr>
 			</c:forEach>
 		</tbody>

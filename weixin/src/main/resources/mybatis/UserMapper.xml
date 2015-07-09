@@ -52,6 +52,9 @@
 	</select>
 		
 	<select id="getUserTree2"  resultType="com.gamewin.weixin.entity.UserTree2" parameterType="long">
-		SELECT u.id AS id,u.name AS TEXT,CASE WHEN(SELECT COUNT(*) FROM wx_user WHERE upuser_id=u.id)>0 THEN 'closed' ELSE '' END AS state FROM wx_user u WHERE u.upuser_id=#{id}
+		SELECT u.id AS id,u.name AS TEXT,CASE WHEN(SELECT COUNT(*) FROM wx_user WHERE upuser_id=u.id)>0 THEN 'closed' ELSE '' END AS state FROM wx_user u 
+		<if test="userid != 1">
+		WHERE u.upuser_id=#{userid}
+		</if>
 	</select>
 </mapper> 

@@ -12,7 +12,7 @@
 	</c:if>
 	<form id="inputForm"   class="form-horizontal">
  <fieldset>
-			<legend><small>正在审批的资料</small></legend>
+			<legend><small>正在审批的资料</small><c:if test="${applyThreeAdmin.status eq 'reject'}"><a href="${ctx}/ApplyThreeAdmin/update/${applyThreeAdmin.id }" style="float: right;">重新申请</a></c:if></legend>
 			<div class="control-group">
 				<label for="loginName" class="control-label">姓名:</label>
 				<div class="controls">

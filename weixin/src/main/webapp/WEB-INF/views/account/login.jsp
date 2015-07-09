@@ -33,6 +33,10 @@
  
    <form id="loginForm" action="${ctx}/login" method="post" class="form-horizontal">
     <div class="container"> 
+    	<c:if test="${not empty message}">
+	     <div class="alert alert-success controls input-large">
+			<button data-dismiss="alert" class="close">×</button>${message}</div>
+		</c:if>
 		<%
 			String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
 			if(error != null){

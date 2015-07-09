@@ -181,6 +181,7 @@ public class AccountService {
 				User user = userList.get(i);
 				UserDto dto = new UserDto();
 				dto.setId(user.getId() + "");
+				dto.setUserName(user.getLoginName());
 				dto.setManageAddress(user.getManageAddress());
 				userdto.add(dto);
 			}

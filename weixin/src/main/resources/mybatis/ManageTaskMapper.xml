@@ -34,7 +34,7 @@
            and k.user_id in (SELECT u.id
                                FROM wx_user u
                               WHERE FIND_IN_SET(u.id, queryChildrenUser(#{userId}))
-                                AND u.upuser_id IS NOT NULL)) finishTaskMyChildrenCount
+                                 )) finishTaskMyChildrenCount
   FROM wx_manage_task t
  WHERE t.isdelete = 0
    AND (t.viewrange_Type = 'All' or
@@ -45,7 +45,7 @@
                             (SELECT u.id
                                FROM wx_user u
                               WHERE FIND_IN_SET(u.id, queryUpUser(#{userId}))
-                                AND u.upuser_id IS NOT NULL))))
+                                 ))))
 
 order by t.create_Date desc
 	</select>

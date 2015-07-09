@@ -49,7 +49,7 @@ import com.google.common.collect.Maps;
 @Controller
 @RequestMapping(value = "/manageTask")
 public class ManageTaskController {
-	 
+
 	private static final String PAGE_SIZE = "10";
 
 	private static Map<String, String> sortTypes = Maps.newLinkedHashMap();
@@ -60,7 +60,7 @@ public class ManageTaskController {
 
 	@Autowired
 	private ManageTaskService manageTaskService;
-	
+
 	@RequiresRoles("admin")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
@@ -73,7 +73,7 @@ public class ManageTaskController {
 		List<ManageTask> manageTasks = manageTaskService.getUserManageTask(userId, searchParams, pageNumber, pageSize,
 				sortType);
 		PageInfo<ManageTask> page = new PageInfo<ManageTask>(manageTasks);
-	  	model.addAttribute("page", page);
+		model.addAttribute("page", page);
 		model.addAttribute("manageTasks", manageTasks);
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);
@@ -82,9 +82,8 @@ public class ManageTaskController {
 
 		return "manageTask/manageTaskList";
 	}
-	
-	
-	@RequestMapping(value = "myTask" ,method = RequestMethod.GET)
+
+	@RequestMapping(value = "myTask", method = RequestMethod.GET)
 	public String myTask(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
@@ -92,10 +91,10 @@ public class ManageTaskController {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
 		Long userId = getCurrentUserId();
 
-		List<ManageTask> manageTasks = manageTaskService.getUserMyManageTask(userId, searchParams, pageNumber, pageSize,
-				sortType);
+		List<ManageTask> manageTasks = manageTaskService.getUserMyManageTask(userId, searchParams, pageNumber,
+				pageSize, sortType);
 		PageInfo<ManageTask> page = new PageInfo<ManageTask>(manageTasks);
-	  	model.addAttribute("page", page);
+		model.addAttribute("page", page);
 		model.addAttribute("manageTasks", manageTasks);
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);
@@ -104,7 +103,7 @@ public class ManageTaskController {
 
 		return "myTask/myTaskList";
 	}
-	
+
 	@RequiresRoles("admin")
 	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String createForm(Model model) {
@@ -112,95 +111,111 @@ public class ManageTaskController {
 		model.addAttribute("action", "create");
 		return "manageTask/manageTaskForm";
 	}
+
 	@RequiresRoles("admin")
 	@RequestMapping(value = "create", method = RequestMethod.POST)
-	public String create(@Valid ManageTask newManageTask, RedirectAttributes redirectAttributes,ServletRequest request) {
-		User user = new User(getCurrentUserId());
-		newManageTask.setUser(user);
-		newManageTask.setIsdelete(0);
-		newManageTask.setState("Y");
-		manageTaskService.saveManageTask(newManageTask);
-		
-		if("SELECT".equals(newManageTask.getViewrangeType()))
-		{
-			//设置可见范围
-			String viewrangeUsers=request.getParameter("viewrangeUsers");
-			if(!StringUtils.isEmpty(viewrangeUsers))
-			{
-				String [] viewrangeUserArray=viewrangeUsers.split(",");
-				for (int i = 0; i < viewrangeUserArray.length; i++) {
-					Long userId=Long.parseLong(viewrangeUserArray[i]);  
-					User user_vr = new User(userId);
-					ViewRange vr=new ViewRange();
-					vr.setCreateDate(new Date());
-					vr.setIsdelete(0);
-					vr.setTask(newManageTask);
-					vr.setUser(user_vr);
-					manageTaskService.saveViewRange(vr);
+	public String create(@Valid ManageTask newManageTask, RedirectAttributes redirectAttributes, ServletRequest request) {
+		String startDateStr = request.getParameter("startDateStr");
+		String endDateStr = request.getParameter("endDateStr");
+		try {
+			User user = new User(getCurrentUserId());
+			newManageTask.setCreateDate(new Date());
+			newManageTask.setStartDate(DateUtils.parseDate(startDateStr, "yyyy-MM-dd"));
+			newManageTask.setEndDate(DateUtils.parseDate(endDateStr, "yyyy-MM-dd"));
+			newManageTask.setUser(user);
+			newManageTask.setIsdelete(0);
+			newManageTask.setState("Y");
+			manageTaskService.saveManageTask(newManageTask);
+
+			if ("SELECT".equals(newManageTask.getViewrangeType())) {
+				// 设置可见范围
+				String viewrangeUsers = request.getParameter("viewrangeUsers");
+				if (!StringUtils.isEmpty(viewrangeUsers)) {
+					String[] viewrangeUserArray = viewrangeUsers.split(",");
+					for (int i = 0; i < viewrangeUserArray.length; i++) {
+						Long userId = Long.parseLong(viewrangeUserArray[i]);
+						User user_vr = new User(userId);
+						ViewRange vr = new ViewRange();
+						vr.setCreateDate(new Date());
+						vr.setIsdelete(0);
+						vr.setTask(newManageTask);
+						vr.setUser(user_vr);
+						manageTaskService.saveViewRange(vr);
+					}
 				}
 			}
+
+			redirectAttributes.addFlashAttribute("message", "创建任务成功");
+			return "redirect:/manageTask/";
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("message", "创建任务失败");
+			return "redirect:/manageTask/";
 		}
-		  
-		
-		redirectAttributes.addFlashAttribute("message", "创建任务成功");
-		return "redirect:/manageTask/";
 	}
+
 	@RequiresRoles("admin")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	public String updateForm(@PathVariable("id") Long id, Model model) {
-		ManageTask task=manageTaskService.getManageTask(id);
-		model.addAttribute("task",task);
+		ManageTask task = manageTaskService.getManageTask(id);
+		model.addAttribute("task", task);
 		model.addAttribute("action", "update");
-		
-		//获取人员
-		if(!"ALL".equals(task.getViewrangeType()))
-		{
-			List<Long> userIdList=new ArrayList<Long>();
-			String userIdListStr="";
-			List<ViewRange> userList=manageTaskService.getViewRangeUserByTask(id);
-			if(userList!=null && userList.size()>0)
-			{
+
+		// 获取人员
+		if (!"ALL".equals(task.getViewrangeType())) {
+			List<Long> userIdList = new ArrayList<Long>();
+			String userIdListStr = "";
+			List<ViewRange> userList = manageTaskService.getViewRangeUserByTask(id);
+			if (userList != null && userList.size() > 0) {
 				for (int i = 0; i < userList.size(); i++) {
 					userIdList.add(userList.get(i).getUser().getId());
-					userIdListStr+=userList.get(i).getUser().getId()+",";
+					userIdListStr += userList.get(i).getUser().getId() + ",";
 				}
-				model.addAttribute("userIdArray","["+userIdListStr.substring(0,userIdListStr.length()-1)+"]");
+				model.addAttribute("userIdArray", "[" + userIdListStr.substring(0, userIdListStr.length() - 1) + "]");
 			}
 		}
-		
+
 		return "manageTask/manageTaskForm";
 	}
+
 	@RequiresRoles("admin")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(@Valid @ModelAttribute("manageTask") ManageTask manageTask,
 			RedirectAttributes redirectAttributes, ServletRequest request) {
-		String createDateStr = request.getParameter("createDateStr");
+		String startDateStr = request.getParameter("startDateStr");
 		String endDateStr = request.getParameter("endDateStr");
-		//判断人员变更
-		
+		// 判断人员变更
+
+		ManageTask manageTaskOld = manageTaskService.getManageTask(manageTask.getId());
+		manageTaskOld.setState("N");
+		manageTaskService.saveManageTask(manageTaskOld);
+		// 失效当前任务下所有二维码
+		manageTaskService.invalidAllQRCode(manageTaskOld.getId());
+
 		try {
 			User user = new User(getCurrentUserId());
+			manageTask.setId(null);
+			manageTask.setTitle(manageTask.getTitle() + "(新)");
 			manageTask.setUser(user);
 			manageTask.setIsdelete(0);
 			manageTask.setState("Y");
-			manageTask.setCreateDate(DateUtils.parseDate(createDateStr, "yyyy-MM-dd"));
+			manageTask.setCreateDate(new Date());
+			manageTask.setStartDate(DateUtils.parseDate(startDateStr, "yyyy-MM-dd"));
 			manageTask.setEndDate(DateUtils.parseDate(endDateStr, "yyyy-MM-dd"));
 			manageTaskService.saveManageTask(manageTask);
-			
-			//删除人员
-			manageTaskService.deleteViewRangeUserByTask(manageTask.getId());
-			
-			if("SELECT".equals(manageTask.getViewrangeType()))
-			{
-				//设置可见范围
-				String viewrangeUsers=request.getParameter("viewrangeUsers");
-				if(!StringUtils.isEmpty(viewrangeUsers))
-				{
-					String [] viewrangeUserArray=viewrangeUsers.split(",");
+
+			// 删除人员
+			// manageTaskService.deleteViewRangeUserByTask(manageTask.getId());
+
+			if ("SELECT".equals(manageTask.getViewrangeType())) {
+				// 设置可见范围
+				String viewrangeUsers = request.getParameter("viewrangeUsers");
+				if (!StringUtils.isEmpty(viewrangeUsers)) {
+					String[] viewrangeUserArray = viewrangeUsers.split(",");
 					for (int i = 0; i < viewrangeUserArray.length; i++) {
-						Long userId=Long.parseLong(viewrangeUserArray[i]);  
+						Long userId = Long.parseLong(viewrangeUserArray[i]);
 						User user_vr = new User(userId);
-						ViewRange vr=new ViewRange();
+						ViewRange vr = new ViewRange();
 						vr.setCreateDate(new Date());
 						vr.setIsdelete(0);
 						vr.setTask(manageTask);
@@ -209,9 +224,8 @@ public class ManageTaskController {
 					}
 				}
 			}
-			
-			 
-			redirectAttributes.addFlashAttribute("message", "更新任务成功");
+
+			redirectAttributes.addFlashAttribute("message", "更新任务成功,上一批次任务所有二维码失效");
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("message", "更新任务失败");
@@ -219,6 +233,7 @@ public class ManageTaskController {
 		}
 		return "redirect:/manageTask/";
 	}
+
 	@RequiresRoles("admin")
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
@@ -229,18 +244,19 @@ public class ManageTaskController {
 		redirectAttributes.addFlashAttribute("message", "删除任务成功");
 		return "redirect:/manageTask/";
 	}
+
 	@RequiresRoles("admin")
 	@RequestMapping(value = "disabled/{id}")
 	public String disabled(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		ManageTask entity = manageTaskService.getManageTask(id);
 		entity.setState("N");
 		manageTaskService.saveManageTask(entity);
-		//失效当前任务下所有二维码
+		// 失效当前任务下所有二维码
 		manageTaskService.invalidAllQRCode(entity.getId());
 		redirectAttributes.addFlashAttribute("message", "失效任务成功,当前任务下所有二维码均已失效");
 		return "redirect:/manageTask/";
 	}
- 
+
 	/**
 	 * 取出Shiro中的当前用户Id.
 	 */

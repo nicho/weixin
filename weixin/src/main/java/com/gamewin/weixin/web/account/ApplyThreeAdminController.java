@@ -13,6 +13,8 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -145,10 +147,14 @@ public class ApplyThreeAdminController {
 	 * @param redirectAttributes
 	 * @return
 	 */
+	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "auditPass" , method = RequestMethod.POST)
 	public String auditPass(Model model,RedirectAttributes redirectAttributes,ServletRequest request,ApplyThreeAdmin applyThreeAdmin) {
 		 
-		applyThreeAdminService.saveApplyThreeAdmin(applyThreeAdmin);
+		ApplyThreeAdmin applyThreeAdminold=applyThreeAdminService.getApplyThreeAdmin(applyThreeAdmin.getId());
+		applyThreeAdminold.setStatus(applyThreeAdmin.getStatus());
+		applyThreeAdminService.saveApplyThreeAdmin(applyThreeAdminold);
+		
 		if("pass".equals(applyThreeAdmin.getStatus()))
 		{
 			ApplyThreeAdmin applyThree =applyThreeAdminService.getApplyThreeAdmin(applyThreeAdmin.getId());
@@ -182,20 +188,20 @@ public class ApplyThreeAdminController {
 				newApplyThreeAdmin.setUpuser(upuser);
 				applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
 				redirectAttributes.addFlashAttribute("applyThreeAdmin", newApplyThreeAdmin);
-				redirectAttributes.addFlashAttribute("message", "申请任务成功,待上级分销商审批");
+				redirectAttributes.addFlashAttribute("message", "申请中,待上级分销商审批");
 				return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
 			}
 			else
 			{
 				applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
 				redirectAttributes.addFlashAttribute("applyThreeAdmin", newApplyThreeAdmin);
-				redirectAttributes.addFlashAttribute("message", "申请任务成功,待总经销商审批");
+				redirectAttributes.addFlashAttribute("message", "申请中,待总经销商审批");
 				return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
 			}
 		}else { 
 			applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
 			redirectAttributes.addFlashAttribute("applyThreeAdmin", newApplyThreeAdmin);
-			redirectAttributes.addFlashAttribute("message", "申请任务成功,待总经销商审批");
+			redirectAttributes.addFlashAttribute("message", "申请中,待总经销商审批");
 			return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
 		}
 		
@@ -207,48 +213,67 @@ public class ApplyThreeAdminController {
 	}
 	
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
-	public String updateForm(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("task", applyThreeAdminService.getApplyThreeAdmin(id));
-		model.addAttribute("action", "update");
-		return "applyThreeAdmin/applyThreeAdminForm";
+	public String updateForm(@PathVariable("id") Long id, Model model,RedirectAttributes redirectAttributes) {
+		ApplyThreeAdmin applyThreeAdmin=applyThreeAdminService.getApplyThreeAdmin(id);
+		ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+		if(applyThreeAdmin!=null && user.id.equals(applyThreeAdmin.getUser().getId()))
+		{
+			model.addAttribute("applyThreeAdmin", applyThreeAdminService.getApplyThreeAdmin(id));
+			model.addAttribute("action", "update");
+			List<UserDto> userdto=accountService.getUserByTwoUpAdminUserlist();
+			model.addAttribute("userdto", userdto);
+			return "applyAdmin/applyThreeAdminFrom";
+		}else
+		{
+			redirectAttributes.addFlashAttribute("message", "非法操作");
+			return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+		}
+		
+
+		
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
-	public String update(@Valid @ModelAttribute("applyThreeAdmin") ApplyThreeAdmin applyThreeAdmin,
+	public String update(@Valid @ModelAttribute("applyThreeAdmin") ApplyThreeAdmin newApplyThreeAdmin,
 			RedirectAttributes redirectAttributes, ServletRequest request) { 
-
-		try { 
-			applyThreeAdminService.saveApplyThreeAdmin(applyThreeAdmin);
-			redirectAttributes.addFlashAttribute("message", "更新任务成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("message", "更新任务失败");
-			return "redirect:/applyThreeAdmin/";
+ 
+		User user = new User(getCurrentUserId());
+		newApplyThreeAdmin.setUser(user);
+		newApplyThreeAdmin.setIsdelete(0);
+		newApplyThreeAdmin.setStatus("submit");
+		
+ 	
+		String upuserId =request.getParameter("upuserId");
+		if(!StringUtils.isEmpty(upuserId))
+		{
+			User upuser=  accountService.getUser(Long.parseLong(upuserId));
+			if(upuser!=null && "TwoAdmin".equals(upuser.getRoles()))
+			{  
+				newApplyThreeAdmin.setUpuser(upuser);
+				applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
+				redirectAttributes.addFlashAttribute("applyThreeAdmin", newApplyThreeAdmin);
+				redirectAttributes.addFlashAttribute("message", "重新申请中,待上级分销商审批");
+				return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+			}
+			else
+			{
+				applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
+				redirectAttributes.addFlashAttribute("applyThreeAdmin", newApplyThreeAdmin);
+				redirectAttributes.addFlashAttribute("message", "重新申请中,待总经销商审批");
+				return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
+			}
+		}else { 
+			applyThreeAdminService.saveApplyThreeAdmin(newApplyThreeAdmin);
+			redirectAttributes.addFlashAttribute("applyThreeAdmin", newApplyThreeAdmin);
+			redirectAttributes.addFlashAttribute("message", "重新申请中,待总经销商审批");
+			return "redirect:/ApplyThreeAdmin/applyThreeAdminView";
 		}
-		return "redirect:/applyThreeAdmin/";
+		 
+		
 	}
 
-	@RequestMapping(value = "delete/{id}")
-	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-		ApplyThreeAdmin entity = applyThreeAdminService.getApplyThreeAdmin(id);
-		entity.setIsdelete(1);
-		applyThreeAdminService.saveApplyThreeAdmin(entity);
-		redirectAttributes.addFlashAttribute("message", "删除任务成功");
-		return "redirect:/applyThreeAdmin/";
-	}
-
-	/**
-	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2
-	 * Preparable二次部分绑定的效果,先根据form的id从数据库查出ApplyThreeAdmin对象,再把Form提交的内容绑定到该对象上。
-	 * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.
-	 */
-	@ModelAttribute
-	public void getApplyThreeAdmin(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
-		if (id != -1) {
-			model.addAttribute("applyThreeAdmin", applyThreeAdminService.getApplyThreeAdmin(id));
-		}
-	}
-
+ 
+ 
 	/**
 	 * 取出Shiro中的当前用户Id.
 	 */

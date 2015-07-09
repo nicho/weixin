@@ -149,6 +149,22 @@ public class UserAdminController {
 		return "redirect:/admin/user";
 	}
 	
+	@RequiresRoles("admin")
+	@RequestMapping(value = "upTwoAdmin/{id}", method = RequestMethod.GET)
+	public String update(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) { 
+ 
+		User user=  accountService.getUser(id);
+		if(user!=null &&  "ThreeAdmin".equals(user.getRoles()))
+		{
+			user.setRoles("TwoAdmin"); 
+			accountService.updateUser(user);
+		}
+		 
+		redirectAttributes.addFlashAttribute("message", "更新用户" + user.getLoginName() + "为二级经销商");
+		return "redirect:/admin/user";
+	}
+	
+	
 	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "disabled/{id}")
 	public String disabled(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {

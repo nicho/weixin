@@ -17,15 +17,14 @@
 	<div class="row">
 		<div class="span4 offset7">
 			<form class="form-search" action="#">
-				<label>名称</label> <input type="text" name="search_LIKE_title" class="input-medium" value="${param.search_LIKE_title}"> 
-				<button type="submit" class="btn" id="search_btn">查询</button>
+				 
 		    </form>
 	    </div>
-	    <tags:sort/>
+	   
 	</div>
  	<br>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>二维码名称</th> <th>创建日期</th><th>主任务</th><th>二维码类型</th><th>二维码状态</th><th>已完成关注数</th> <th>分配用户</th><th>管理</th></tr></thead>
+		<thead><tr><th>二维码名称</th> <th>创建日期</th><th>主任务</th><th>二维码类型</th><th>二维码状态</th><th>已完成关注数</th> <th>已完成关注数(管理)</th> <th>分配用户</th><th>管理</th></tr></thead>
 		<tbody>
 		<c:forEach items="${manageQRcodes}" var="task">
 			<tr>
@@ -43,10 +42,11 @@
 				<td>
 				 <c:choose>
 					<c:when test="${task.qrState eq 'Y'}">有效</c:when>
-					<c:when test="${task.qrState eq 'N'}">无效</c:when> 
+					<c:when test="${task.qrState eq 'N'}">失效</c:when> 
 				</c:choose>
 				</td>
 				<td>${task.qrSubscribeCount}</td> 
+				<td>${task.qrSubscribeAdminCount}</td> 
 				<td>${task.user.name}</td>
 				<td>
 				<shiro:hasRole name="admin">

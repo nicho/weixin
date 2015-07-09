@@ -89,10 +89,10 @@ public class ManageQRcodeService {
 	public List<ManageQRcode> getMyUserManageQRcodeByTaskId(Long taskId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
 		PageHelper.startPage(pageNumber, pageSize); 
-		return manageQRcodeMybatisDao.getUserManageQRcodeByTaskId(taskId);
+		return manageQRcodeMybatisDao.getMyUserManageQRcodeByTaskId(taskId,userId);
 	}
-	public Integer getUserManageQRcodeByTaskIdAndQrType(Long taskId,String qrType) {
-		return manageQRcodeMybatisDao.getUserManageQRcodeByTaskIdAndQrType(taskId, qrType);
+	public Integer getUserManageQRcodeByTaskIdAndQrType(Long taskId,String qrType,Long userId) {
+		return manageQRcodeMybatisDao.getUserManageQRcodeByTaskIdAndQrType(taskId, qrType,userId);
 	}
 	
 	 	public Page<ManageQRcode> getUserManageQRcode(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,

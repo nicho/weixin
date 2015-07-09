@@ -23,19 +23,19 @@
 			<div class="control-group">
 				<label for="loginName" class="control-label">姓名:</label>
 				<div class="controls">
-					<input type="text" id="userName" name="userName" class="input-large required"  />
+					<input type="text" id="userName" name="userName" class="input-large required" value="${applyThreeAdmin.userName }" />
 				</div>
 			</div>
 			<div class="control-group">
 				<label for="name" class="control-label">证件号:</label>
 				<div class="controls">
-					<input type="text" id="ssnumber" name="ssnumber" class="input-large required"/>
+					<input type="text" id="ssnumber" name="ssnumber" class="input-large required" value="${applyThreeAdmin.ssnumber }"/>
 				</div>
 			</div>
 	 	<div class="control-group">
 				<label for="name" class="control-label">地址:</label>
 				<div class="controls"> 
-					<input type="text" id="address" name="address" class="input-large required"/>
+					<input type="text" id="address" name="address" class="input-large required" value="${applyThreeAdmin.address }" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -44,7 +44,7 @@
 				    <select name="upuserId">
 						<option value="">请选择</option>
 						 <c:forEach var="list" items="${userdto}" varStatus="name">
-							<option value="${list.id}" >${list.manageAddress}</option>
+							<option value="${list.id}" <c:if test="${applyThreeAdmin.upuser.id eq list.id}">selected</c:if>>${list.userName}</option>
 						</c:forEach>
 					</select>
 				</div>
@@ -52,7 +52,7 @@
 			 <div class="control-group">
 				<label for="plainPassword" class="control-label">申请理由:</label>
 				<div class="controls"> 
-					<textarea rows="5" cols="5" style="  width: 500px;" name="description" class="required"></textarea>
+					<textarea rows="5" cols="5" style="  width: 500px;" name="description" class="required" ${applyThreeAdmin.description }></textarea>
 				</div>
 			</div>
 			<div class="form-actions">

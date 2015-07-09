@@ -101,7 +101,7 @@ public class ManageQRcodeController {
 		{
 			if("Y".equals(manageTask.getWeixinGd()))
 			{
-				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinGd");
+				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinGd",shiroUser.id);
 				if(weixinGdCount==0)
 				{ 
 					ManageQRcode newManageQRcode = new ManageQRcode();
@@ -119,7 +119,7 @@ public class ManageQRcodeController {
 			}
 		    if("Y".equals(manageTask.getWeixinLs()))
 			{
-				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinLs");
+				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinLs",shiroUser.id);
 				if(weixinGdCount==0)
 				{ 
 					ManageQRcode newManageQRcode = new ManageQRcode();
@@ -137,7 +137,7 @@ public class ManageQRcodeController {
 			}
 			if("Y".equals(manageTask.getWeixinApk()))
 			{
-				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinApk");
+				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinApk",shiroUser.id);
 				if(weixinGdCount==0)
 				{ 
 					ManageQRcode newManageQRcode = new ManageQRcode();
@@ -156,7 +156,7 @@ public class ManageQRcodeController {
 			}
 			if("Y".equals(manageTask.getWeixinOther()))
 			{
-				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinOther");
+				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinOther",shiroUser.id);
 				if(weixinGdCount==0)
 				{ 
 					ManageQRcode newManageQRcode = new ManageQRcode();
@@ -174,7 +174,7 @@ public class ManageQRcodeController {
 				}
 			}
 		}
-		List<ManageQRcode> manageQRcodes = manageQRcodeService.getMyUserManageQRcodeByTaskId(id,getCurrentUserId(), searchParams, pageNumber, pageSize,sortType);
+		List<ManageQRcode> manageQRcodes = manageQRcodeService.getMyUserManageQRcodeByTaskId(id,shiroUser.id, searchParams, pageNumber, pageSize,sortType);
 		
 		
 		PageInfo<ManageQRcode> page = new PageInfo<ManageQRcode>(manageQRcodes);

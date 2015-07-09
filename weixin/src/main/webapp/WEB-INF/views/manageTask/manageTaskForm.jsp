@@ -29,7 +29,7 @@
 			 <div class="control-group">
 				<label for="task_title" class="control-label">开始时间:</label>
 				<div class="controls">
-					<input type="text" id="task_createDate" name="createDateStr"  value="<fmt:formatDate  value="${task.createDate}" type="both" pattern="yyyy-MM-dd" />" class="input-large required" onclick="WdatePicker()"  />
+					<input type="text" id="task_startDate" name="startDateStr"  value="<fmt:formatDate  value="${task.startDate}" type="both" pattern="yyyy-MM-dd" />" class="input-large required" onclick="WdatePicker()"  />
 				</div>
 			</div>	
 			 <div class="control-group">

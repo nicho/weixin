@@ -25,6 +25,17 @@
 					<input type="text" id="name" name="name" value="${user.name}" class="input-large required"/>
 				</div>
 			</div>
+			<div class="control-group">
+				<label class="control-label">级别:</label>
+				<div class="controls"> 
+					 <c:choose>
+						<c:when test="${user.roles eq 'admin'}">管理员</c:when>
+						<c:when test="${user.roles eq 'TwoAdmin'}">二级分销商</c:when>
+						<c:when test="${user.roles eq 'ThreeAdmin'}">三级分销商</c:when>
+						<c:otherwise>用户</c:otherwise>
+					</c:choose> 
+				</div>
+			</div>
 		    <div class="control-group">
 				<label for="plainPassword" class="control-label">上级分销商:</label>
 				<div class="controls"> 

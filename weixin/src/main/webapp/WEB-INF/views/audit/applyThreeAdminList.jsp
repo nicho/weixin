@@ -32,6 +32,7 @@
 				<th>登录名</th>
 				<th>用户名</th>
 				<th>姓名</th>
+				<th>上级经销商</th>
 				<th>申请时间</th>
 				<th>状态</th>
 				<th>管理</th>
@@ -43,6 +44,7 @@
 					<td> ${user.user.loginName} </td>
 					<td>${user.user.name}</td>
 					<td>${user.userName}</td>
+					<td>${user.upuser.loginName}</td>
 					<td><fmt:formatDate value="${user.createDate}"	pattern="yyyy-MM-dd  HH:mm:ss" /></td>
 					<td>
 					 <c:if test="${user.status eq 'submit'}">审批中</c:if>
