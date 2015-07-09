@@ -66,7 +66,8 @@
 									<input type="password" name="password" placeholder="密码"  class="input-medium required"/><br>
 								</DIV>
 								 <DIV class="span6"><br><label><input type="checkbox" id="rememberMe" name="rememberMe"  />下次自动登录</label></DIV><br>
-									<DIV class="span1"><input type="submit" value=" 登录 " class="btn btn-primary"></DIV>
+									<DIV class="span1"><input type="submit" value=" 登录 " class="btn btn-primary"></DIV> <a style="margin-left: 30px;" class="btn" href="${ctx}/register">注册</a>
+									
 							</div>
 						</div>
 					</div>
