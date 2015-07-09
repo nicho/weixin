@@ -167,8 +167,16 @@ public class ApiListController {
             	Integer count=manageQRcodeService.selectHistoryWeixinBytaskId(manageQRcode.getTask().getId(),inputMsg.getFromUserName());
             	if(count==0)
             	{ 
-                	manageQRcode.setQrSubscribeCount(manageQRcode.getQrSubscribeCount()+1);
-                	manageQRcodeService.saveManageQRcode(manageQRcode);
+					if("Y".equals(manageQRcode.getQrState()))
+					{
+						manageQRcode.setQrSubscribeCount(manageQRcode.getQrSubscribeCount()+1);
+						manageQRcode.setQrSubscribeAdminCount(manageQRcode.getQrSubscribeAdminCount()+1);
+						manageQRcodeService.saveManageQRcode(manageQRcode);
+					}else
+					{
+						manageQRcode.setQrSubscribeAdminCount(manageQRcode.getQrSubscribeAdminCount()+1);
+						manageQRcodeService.saveManageQRcode(manageQRcode);
+					} 
             	}
             
             } 

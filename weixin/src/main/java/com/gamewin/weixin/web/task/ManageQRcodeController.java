@@ -107,6 +107,7 @@ public class ManageQRcodeController {
 				newManageQRcode.setIsdelete(0);
 				newManageQRcode.setQrState("Y");
 				newManageQRcode.setQrSubscribeCount(0);
+				newManageQRcode.setQrSubscribeAdminCount(0);
 				newManageQRcode.setTask(manageTask);
 				newManageQRcode.setTitle(manageTask.getTitle()+"-微信固定-"+shiroUser.getName());
 				newManageQRcode.setQrcodeType("WeixinGd");
@@ -124,6 +125,7 @@ public class ManageQRcodeController {
 				newManageQRcode.setIsdelete(0);
 				newManageQRcode.setQrState("Y");
 				newManageQRcode.setQrSubscribeCount(0);
+				newManageQRcode.setQrSubscribeAdminCount(0);
 				newManageQRcode.setTask(manageTask);
 				newManageQRcode.setTitle(manageTask.getTitle()+"-微信临时-"+shiroUser.getName());
 				newManageQRcode.setQrcodeType("WeixinLs");
@@ -141,6 +143,7 @@ public class ManageQRcodeController {
 				newManageQRcode.setIsdelete(0);
 				newManageQRcode.setQrState("Y");
 				newManageQRcode.setQrSubscribeCount(0);
+				newManageQRcode.setQrSubscribeAdminCount(0);
 				newManageQRcode.setTask(manageTask);
 				newManageQRcode.setTitle(manageTask.getTitle()+"-应用APK-"+shiroUser.getName());
 				newManageQRcode.setQrcodeType("WeixinApk");
@@ -159,6 +162,7 @@ public class ManageQRcodeController {
 				newManageQRcode.setIsdelete(0);
 				newManageQRcode.setQrState("Y");
 				newManageQRcode.setQrSubscribeCount(0);
+				newManageQRcode.setQrSubscribeAdminCount(0);
 				newManageQRcode.setTask(manageTask);
 				newManageQRcode.setTitle(manageTask.getTitle()+"-外部跳转-"+shiroUser.getName());
 				newManageQRcode.setQrcodeType("WeixinOther");

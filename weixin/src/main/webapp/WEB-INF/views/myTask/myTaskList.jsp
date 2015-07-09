@@ -24,7 +24,7 @@
 	</div>
 	
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>任务名称</th><th>任务描述</th><th>开始时间</th><th>结束时间</th><th>任务目标数</th><th>任务状态</th><th>二维码类型</th><th>任务范围</th><th>总共已完成任务数</th><th>我完成的任务数</th><th>管理</th></tr></thead>
+		<thead><tr><th>任务名称</th><th>任务描述</th><th>开始时间</th><th>结束时间</th><th>任务目标数</th><th>任务状态</th><th>二维码类型</th><th>任务范围</th><th>总完成任务数</th><th>本人完成任务数</th><th>下级完成任务数</th><th>管理</th></tr></thead>
 		<tbody>
 		<c:forEach items="${manageTasks}" var="task">
 			<tr>
@@ -50,6 +50,7 @@
 				</c:choose>
 				</td>
 				<td></td> 
+			    <td></td> 
 			    <td></td> 
 				<td><a href="${ctx}/manageQRcode/showMyTaskQRcode/${task.id}">查看二维码</a> </td>
 			</tr>

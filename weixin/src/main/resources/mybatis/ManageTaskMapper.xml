@@ -6,10 +6,33 @@
  
  
 	<select id="getUserMyManageTask" parameterType="long" resultType="com.gamewin.weixin.entity.ManageTask">
-		 select id,title,start_Date startDate,end_Date endDate ,create_Date createDate,
-		 description,task_Count taskCount,viewrange_Type viewrangeType,weixin_Gd weixinGd,
-		 weixin_Ls weixinLs,weixin_Apk weixinApk,weixin_Other weixinOther,apk_Url apkUrl,
-		 other_Url otherUrl,state 
-		 from wx_manage_task t  where t.isdelete=0
+SELECT id,
+       title,
+       start_Date     startDate,
+       end_Date       endDate,
+       create_Date    createDate,
+       description,
+       task_Count     taskCount,
+       viewrange_Type viewrangeType,
+       weixin_Gd      weixinGd,
+       weixin_Ls      weixinLs,
+       weixin_Apk     weixinApk,
+       weixin_Other   weixinOther,
+       apk_Url        apkUrl,
+       other_Url      otherUrl,
+       state
+  FROM wx_manage_task t
+ WHERE t.isdelete = 0
+   AND (t.viewrange_Type = 'All' OR
+       (t. viewrange_Type = 'SELECT' AND
+        T.id IN
+        (SELECT task_id
+               FROM wx_user_viewrange v
+              WHERE v.user_id IN (SELECT u.id
+                                   FROM wx_user u
+                                  WHERE FIND_IN_SET(u.id, queryUpUser(#{userId}))
+                                    AND u.upuser_id IS NOT NULL))))
+ 
+
 	</select>
 </mapper> 

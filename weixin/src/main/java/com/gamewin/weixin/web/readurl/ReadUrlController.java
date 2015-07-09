@@ -47,8 +47,16 @@ public class ReadUrlController {
 				Integer count=manageQRcodeService.selectHistoryUrlByuserIpAndqrcodeId(userIp, manageQRcode.getId());
 				if(count==0)
 				{
-					manageQRcode.setQrSubscribeCount(manageQRcode.getQrSubscribeCount()+1);
-					manageQRcodeService.saveManageQRcode(manageQRcode);
+					if("Y".equals(manageQRcode.getQrState()))
+					{
+						manageQRcode.setQrSubscribeCount(manageQRcode.getQrSubscribeCount()+1);
+						manageQRcode.setQrSubscribeAdminCount(manageQRcode.getQrSubscribeAdminCount()+1);
+						manageQRcodeService.saveManageQRcode(manageQRcode);
+					}else
+					{
+						manageQRcode.setQrSubscribeAdminCount(manageQRcode.getQrSubscribeAdminCount()+1);
+						manageQRcodeService.saveManageQRcode(manageQRcode);
+					} 
 					 
 				}
 				HistoryUrl entity=new HistoryUrl();

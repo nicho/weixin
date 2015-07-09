@@ -26,12 +26,21 @@ public class ManageQRcode extends IdEntity {
 	private String qrState;// 二维码状态
 	private Date qrValidityDate;// 二维码有效期
 	private Integer qrSubscribeCount; // 二维码关注数
+	private Integer qrSubscribeAdminCount; // 二维码管理关注数
 	private Date createDate;
 	private String description;
 	private Integer isdelete;
 	private User user;
 	private ManageTask task;// 主任务
 	private String imageUrl;
+
+	public Integer getQrSubscribeAdminCount() {
+		return qrSubscribeAdminCount;
+	}
+
+	public void setQrSubscribeAdminCount(Integer qrSubscribeAdminCount) {
+		this.qrSubscribeAdminCount = qrSubscribeAdminCount;
+	}
 
 	public String getImageUrl() {
 		return imageUrl;
