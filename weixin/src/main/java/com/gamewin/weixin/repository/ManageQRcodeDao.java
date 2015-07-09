@@ -19,8 +19,8 @@ public interface ManageQRcodeDao extends PagingAndSortingRepository<ManageQRcode
 	Page<ManageQRcode> findByUserId(Long id, Pageable pageRequest);
 	
 	Page<ManageQRcode> findByTaskId(Long id, Pageable pageRequest);
-
+ 
 	@Modifying
-	@Query("delete from ManageQRcode task where task.user.id=?1")
-	void deleteByUserId(Long id);
+	@Query("update from ManageQRcode qr set qr.qrState='N' where qr.task.id=?1")
+	void invalidAllQRCode(Long taskId);
 }

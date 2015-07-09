@@ -21,4 +21,5 @@ public interface ManageTaskDao extends PagingAndSortingRepository<ManageTask, Lo
 	@Modifying
 	@Query("delete from ManageTask task where task.user.id=?1")
 	void deleteByUserId(Long id);
+	 
 }

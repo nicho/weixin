@@ -49,9 +49,9 @@
 					<c:otherwise>指定</c:otherwise>
 				</c:choose>
 				</td>
-				<td></td> 
-			    <td></td> 
-			    <td></td> 
+				<td>${task.finishTaskCount}</td> 
+			    <td>${task.finishTaskMyCount}</td> 
+			    <td>${task.finishTaskMyChildrenCount}</td> 
 				<td><a href="${ctx}/manageQRcode/showMyTaskQRcode/${task.id}">查看二维码</a> </td>
 			</tr>
 		</c:forEach>

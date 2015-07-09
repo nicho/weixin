@@ -6,7 +6,7 @@
 	<h1>任务管理</h1>
 	<div class="submenu"> 
 		<a id="myTask" href="${ctx}/manageTask/myTask">我的任务</a> 
-		<a id="ManageTaskController" href="${ctx}/manageTask">任务列表</a>  
+		<a id="ManageTaskController" href="${ctx}/manageTask">管理任务</a>  
 	</div>
 	<h1>系统管理</h1>
 	<div class="submenu">

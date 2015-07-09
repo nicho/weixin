@@ -5,16 +5,12 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.task;
 
-import java.net.URLEncoder;
 import java.util.Map;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,13 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springside.modules.web.Servlets;
 
 import com.gamewin.weixin.entity.Task;
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.TaskService;
-import com.gamewin.weixin.util.MobileHttpClient;
 import com.google.common.collect.Maps;
 
 /**

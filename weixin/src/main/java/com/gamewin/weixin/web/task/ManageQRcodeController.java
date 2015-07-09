@@ -97,78 +97,81 @@ public class ManageQRcodeController {
 		User user = new User(getCurrentUserId()); 
 		//查询当前任务的类型
 		ManageTask manageTask=manageTaskService.getManageTask(id);
-		if("Y".equals(manageTask.getWeixinGd()))
+		if("Y".equals(manageTask.getState()))
 		{
-			Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinGd");
-			if(weixinGdCount==0)
-			{ 
-				ManageQRcode newManageQRcode = new ManageQRcode();
-				newManageQRcode.setUser(user);
-				newManageQRcode.setIsdelete(0);
-				newManageQRcode.setQrState("Y");
-				newManageQRcode.setQrSubscribeCount(0);
-				newManageQRcode.setQrSubscribeAdminCount(0);
-				newManageQRcode.setTask(manageTask);
-				newManageQRcode.setTitle(manageTask.getTitle()+"-微信固定-"+shiroUser.getName());
-				newManageQRcode.setQrcodeType("WeixinGd");
-				newManageQRcode.setCreateDate(new Date()); 
-				manageQRcodeService.saveManageQRcode(newManageQRcode);
+			if("Y".equals(manageTask.getWeixinGd()))
+			{
+				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinGd");
+				if(weixinGdCount==0)
+				{ 
+					ManageQRcode newManageQRcode = new ManageQRcode();
+					newManageQRcode.setUser(user);
+					newManageQRcode.setIsdelete(0);
+					newManageQRcode.setQrState("Y");
+					newManageQRcode.setQrSubscribeCount(0);
+					newManageQRcode.setQrSubscribeAdminCount(0);
+					newManageQRcode.setTask(manageTask);
+					newManageQRcode.setTitle(manageTask.getTitle()+"-微信固定-"+shiroUser.getName());
+					newManageQRcode.setQrcodeType("WeixinGd");
+					newManageQRcode.setCreateDate(new Date()); 
+					manageQRcodeService.saveManageQRcode(newManageQRcode);
+				}
 			}
-		}
-	    if("Y".equals(manageTask.getWeixinLs()))
-		{
-			Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinLs");
-			if(weixinGdCount==0)
-			{ 
-				ManageQRcode newManageQRcode = new ManageQRcode();
-				newManageQRcode.setUser(user);
-				newManageQRcode.setIsdelete(0);
-				newManageQRcode.setQrState("Y");
-				newManageQRcode.setQrSubscribeCount(0);
-				newManageQRcode.setQrSubscribeAdminCount(0);
-				newManageQRcode.setTask(manageTask);
-				newManageQRcode.setTitle(manageTask.getTitle()+"-微信临时-"+shiroUser.getName());
-				newManageQRcode.setQrcodeType("WeixinLs");
-				newManageQRcode.setCreateDate(new Date()); 
-				manageQRcodeService.saveManageQRcode(newManageQRcode);
+		    if("Y".equals(manageTask.getWeixinLs()))
+			{
+				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinLs");
+				if(weixinGdCount==0)
+				{ 
+					ManageQRcode newManageQRcode = new ManageQRcode();
+					newManageQRcode.setUser(user);
+					newManageQRcode.setIsdelete(0);
+					newManageQRcode.setQrState("Y");
+					newManageQRcode.setQrSubscribeCount(0);
+					newManageQRcode.setQrSubscribeAdminCount(0);
+					newManageQRcode.setTask(manageTask);
+					newManageQRcode.setTitle(manageTask.getTitle()+"-微信临时-"+shiroUser.getName());
+					newManageQRcode.setQrcodeType("WeixinLs");
+					newManageQRcode.setCreateDate(new Date()); 
+					manageQRcodeService.saveManageQRcode(newManageQRcode);
+				}
 			}
-		}
-		if("Y".equals(manageTask.getWeixinApk()))
-		{
-			Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinApk");
-			if(weixinGdCount==0)
-			{ 
-				ManageQRcode newManageQRcode = new ManageQRcode();
-				newManageQRcode.setUser(user);
-				newManageQRcode.setIsdelete(0);
-				newManageQRcode.setQrState("Y");
-				newManageQRcode.setQrSubscribeCount(0);
-				newManageQRcode.setQrSubscribeAdminCount(0);
-				newManageQRcode.setTask(manageTask);
-				newManageQRcode.setTitle(manageTask.getTitle()+"-应用APK-"+shiroUser.getName());
-				newManageQRcode.setQrcodeType("WeixinApk");
-				newManageQRcode.setQrUrl(manageTask.getApkUrl());
-				newManageQRcode.setCreateDate(new Date()); 
-				manageQRcodeService.saveManageQRcode(newManageQRcode);
+			if("Y".equals(manageTask.getWeixinApk()))
+			{
+				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinApk");
+				if(weixinGdCount==0)
+				{ 
+					ManageQRcode newManageQRcode = new ManageQRcode();
+					newManageQRcode.setUser(user);
+					newManageQRcode.setIsdelete(0);
+					newManageQRcode.setQrState("Y");
+					newManageQRcode.setQrSubscribeCount(0);
+					newManageQRcode.setQrSubscribeAdminCount(0);
+					newManageQRcode.setTask(manageTask);
+					newManageQRcode.setTitle(manageTask.getTitle()+"-应用APK-"+shiroUser.getName());
+					newManageQRcode.setQrcodeType("WeixinApk");
+					newManageQRcode.setQrUrl(manageTask.getApkUrl());
+					newManageQRcode.setCreateDate(new Date()); 
+					manageQRcodeService.saveManageQRcode(newManageQRcode);
+				}
 			}
-		}
-		if("Y".equals(manageTask.getWeixinOther()))
-		{
-			Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinOther");
-			if(weixinGdCount==0)
-			{ 
-				ManageQRcode newManageQRcode = new ManageQRcode();
-				newManageQRcode.setUser(user);
-				newManageQRcode.setIsdelete(0);
-				newManageQRcode.setQrState("Y");
-				newManageQRcode.setQrSubscribeCount(0);
-				newManageQRcode.setQrSubscribeAdminCount(0);
-				newManageQRcode.setTask(manageTask);
-				newManageQRcode.setTitle(manageTask.getTitle()+"-外部跳转-"+shiroUser.getName());
-				newManageQRcode.setQrcodeType("WeixinOther");
-				newManageQRcode.setQrUrl(manageTask.getOtherUrl());
-				newManageQRcode.setCreateDate(new Date()); 
-				manageQRcodeService.saveManageQRcode(newManageQRcode);
+			if("Y".equals(manageTask.getWeixinOther()))
+			{
+				Integer weixinGdCount=manageQRcodeService.getUserManageQRcodeByTaskIdAndQrType(id, "WeixinOther");
+				if(weixinGdCount==0)
+				{ 
+					ManageQRcode newManageQRcode = new ManageQRcode();
+					newManageQRcode.setUser(user);
+					newManageQRcode.setIsdelete(0);
+					newManageQRcode.setQrState("Y");
+					newManageQRcode.setQrSubscribeCount(0);
+					newManageQRcode.setQrSubscribeAdminCount(0);
+					newManageQRcode.setTask(manageTask);
+					newManageQRcode.setTitle(manageTask.getTitle()+"-外部跳转-"+shiroUser.getName());
+					newManageQRcode.setQrcodeType("WeixinOther");
+					newManageQRcode.setQrUrl(manageTask.getOtherUrl());
+					newManageQRcode.setCreateDate(new Date()); 
+					manageQRcodeService.saveManageQRcode(newManageQRcode);
+				}
 			}
 		}
 		List<ManageQRcode> manageQRcodes = manageQRcodeService.getMyUserManageQRcodeByTaskId(id,getCurrentUserId(), searchParams, pageNumber, pageSize,sortType);
@@ -225,7 +228,7 @@ public class ManageQRcodeController {
 	public String viewManageQRcode(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,Model model,ServletRequest request) {
 		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
 		 
-		if(StringUtils.isEmpty(entity.getImageUrl()))
+		if(StringUtils.isEmpty(entity.getImageUrl()) && "Y".equals(entity.getQrState()))
 		{
 			String imageUrl = entity.getTask().getId() + "-" + entity.getQrcodeType() + "-" + entity.getId() + ".jpg";
 			String url = request.getServletContext().getRealPath("/") + "\\image\\" + imageUrl;

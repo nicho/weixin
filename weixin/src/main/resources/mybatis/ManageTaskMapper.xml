@@ -6,33 +6,74 @@
  
  
 	<select id="getUserMyManageTask" parameterType="long" resultType="com.gamewin.weixin.entity.ManageTask">
-SELECT id,
+	SELECT id,
        title,
-       start_Date     startDate,
-       end_Date       endDate,
-       create_Date    createDate,
+       start_Date startDate,
+       end_Date endDate,
+       create_Date createDate,
        description,
-       task_Count     taskCount,
+       task_Count taskCount,
        viewrange_Type viewrangeType,
-       weixin_Gd      weixinGd,
-       weixin_Ls      weixinLs,
-       weixin_Apk     weixinApk,
-       weixin_Other   weixinOther,
-       apk_Url        apkUrl,
-       other_Url      otherUrl,
-       state
+       weixin_Gd weixinGd,
+       weixin_Ls weixinLs,
+       weixin_Apk weixinApk,
+       weixin_Other weixinOther,
+       apk_Url apkUrl,
+       other_Url otherUrl,
+       state,
+       (SELECT SUM(k.qr_Subscribe_Count)
+          FROM wx_manage_qrcode k
+         WHERE k.task_id = t.id) finishTaskCount, 
+       (SELECT SUM(k.qr_Subscribe_Count)
+          FROM wx_manage_qrcode k
+         WHERE k.task_id = t.id
+           and k.user_id = #{userId}) finishTaskMyCount,
+       (SELECT SUM(k.qr_Subscribe_Count)
+          FROM wx_manage_qrcode k
+         WHERE k.task_id = t.id
+           and k.user_id in (SELECT u.id
+                               FROM wx_user u
+                              WHERE FIND_IN_SET(u.id, queryChildrenUser(#{userId}))
+                                AND u.upuser_id IS NOT NULL)) finishTaskMyChildrenCount
   FROM wx_manage_task t
  WHERE t.isdelete = 0
-   AND (t.viewrange_Type = 'All' OR
+   AND (t.viewrange_Type = 'All' or
        (t. viewrange_Type = 'SELECT' AND
-        T.id IN
-        (SELECT task_id
-               FROM wx_user_viewrange v
-              WHERE v.user_id IN (SELECT u.id
-                                   FROM wx_user u
-                                  WHERE FIND_IN_SET(u.id, queryUpUser(#{userId}))
-                                    AND u.upuser_id IS NOT NULL))))
- 
+        T.id in (SELECT task_id
+                       FROM wx_user_viewrange v
+                      WHERE v.user_id in
+                            (SELECT u.id
+                               FROM wx_user u
+                              WHERE FIND_IN_SET(u.id, queryUpUser(#{userId}))
+                                AND u.upuser_id IS NOT NULL))))
 
+
+	</select>
+	
+	
+	<select id="getUserManageTask" parameterType="long" resultType="com.gamewin.weixin.entity.ManageTask">
+		SELECT id,
+	       title,
+	       start_Date startDate,
+	       end_Date endDate,
+	       create_Date createDate,
+	       description,
+	       task_Count taskCount,
+	       viewrange_Type viewrangeType,
+	       weixin_Gd weixinGd,
+	       weixin_Ls weixinLs,
+	       weixin_Apk weixinApk,
+	       weixin_Other weixinOther,
+	       apk_Url apkUrl,
+	       other_Url otherUrl,
+	       state,
+	       (SELECT SUM(k.qr_Subscribe_Count)
+	          FROM wx_manage_qrcode k
+	         WHERE k.task_id = t.id) finishTaskCount,
+	       (SELECT SUM(k.qr_Subscribe_Admin_Count)
+	          FROM wx_manage_qrcode k
+	         WHERE k.task_id = t.id) finishTaskAdminCount 
+	  FROM wx_manage_task t
+	 WHERE t.isdelete = 0  
 	</select>
 </mapper> 

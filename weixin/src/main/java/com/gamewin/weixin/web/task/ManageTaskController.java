@@ -15,10 +15,8 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -71,9 +69,10 @@ public class ManageTaskController {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
 		Long userId = getCurrentUserId();
 
-		Page<ManageTask> manageTasks = manageTaskService.getUserManageTask(userId, searchParams, pageNumber, pageSize,
+		List<ManageTask> manageTasks = manageTaskService.getUserManageTask(userId, searchParams, pageNumber, pageSize,
 				sortType);
-
+		PageInfo<ManageTask> page = new PageInfo<ManageTask>(manageTasks);
+	  	model.addAttribute("page", page);
 		model.addAttribute("manageTasks", manageTasks);
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);
@@ -119,8 +118,6 @@ public class ManageTaskController {
 		newManageTask.setUser(user);
 		newManageTask.setIsdelete(0);
 		newManageTask.setState("Y");
-		newManageTask.setFinishTaskAdminCount(0);
-		newManageTask.setFinishTaskCount(0);
 		manageTaskService.saveManageTask(newManageTask);
 		
 		if("SELECT".equals(newManageTask.getViewrangeType()))
@@ -147,14 +144,14 @@ public class ManageTaskController {
 		redirectAttributes.addFlashAttribute("message", "创建任务成功");
 		return "redirect:/manageTask/";
 	}
-
+	@RequiresRoles("admin")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	public String updateForm(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("task", manageTaskService.getManageTask(id));
 		model.addAttribute("action", "update");
 		return "manageTask/manageTaskForm";
 	}
-
+	@RequiresRoles("admin")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(@Valid @ModelAttribute("manageTask") ManageTask manageTask,
 			RedirectAttributes redirectAttributes, ServletRequest request) {
@@ -188,7 +185,9 @@ public class ManageTaskController {
 		ManageTask entity = manageTaskService.getManageTask(id);
 		entity.setState("N");
 		manageTaskService.saveManageTask(entity);
-		redirectAttributes.addFlashAttribute("message", "失效任务成功");
+		//失效当前任务下所有二维码
+		manageTaskService.invalidAllQRCode(entity.getId());
+		redirectAttributes.addFlashAttribute("message", "失效任务成功,当前任务下所有二维码均已失效");
 		return "redirect:/manageTask/";
 	}
 	/**

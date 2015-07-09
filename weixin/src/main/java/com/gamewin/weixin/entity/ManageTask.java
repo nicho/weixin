@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -19,7 +20,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "wx_manage_task")
 public class ManageTask extends IdEntity {
-
+ 
 	private String title;
 	private Date startDate;
 	private Date endDate;
@@ -36,9 +37,27 @@ public class ManageTask extends IdEntity {
 	private String apkUrl;
 	private String otherUrl;
 	private String state;
+	
+	@Transient
 	private Integer finishTaskCount; 
+	
+	@Transient
 	private Integer finishTaskAdminCount; 
 	
+	@Transient
+	private Integer finishTaskMyCount;
+	
+	@Transient
+	private Integer finishTaskMyChildrenCount;
+	
+	public Integer getFinishTaskMyChildrenCount() {
+		return finishTaskMyChildrenCount;
+	}
+
+	public void setFinishTaskMyChildrenCount(Integer finishTaskMyChildrenCount) {
+		this.finishTaskMyChildrenCount = finishTaskMyChildrenCount;
+	}
+
 	public Integer getFinishTaskCount() {
 		return finishTaskCount;
 	}
@@ -198,6 +217,14 @@ public class ManageTask extends IdEntity {
 
 
 	 
+	public Integer getFinishTaskMyCount() {
+		return finishTaskMyCount;
+	}
+
+	public void setFinishTaskMyCount(Integer finishTaskMyCount) {
+		this.finishTaskMyCount = finishTaskMyCount;
+	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

@@ -11,10 +11,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +22,7 @@ import org.springside.modules.persistence.SearchFilter.Operator;
 import com.gamewin.weixin.entity.ManageTask;
 import com.gamewin.weixin.entity.ViewRange;
 import com.gamewin.weixin.mybatis.ManageTaskMybatisDao;
+import com.gamewin.weixin.repository.ManageQRcodeDao;
 import com.gamewin.weixin.repository.ManageTaskDao;
 import com.gamewin.weixin.repository.ViewRangeDao;
 import com.gamewin.weixin.util.MemcachedObjectType;
@@ -46,14 +43,21 @@ public class ManageTaskService {
 	private ManageTaskMybatisDao manageTaskMybatisDao;
 	@Autowired
 	private ViewRangeDao viewRangeDao;
+	@Autowired
+	private ManageQRcodeDao manageQRcodeDao;
 	
-	
+
 	public ManageTask getManageTask(Long id) {
 		return manageTaskDao.findOne(id);
+	}
+	
+	public void invalidAllQRCode(Long taskId) {
+		manageQRcodeDao.invalidAllQRCode(taskId);
 	}
 	public void saveManageTask(ManageTask entity) {
 		manageTaskDao.save(entity);
 	}
+
 	public void saveViewRange(ViewRange entity) {
 		viewRangeDao.save(entity);
 	}
@@ -66,49 +70,22 @@ public class ManageTaskService {
 		return (List<ManageTask>) manageTaskDao.findAll();
 	}
 
-	public Page<ManageTask> getUserManageTask(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
-			String sortType) {
-		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
-		Specification<ManageTask> spec = buildSpecification(userId, searchParams);
-
-		return manageTaskDao.findAll(spec, pageRequest);
-	}
-	public List<ManageTask> getUserManageTask_createQr(Long userId) {  
-		Map<String, SearchFilter> filters =new HashMap<String, SearchFilter>();
-		filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
-		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
-		Specification<ManageTask> spec = DynamicSpecifications.bySearchFilter(filters.values(), ManageTask.class); 
-		return manageTaskDao.findAll(spec);
-	}
-	public List<ManageTask> getUserMyManageTask(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
-			String sortType) { 
-		PageHelper.startPage(pageNumber, pageSize); 
-		return manageTaskMybatisDao.getUserMyManageTask(userId);
-	}
-	
-	/**
-	 * 创建分页请求.
-	 */
-	private PageRequest buildPageRequest(int pageNumber, int pagzSize, String sortType) {
-		Sort sort = null;
-		if ("auto".equals(sortType)) {
-			sort = new Sort(Direction.DESC, "id");
-		} else if ("title".equals(sortType)) {
-			sort = new Sort(Direction.ASC, "title");
-		}
-
-		return new PageRequest(pageNumber - 1, pagzSize, sort);
-	}
-
-	/**
-	 * 创建动态查询条件组合.
-	 */
-	private Specification<ManageTask> buildSpecification(Long userId, Map<String, Object> searchParams) {
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+	public List<ManageTask> getUserManageTask_createQr(Long userId) {
+		Map<String, SearchFilter> filters = new HashMap<String, SearchFilter>();
 		filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userId));
 		filters.put("isdelete", new SearchFilter("isdelete", Operator.EQ, "0"));
 		Specification<ManageTask> spec = DynamicSpecifications.bySearchFilter(filters.values(), ManageTask.class);
-		return spec;
+		return manageTaskDao.findAll(spec);
+	}
+
+	public List<ManageTask> getUserMyManageTask(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) {
+		PageHelper.startPage(pageNumber, pageSize);
+		return manageTaskMybatisDao.getUserMyManageTask(userId);
+	}
+
+	public List<ManageTask> getUserManageTask(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) {
+		PageHelper.startPage(pageNumber, pageSize);
+		return manageTaskMybatisDao.getUserManageTask(userId);
 	}
 
 	@Autowired
@@ -132,8 +109,6 @@ public class ManageTaskService {
 		return accessToken;
 	}
 
- 
-
 	public ManageTask getManageTaskByUser(Long userid) {
 		Map<String, SearchFilter> filters = new HashMap<String, SearchFilter>();
 		filters.put("user.id", new SearchFilter("user.id", Operator.EQ, userid));
@@ -144,5 +119,5 @@ public class ManageTaskService {
 		else
 			return null;
 	}
-	
+
 }

@@ -26,7 +26,7 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead><tr><th>任务名称</th><th>任务描述</th><th>开始时间</th><th>结束时间</th><th>任务目标数</th><th>任务状态</th><th>二维码类型</th><th>任务范围</th><th>已完成任务数</th><th>已完成任务数（管理）</th><th>管理</th></tr></thead>
 		<tbody>
-		<c:forEach items="${manageTasks.content}" var="task">
+		<c:forEach items="${manageTasks}" var="task">
 			<tr>
 				<td> ${task.title} </td>
 				<td>${task.description}</td>
@@ -52,14 +52,16 @@
 				<td>${task.finishTaskCount}</td>
 				<td>${task.finishTaskAdminCount}</td>
 				<td><a href="${ctx}/manageQRcode/showTaskQRcode/${task.id}">二维码管理</a> &nbsp;
-				<c:if test="${task.state eq 'Y'}"><a href="#" onclick ="confirmDisabled('${ctx}/disabled/${task.id}')">失效</a> &nbsp;</c:if>
+				<c:if test="${task.state eq 'Y'}"><a href="#" onclick ="confirmDisabled('${ctx}/manageTask/disabled/${task.id}')">失效</a> &nbsp;
+				<a href="#" onclick ="confirmDisabled('${ctx}/manageTask/update/${task.id}')">任务变更</a> &nbsp;
+				</c:if>
 				<a href="#" onclick="confirmDelete('${ctx}/manageTask/delete/${task.id}')">删除</a></td>
 			</tr>
 		</c:forEach>
 		</tbody>
 	</table>
 	
-	<tags:pagination page="${manageTasks}" paginationSize="5"/>
+	<tags:paginationMybatis/>
 
 	
 </body>

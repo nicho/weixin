@@ -19,4 +19,5 @@ import com.gamewin.weixin.entity.ManageTask;
 public interface ManageTaskMybatisDao {
 
 	List<ManageTask> getUserMyManageTask(Long userId);
+	List<ManageTask> getUserManageTask(Long userId);
 }
