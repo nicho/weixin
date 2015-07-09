@@ -5,6 +5,7 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.task;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -147,8 +148,24 @@ public class ManageTaskController {
 	@RequiresRoles("admin")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	public String updateForm(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("task", manageTaskService.getManageTask(id));
+		ManageTask task=manageTaskService.getManageTask(id);
+		model.addAttribute("task",task);
 		model.addAttribute("action", "update");
+		
+		//获取人员
+		if(!"ALL".equals(task.getViewrangeType()))
+		{
+			List<Long> userIdList=new ArrayList<Long>();
+			List<ViewRange> userList=manageTaskService.getViewRangeUserByTask(id);
+			if(userList!=null && userList.size()>0)
+			{
+				for (int i = 0; i < userList.size(); i++) {
+					userIdList.add(userList.get(i).getUser().getId());
+				}
+				model.addAttribute("userIdArray",userIdList.toArray());
+			}
+		}
+		
 		return "manageTask/manageTaskForm";
 	}
 	@RequiresRoles("admin")
@@ -157,11 +174,37 @@ public class ManageTaskController {
 			RedirectAttributes redirectAttributes, ServletRequest request) {
 		String createDateStr = request.getParameter("createDateStr");
 		String endDateStr = request.getParameter("endDateStr");
-
+		//判断人员变更
+		
 		try {
 			manageTask.setCreateDate(DateUtils.parseDate(createDateStr, "yyyy-MM-dd"));
 			manageTask.setEndDate(DateUtils.parseDate(endDateStr, "yyyy-MM-dd"));
 			manageTaskService.saveManageTask(manageTask);
+			
+			//删除人员
+			manageTaskService.deleteViewRangeUserByTask(manageTask.getId());
+			
+			if("SELECT".equals(manageTask.getViewrangeType()))
+			{
+				//设置可见范围
+				String viewrangeUsers=request.getParameter("viewrangeUsers");
+				if(!StringUtils.isEmpty(viewrangeUsers))
+				{
+					String [] viewrangeUserArray=viewrangeUsers.split(",");
+					for (int i = 0; i < viewrangeUserArray.length; i++) {
+						Long userId=Long.parseLong(viewrangeUserArray[i]);  
+						User user_vr = new User(userId);
+						ViewRange vr=new ViewRange();
+						vr.setCreateDate(new Date());
+						vr.setIsdelete(0);
+						vr.setTask(manageTask);
+						vr.setUser(user_vr);
+						manageTaskService.saveViewRange(vr);
+					}
+				}
+			}
+			
+			 
 			redirectAttributes.addFlashAttribute("message", "更新任务成功");
 		} catch (Exception e) {
 			e.printStackTrace();

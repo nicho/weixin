@@ -135,6 +135,10 @@
 			{
 				$("#selectDiv").attr("style","");
 			}
+			if('${userIdArray}'!=null && '${userIdArray}'!='')
+			{
+				$('#cc').combotree('setValues', '${userIdArray}');
+			}
 			
 			$('#cc').combotree({  
 				url: "${ctx}/admin/user/findUserTree?id=1",  

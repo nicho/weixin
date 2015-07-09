@@ -51,6 +51,12 @@ public class ManageTaskService {
 		return manageTaskDao.findOne(id);
 	}
 	
+	public List<ViewRange> getViewRangeUserByTask(Long id) {
+		return viewRangeDao.getViewRangeUserByTask(id);
+	}
+	public void deleteViewRangeUserByTask(Long id) {
+		  viewRangeDao.deleteViewRangeUserByTask(id);
+	}
 	public void invalidAllQRCode(Long taskId) {
 		manageQRcodeDao.invalidAllQRCode(taskId);
 	}
