@@ -231,45 +231,64 @@ public class ManageQRcodeController {
 		ShiroUser user = (ShiroUser) SecurityUtils.getSubject().getPrincipal();
 		return user.id;
 	}
-	
+	private void createQrCode(ManageQRcode entity,ServletRequest request,String filePath)
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String nowDate=sdf.format(clock.getCurrentDate());
+		
+		String imageUrl = entity.getTask().getId() + "-" + entity.getQrcodeType() + "-" + entity.getId() + ".jpg";
+		String url = request.getServletContext().getRealPath("/") +"\\image\\"+nowDate+"\\" + imageUrl; // 
+		
+		File file =new File(filePath);    
+		// 如果文件夹不存在则创建
+		if (!file.exists() && !file.isDirectory()) {
+			file.mkdirs();
+		} 
+		try {
+			if ("WeixinGd".equals(entity.getQrcodeType())) {
+				String AccessToken = taskService.getAccessToken(); 
+				String ticket = MobileHttpClient.getJsapi_ticket_WeixinGd(AccessToken, entity.getId());
+				MobileHttpClient.getticketImage(URLEncoder.encode(ticket, "UTF-8"), url);
+
+			} else if ("WeixinLs".equals(entity.getQrcodeType())) {
+				String AccessToken = taskService.getAccessToken(); 
+				String ticket = MobileHttpClient.getJsapi_ticket_WeixinLs(AccessToken, entity.getId());
+				MobileHttpClient.getticketImage(URLEncoder.encode(ticket, "UTF-8"), url);
+			} else if ("WeixinApk".equals(entity.getQrcodeType())) {
+				QRCodeUtil.createEncode(MobileContants.YM+"/readurl/redirectUrl?taskid="+entity.getTask().getId()+"&qrcodeId="+entity.getId(), entity.getUser().getName(), filePath, imageUrl);
+			} else if ("WeixinOther".equals(entity.getQrcodeType())) {
+				QRCodeUtil.createEncode(MobileContants.YM+"/readurl/redirectUrl?taskid="+entity.getTask().getId()+"&qrcodeId="+entity.getId(), entity.getUser().getName(), filePath, imageUrl);
+			}
+		} catch (Exception e) { 
+			e.printStackTrace();
+		}
+		
+		entity.setImageUrl(nowDate+"\\"+imageUrl);
+		manageQRcodeService.saveManageQRcode(entity);
+	}
 	@RequestMapping(value = "viewManageQRcode/{id}")
 	public String viewManageQRcode(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,Model model,ServletRequest request) {
 		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
-		 
-		if(StringUtils.isEmpty(entity.getImageUrl()) && "Y".equals(entity.getQrState()))
+ 
+		if("Y".equals(entity.getQrState()))
 		{ 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			String nowDate=sdf.format(clock.getCurrentDate());
 			
-			String imageUrl = entity.getTask().getId() + "-" + entity.getQrcodeType() + "-" + entity.getId() + ".jpg";
-			String url = request.getServletContext().getRealPath("/") +"\\image\\"+nowDate+"\\" + imageUrl; // 
 			String filePath = request.getServletContext().getRealPath("/") +"\\image\\"+nowDate+"\\" ;
-			File file =new File(filePath);    
-			// 如果文件夹不存在则创建
-			if (!file.exists() && !file.isDirectory()) {
-				file.mkdirs();
-			} 
-			try {
-				if ("WeixinGd".equals(entity.getQrcodeType())) {
-					String AccessToken = taskService.getAccessToken(); 
-					String ticket = MobileHttpClient.getJsapi_ticket_WeixinGd(AccessToken, entity.getId());
-					MobileHttpClient.getticketImage(URLEncoder.encode(ticket, "UTF-8"), url);
-
-				} else if ("WeixinLs".equals(entity.getQrcodeType())) {
-					String AccessToken = taskService.getAccessToken(); 
-					String ticket = MobileHttpClient.getJsapi_ticket_WeixinLs(AccessToken, entity.getId());
-					MobileHttpClient.getticketImage(URLEncoder.encode(ticket, "UTF-8"), url);
-				} else if ("WeixinApk".equals(entity.getQrcodeType())) {
-					QRCodeUtil.createEncode(MobileContants.YM+"/readurl/redirectUrl?taskid="+entity.getTask().getId()+"&qrcodeId="+entity.getId(), entity.getUser().getName(), filePath, imageUrl);
-				} else if ("WeixinOther".equals(entity.getQrcodeType())) {
-					QRCodeUtil.createEncode(MobileContants.YM+"/readurl/redirectUrl?taskid="+entity.getTask().getId()+"&qrcodeId="+entity.getId(), entity.getUser().getName(), filePath, imageUrl);
+			if(!StringUtils.isEmpty(entity.getImageUrl()))
+			{
+				File file=new File(filePath+entity.getImageUrl());    
+				if(!file.exists())
+				{
+					//原文件不存在,重新生成
+					createQrCode(entity, request, filePath);
 				}
-			} catch (Exception e) { 
-				e.printStackTrace();
+			}else
+			{ 
+				createQrCode(entity, request, filePath);
 			}
 			
-			entity.setImageUrl(nowDate+"\\"+imageUrl);
-			manageQRcodeService.saveManageQRcode(entity);
 			
 		} 
 		 
