@@ -153,7 +153,7 @@ public class ApiListController {
 		System.out.println("内容：" + inputMsg.getContent());
 		 StringBuffer str = new StringBuffer();
 		// 根据消息类型获取对应的消息内容
-		if (msgType.equals("event")) {
+		if ("event".equals(msgType)) {
 
 			if ("subscribe".equals(inputMsg.getEvent())) {
 				Long qrCodeId = Long.parseLong(inputMsg.getEventKey().replaceAll("qrscene_", "").trim().toString());
@@ -189,7 +189,7 @@ public class ApiListController {
 				response.getWriter().write(str.toString());
 			}
 
-		} else if ("text".equals(inputMsg.getEvent())) {
+		} else if ("text".equals(msgType)) {
 			if ("绑定推广帐号".equals(inputMsg.getContent())) {
 				String AccessToken = manageTaskService.getAccessToken();
 				try {
@@ -213,8 +213,7 @@ public class ApiListController {
           str.append("<CreateTime>" + returnTime + "</CreateTime>");  
           str.append("<MsgType><![CDATA[" + msgType + "]]></MsgType>");  
           str.append("<Content><![CDATA[  "+ inputMsg.getContent() + " ]></Content>");  
-          str.append("</xml>");  
-	      	str.append("OK");
+          str.append("</xml>");   
 			System.out.println(str.toString());
 			response.getWriter().write(str.toString());
 		}

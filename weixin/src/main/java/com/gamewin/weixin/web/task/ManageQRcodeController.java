@@ -234,7 +234,7 @@ public class ManageQRcodeController {
 		String nowDate=sdf.format(clock.getCurrentDate());
 		
 		String imageUrl = entity.getTask().getId() + "-" + entity.getQrcodeType() + "-" + entity.getId() + ".jpg";
-		String url = request.getServletContext().getRealPath("/") +"\\image\\"+nowDate+"\\" + imageUrl; // 
+		String url =  MobileContants.IMAGEURL+nowDate+"\\" + imageUrl; // 
 		
 		File file =new File(filePath);    
 		// 如果文件夹不存在则创建
@@ -272,7 +272,7 @@ public class ManageQRcodeController {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			String nowDate=sdf.format(clock.getCurrentDate());
 			
-			String filePath = request.getServletContext().getRealPath("/") +"\\image\\"+nowDate+"\\" ;
+			String filePath = MobileContants.IMAGEURL+nowDate+"\\" ;
 			if(!StringUtils.isEmpty(entity.getImageUrl()))
 			{
 				File file=new File(filePath+entity.getImageUrl());    
@@ -288,7 +288,7 @@ public class ManageQRcodeController {
 			
 			
 		} 
-		 
+		model.addAttribute("HttpImageUrl",MobileContants.HTTPIMAGEURL);
 		model.addAttribute("entity",entity);
 		return "myTask/manageQRcodeView";
 	}

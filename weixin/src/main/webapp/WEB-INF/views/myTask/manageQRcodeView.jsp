@@ -29,7 +29,7 @@
 				</label>
 				</div>
 			</div>	 
-		 <img src="${ctx}/image/${entity.imageUrl}" />
+		 <img src="${HttpImageUrl}/image/${entity.imageUrl}" />
 		</fieldset>
  </form>
 </body>
