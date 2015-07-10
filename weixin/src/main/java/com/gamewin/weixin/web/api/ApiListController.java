@@ -157,6 +157,8 @@ public class ApiListController {
             if("subscribe".equals(inputMsg.getEvent()))
             {
             	Long qrCodeId= Long.parseLong(inputMsg.getEventKey().replaceAll("qrscene_", "").trim().toString());
+            	
+            	ManageQRcode manageQRcode=manageQRcodeService.getManageQRcode(qrCodeId); 
                 HistoryWeixin wxUser=new HistoryWeixin();
             	wxUser.setCreateDate(new Date());
             	wxUser.setToUserName(inputMsg.getToUserName());
@@ -166,9 +168,10 @@ public class ApiListController {
             	wxUser.setEventKey(inputMsg.getEventKey());
             	wxUser.setCreateTime(inputMsg.getCreateTime().toString());
             	wxUser.setQrcodeId(qrCodeId);
+            	wxUser.setTaskId(manageQRcode.getTask().getId());
             	manageQRcodeService.saveHistoryWeixin(wxUser);
             	
-            	ManageQRcode manageQRcode=manageQRcodeService.getManageQRcode(qrCodeId);
+            	
             	Integer count=manageQRcodeService.selectHistoryWeixinBytaskId(manageQRcode.getTask().getId(),inputMsg.getFromUserName());
             	if(count==0)
             	{ 
