@@ -185,29 +185,30 @@ public class ApiListController {
             	}
             
             } 
-            else if("text".equals(inputMsg.getEvent()))
-            {
-            	if("绑定推广帐号".equals(inputMsg.getContent()))
-            	{
-            		String AccessToken = manageTaskService.getAccessToken(); 
-            		try {
-            			String redurl=URLEncoder.encode(MobileContants.YM+"/weixinUser/bindUserOpenId","utf-8"); 
-            			String url="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+MobileContants.appID+"&redirect_uri="+redurl+"&response_type=code&scope=snsapi_base&state=1#wechat_redirect";
-            			
-						MobileHttpClient.sendWinXinMessage(AccessToken, inputMsg.getFromUserName(), "绑定推广帐号,请点击阅读全文,进行绑定", "绑定推广帐号通知", url);
-					} catch (Exception e) { 
-						System.out.println("消息发送失败");
-						e.printStackTrace();
-					}
-            		
-            	}
-            }
             
-            StringBuffer str = new StringBuffer();  
-            str.append("OK");   
-            System.out.println(str.toString());  
-            response.getWriter().write(str.toString());  
         }  
+        else if("text".equals(inputMsg.getEvent()))
+        {
+        	if("绑定推广帐号".equals(inputMsg.getContent()))
+        	{
+        		String AccessToken = manageTaskService.getAccessToken(); 
+        		try {
+        			String redurl=URLEncoder.encode(MobileContants.YM+"/weixinUser/bindUserOpenId","utf-8"); 
+        			String url="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+MobileContants.appID+"&redirect_uri="+redurl+"&response_type=code&scope=snsapi_base&state=1#wechat_redirect";
+        			
+					MobileHttpClient.sendWinXinMessage(AccessToken, inputMsg.getFromUserName(), "绑定推广帐号,请点击阅读全文,进行绑定", "绑定推广帐号通知", url);
+				} catch (Exception e) { 
+					System.out.println("消息发送失败");
+					e.printStackTrace();
+				}
+        		
+        	}
+        }
+        
+        StringBuffer str = new StringBuffer();  
+        str.append("OK");   
+        System.out.println(str.toString());  
+        response.getWriter().write(str.toString());  
          
     }  
 }
