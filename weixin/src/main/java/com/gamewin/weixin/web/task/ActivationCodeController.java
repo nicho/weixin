@@ -14,11 +14,12 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,7 +57,7 @@ public class ActivationCodeController {
 
 	@Autowired
 	private ActivationCodeService activationCodeService;
-
+	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
@@ -76,14 +77,14 @@ public class ActivationCodeController {
 
 		return "activationCode/activationCodeList";
 	}
-
+	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String createForm(Model model) {
 		model.addAttribute("activationCode", new ActivationCode());
 		model.addAttribute("action", "create");
 		return "activationCode/activationCodeForm";
 	}
-
+	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String create(@Valid ActivationCode newActivationCode, RedirectAttributes redirectAttributes,ServletRequest request) {
 		User user = new User(getCurrentUserId());
@@ -111,49 +112,8 @@ public class ActivationCodeController {
 		redirectAttributes.addFlashAttribute("message", "创建激活码成功");
 		return "redirect:/activationCode/";
 	}
-
-	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
-	public String updateForm(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("task", activationCodeService.getActivationCode(id));
-		model.addAttribute("action", "update");
-		return "activationCode/activationCodeForm";
-	}
-
-	@RequestMapping(value = "update", method = RequestMethod.POST)
-	public String update(@Valid @ModelAttribute("activationCode") ActivationCode activationCode,
-			RedirectAttributes redirectAttributes, ServletRequest request) {
-		 
-		try { 
-			activationCodeService.saveActivationCode(activationCode);
-			redirectAttributes.addFlashAttribute("message", "更新任务成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("message", "更新任务失败");
-			return "redirect:/activationCode/";
-		}
-		return "redirect:/activationCode/";
-	}
-
-	@RequestMapping(value = "delete/{id}")
-	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-		ActivationCode entity = activationCodeService.getActivationCode(id);
-		entity.setIsdelete(1);
-		activationCodeService.saveActivationCode(entity);
-		redirectAttributes.addFlashAttribute("message", "删除任务成功");
-		return "redirect:/activationCode/";
-	}
-
-	/**
-	 * 所有RequestMapping方法调用前的Model准备方法, 实现Struts2
-	 * Preparable二次部分绑定的效果,先根据form的id从数据库查出ActivationCode对象,再把Form提交的内容绑定到该对象上。
-	 * 因为仅update()方法的form中有id属性，因此仅在update时实际执行.
-	 */
-	@ModelAttribute
-	public void getActivationCode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
-		if (id != -1) {
-			model.addAttribute("activationCode", activationCodeService.getActivationCode(id));
-		}
-	}
+  
+	 
 
 	/**
 	 * 取出Shiro中的当前用户Id.
@@ -163,7 +123,7 @@ public class ActivationCodeController {
 		return user.id;
 	}
 	
-	
+	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "disabled/{id}")
 	public String disabled(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		ActivationCode activationCode = activationCodeService.getActivationCode(id);

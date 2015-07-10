@@ -5,7 +5,9 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.task;
 
+import java.io.File;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,8 @@ import javax.servlet.ServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springside.modules.utils.Clock;
 import org.springside.modules.web.Servlets;
 
 import com.gamewin.weixin.entity.ManageQRcode;
@@ -53,7 +58,7 @@ import com.google.common.collect.Maps;
 public class ManageQRcodeController {
 	 
 	private static final String PAGE_SIZE = "10";
-
+	private Clock clock = Clock.DEFAULT;
 	private static Map<String, String> sortTypes = Maps.newLinkedHashMap();
 	static {
 		sortTypes.put("auto", "自动");
@@ -67,6 +72,7 @@ public class ManageQRcodeController {
 	@Autowired
 	private TaskService taskService;
 	
+	@RequiresRoles(value = { "admin"}, logical = Logical.OR)
 	@RequestMapping(value = "showTaskQRcode/{id}",method = RequestMethod.GET)
 	public String showTaskQRcode(@PathVariable("id") Long id,@RequestParam(value = "page", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
@@ -187,6 +193,7 @@ public class ManageQRcodeController {
 
 		return "manageQRcode/manageQRcodeList";
 	} 
+	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "delete/{id}")
 	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
@@ -196,6 +203,7 @@ public class ManageQRcodeController {
 		redirectAttributes.addFlashAttribute("message", "删除二维码成功");
 		return "redirect:/manageQRcode/showTaskQRcode/"+entity.getTask().getId();
 	}
+	@RequiresRoles(value = { "admin", "TwoAdmin", "ThreeAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "disabled/{id}")
 	public String disabled(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
@@ -229,10 +237,18 @@ public class ManageQRcodeController {
 		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
 		 
 		if(StringUtils.isEmpty(entity.getImageUrl()) && "Y".equals(entity.getQrState()))
-		{
+		{ 
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			String nowDate=sdf.format(clock.getCurrentDate());
+			
 			String imageUrl = entity.getTask().getId() + "-" + entity.getQrcodeType() + "-" + entity.getId() + ".jpg";
-			String url = request.getServletContext().getRealPath("/") + "\\image\\" + imageUrl;
-			String filePath = request.getServletContext().getRealPath("/") + "\\image\\" ;
+			String url = request.getServletContext().getRealPath("/") +"\\image\\"+nowDate+"\\" + imageUrl; // 
+			String filePath = request.getServletContext().getRealPath("/") +"\\image\\"+nowDate+"\\" ;
+			File file =new File(filePath);    
+			// 如果文件夹不存在则创建
+			if (!file.exists() && !file.isDirectory()) {
+				file.mkdirs();
+			} 
 			try {
 				if ("WeixinGd".equals(entity.getQrcodeType())) {
 					String AccessToken = taskService.getAccessToken(); 
@@ -252,7 +268,7 @@ public class ManageQRcodeController {
 				e.printStackTrace();
 			}
 			
-			entity.setImageUrl(imageUrl);
+			entity.setImageUrl(nowDate+"\\"+imageUrl);
 			manageQRcodeService.saveManageQRcode(entity);
 			
 		} 
