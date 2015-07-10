@@ -31,8 +31,11 @@ import org.springside.modules.web.Servlets;
 import com.gamewin.weixin.entity.ManageTask;
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.entity.ViewRange;
+import com.gamewin.weixin.service.account.AccountService;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.ManageTaskService;
+import com.gamewin.weixin.util.MobileContants;
+import com.gamewin.weixin.util.MobileHttpClient;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 
@@ -60,7 +63,8 @@ public class ManageTaskController {
 
 	@Autowired
 	private ManageTaskService manageTaskService;
-
+	@Autowired
+	private AccountService accountService;
 	@RequiresRoles("admin")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int pageNumber,
@@ -141,7 +145,14 @@ public class ManageTaskController {
 						vr.setTask(newManageTask);
 						vr.setUser(user_vr);
 						manageTaskService.saveViewRange(vr);
-					}
+						
+						User msUser=accountService.getUser(userId);
+						if(!StringUtils.isEmpty(msUser.getWeixinOpenid()))
+						{
+							String AccessToken = manageTaskService.getAccessToken(); 
+							MobileHttpClient.sendWinXinMessage(AccessToken, msUser.getWeixinOpenid(), user.getName()+",发布了一条新的任务推广,请登录推广系统领取您的任务!", "新任务推广", MobileContants.YM);
+						}
+				 }
 				}
 			}
 
@@ -221,6 +232,13 @@ public class ManageTaskController {
 						vr.setTask(manageTask);
 						vr.setUser(user_vr);
 						manageTaskService.saveViewRange(vr);
+						
+						User msUser=accountService.getUser(userId);
+						if(!StringUtils.isEmpty(msUser.getWeixinOpenid()))
+						{
+							String AccessToken = manageTaskService.getAccessToken(); 
+							MobileHttpClient.sendWinXinMessage(AccessToken, msUser.getWeixinOpenid(), user.getName()+",变更了'"+manageTaskOld.getTitle()+"'任务推广,请登录推广系统重新领取您的任务!", "任务推广变更", MobileContants.YM);
+						}
 					}
 				}
 			}
