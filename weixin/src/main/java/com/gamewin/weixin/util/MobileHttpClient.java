@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -16,8 +18,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.json.JSONArray;
 import org.json.JSONObject;
-
 public class MobileHttpClient {
 
 	public static String getAccessToken() throws Exception {
@@ -202,5 +204,74 @@ public class MobileHttpClient {
 		return url;
 
 	}
+	 public static Map<String,String> sendWinXinMessage(String access_token,String touser,String msgContents,String title,String url) throws Exception 
+	 {
+		  Map<String,String> map=new HashMap<String, String>();
+		  CloseableHttpClient httpclient = HttpClients.createDefault();
+	        try {  
+	            HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token="+access_token);
+	            
+	            JSONObject jsonObj = new JSONObject();
+	            System.out.println("给用户发送微信消息-----------"+touser);
+	            jsonObj.put("touser", touser); 
+	            jsonObj.put("msgtype", "news"); 
+	      
+	            JSONObject body=new JSONObject();
+	            body.put("title", title);
+	            body.put("description", msgContents);
+	            body.put("url", url); 
+	             
+	            jsonObj.put("news",new JSONObject().put("articles", new JSONArray().put(body)));
+	            System.out.println(jsonObj.toString());
+	            StringEntity entity = new StringEntity(jsonObj.toString(),"UTF-8");
+	            
+	            httpPost.setEntity(entity); 
+	             
+	            CloseableHttpResponse response2 = httpclient.execute(httpPost);
 
+	            try {
+	                System.out.println(response2.getStatusLine());
+	                HttpEntity entity2 = response2.getEntity(); 
+	                if (entity2 != null) {
+	                    try {
+	                        BufferedReader bufferedReader = new BufferedReader(
+	                        new InputStreamReader(entity2.getContent(),"UTF-8"), 8 * 1024);
+	                        StringBuilder entityStringBuilder = new StringBuilder();
+	                        String line = null;
+	                        while ((line = bufferedReader.readLine()) != null) {
+	                            entityStringBuilder.append(line);
+	                        }
+	                        // 利用从HttpEntity中得到的String生成JsonObject
+	                        JSONObject resultJsonObject = new JSONObject(entityStringBuilder.toString());  
+	                         
+	                        map.put("errcode", resultJsonObject.get("errcode")+"");
+	                        map.put("errmsg", resultJsonObject.get("errmsg")+"");
+	                       
+	                        String invaliduser="";
+	                        try {
+	                        	invaliduser=resultJsonObject.get("invaliduser")+"";
+							} catch (Exception e) { 
+							}
+	                        map.put("invaliduser",invaliduser);
+	                    } catch (Exception e) {
+	                        e.printStackTrace();
+	                    }
+	                }
+	            } finally {
+	                response2.close();
+	            }
+	        } finally {
+	            httpclient.close();
+	        }
+	        return map;
+	 }
+	 public static void main(String[] args) {
+		 try {
+			String access_token=getAccessToken();
+			sendWinXinMessage(access_token, "or7XwwEpjASO9A5_skvnDf729nJ4", "测试内容", "系统通知", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx520c15f417810387&redirect_uri=http%3A%2F%2Fchong.qq.com%2Fphp%2Findex.php%3Fd%3D%26c%3DwxAdapter%26m%3DmobileDeal%26showwxpaytitle%3D1%26vb2ctag%3D4_2030_5_1194_60&response_type=code&scope=snsapi_base&state=123#wechat_redirect");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
