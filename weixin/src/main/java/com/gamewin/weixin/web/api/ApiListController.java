@@ -30,7 +30,6 @@ import com.gamewin.weixin.service.task.ManageQRcodeService;
 import com.gamewin.weixin.service.task.ManageTaskService;
 import com.gamewin.weixin.util.InputMessage;
 import com.gamewin.weixin.util.MobileContants;
-import com.gamewin.weixin.util.MobileHttpClient;
 import com.gamewin.weixin.util.OutputMessage;
 import com.gamewin.weixin.util.SHA1;
 import com.gamewin.weixin.util.SerializeXmlUtil;
@@ -184,36 +183,42 @@ public class ApiListController {
 						manageQRcodeService.saveManageQRcode(manageQRcode);
 					}
 				}
-		      	str.append("OK");
+		      	str.append("success");
 				System.out.println(str.toString());
 				response.getWriter().write(str.toString());
 			}
 
 		} else if ("text".equals(msgType)) {
-			if ("绑定推广帐号".equals(inputMsg.getContent())) {
-				String AccessToken = manageTaskService.getAccessToken();
-				try {
-					String redurl = URLEncoder.encode(MobileContants.YM + "/weixinUser/bindUserOpenId", "utf-8");
-					String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + MobileContants.appID
-							+ "&redirect_uri=" + redurl
-							+ "&response_type=code&scope=snsapi_base&state=1#wechat_redirect";
-
-					MobileHttpClient.sendWinXinMessage(AccessToken, inputMsg.getFromUserName(), "绑定推广帐号,请点击阅读全文,进行绑定",
-							"绑定推广帐号通知", url);
-				} catch (Exception e) {
-					System.out.println("消息发送失败");
-					e.printStackTrace();
-				}
-
+			
+			String redurl = URLEncoder.encode(MobileContants.YM + "/weixinUser/bindUserOpenId", "utf-8");
+			String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + MobileContants.appID
+					+ "&redirect_uri=" + redurl
+					+ "&response_type=code&scope=snsapi_base&state=1#wechat_redirect"; 
+			
+			String xxxx=inputMsg.getContent().toString();
+	 
+			if (xxxx.indexOf("绑定推广")!=-1) {
+				  
+		          str.append("<xml>                                              ");
+		          str.append("<ToUserName><![CDATA["+custermname+"]]></ToUserName>        ");
+		          str.append("<FromUserName><![CDATA["+servername+"]]></FromUserName>  ");
+		          str.append("<CreateTime>"+returnTime+"</CreateTime>                  ");
+		          str.append("<MsgType><![CDATA[news]]></MsgType>                ");
+		          str.append("<ArticleCount>1</ArticleCount>                     ");
+		          str.append("<Articles>                                         ");
+		          str.append("<item>                                             ");
+		          str.append("<Title><![CDATA[绑定推广帐号通知]]></Title>                   ");
+		          str.append("<Description><![CDATA[绑定推广帐号,请点击阅读全文,进行绑定]]></Description> ");
+		          str.append("<PicUrl><![CDATA[]]></PicUrl>                ");
+		          str.append("<Url><![CDATA["+url+"]]></Url>                         ");
+		          str.append("</item>                                            ");
+		          str.append("</Articles>                                        ");
+		          str.append("</xml>                                             ");
+			}else
+			{
+				str.append("success");
 			}
-		   
-          str.append("<xml>");  
-          str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>");  
-          str.append("<FromUserName><![CDATA[" + servername + "]]></FromUserName>");  
-          str.append("<CreateTime>" + returnTime + "</CreateTime>");  
-          str.append("<MsgType><![CDATA[" + msgType + "]]></MsgType>");  
-          str.append("<Content><![CDATA[  "+ inputMsg.getContent() + " ]></Content>");  
-          str.append("</xml>");   
+		     
 			System.out.println(str.toString());
 			response.getWriter().write(str.toString());
 		}

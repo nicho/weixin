@@ -150,7 +150,7 @@ public class ManageTaskController {
 						if(!StringUtils.isEmpty(msUser.getWeixinOpenid()))
 						{
 							String AccessToken = manageTaskService.getAccessToken(); 
-							MobileHttpClient.sendWinXinMessage(AccessToken, msUser.getWeixinOpenid(), user.getName()+",发布了一条新的任务推广,请登录推广系统领取您的任务!", "新任务推广", MobileContants.YM);
+							MobileHttpClient.sendWinXinMessage(AccessToken, msUser.getWeixinOpenid(), "管理员发布了一条新的任务推广,请登录推广系统领取您的任务!", "新任务推广", MobileContants.YM);
 						}
 				 }
 				}
@@ -237,7 +237,7 @@ public class ManageTaskController {
 						if(!StringUtils.isEmpty(msUser.getWeixinOpenid()))
 						{
 							String AccessToken = manageTaskService.getAccessToken(); 
-							MobileHttpClient.sendWinXinMessage(AccessToken, msUser.getWeixinOpenid(), user.getName()+",变更了'"+manageTaskOld.getTitle()+"'任务推广,请登录推广系统重新领取您的任务!", "任务推广变更", MobileContants.YM);
+							MobileHttpClient.sendWinXinMessage(AccessToken, msUser.getWeixinOpenid(), ",管理员变更了'"+manageTaskOld.getTitle()+"'任务推广,请登录推广系统重新领取您的任务!", "任务推广变更", MobileContants.YM);
 						}
 					}
 				}

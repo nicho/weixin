@@ -268,11 +268,9 @@ public class ManageQRcodeController {
 		ManageQRcode entity = manageQRcodeService.getManageQRcode(id);
  
 		if("Y".equals(entity.getQrState()))
-		{ 
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-			String nowDate=sdf.format(clock.getCurrentDate());
+		{  
 			
-			String filePath = MobileContants.IMAGEURL+nowDate+"\\" ;
+			String filePath = MobileContants.IMAGEURL+"\\" ;
 			if(!StringUtils.isEmpty(entity.getImageUrl()))
 			{
 				File file=new File(filePath+entity.getImageUrl());    
