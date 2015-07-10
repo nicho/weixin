@@ -63,10 +63,7 @@
 						<ul class="nav nav-tabs"> 
 							<li class="active">
 								<a href="#panel-549981" data-toggle="tab">帐号登录</a>
-							</li>
-						     <li >
-								<a href="${ctx}/register" data-toggle="tab">注册</a>
-							</li>
+							</li> 
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane" id="panel-60560">
@@ -77,10 +74,12 @@
 								<DIV>
 									<input type="password" name="password" placeholder="密码"  class="input-medium required"/><br>
 								</DIV>
-								 <DIV class="span6"><br><label><input type="checkbox" id="rememberMe" name="rememberMe"  />下次自动登录</label></DIV><br>
-									<DIV class="span1"><input type="submit" value=" 登录 " class="btn btn-primary"></DIV>  
-									
-							</div>
+								 <DIV class="span6"><br><label class="checkbox" for="rememberMe"><input type="checkbox" id="rememberMe" name="rememberMe"/> 记住我</label></DIV><br>
+									<DIV class="span1"><input type="submit" value=" 登录 " class="btn btn-primary"></DIV>
+							<br> <br> <a href="/weixin/register" data-toggle="tab"
+								style="float: right; font-size: 14px;">注册</a>
+						</div>
+					
 						</div>
 					</div>
         </section><!-- /loginBox -->
