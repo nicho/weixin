@@ -6,6 +6,7 @@
 		<pattern>/login*</pattern>
 		<pattern>/register</pattern>
 		<pattern>/readurl/*</pattern>
+		<pattern>/weixinUser/*</pattern>
 	</excludes>
 	
 	<decorator name="default" page="default.jsp">

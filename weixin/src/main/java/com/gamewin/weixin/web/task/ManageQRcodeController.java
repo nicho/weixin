@@ -36,7 +36,6 @@ import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.ManageQRcodeService;
 import com.gamewin.weixin.service.task.ManageTaskService;
-import com.gamewin.weixin.service.task.TaskService;
 import com.gamewin.weixin.util.MobileContants;
 import com.gamewin.weixin.util.MobileHttpClient;
 import com.gamewin.weixin.web.util.QRCodeUtil;
@@ -68,9 +67,7 @@ public class ManageQRcodeController {
 	@Autowired
 	private ManageQRcodeService manageQRcodeService;
 	@Autowired
-	private ManageTaskService manageTaskService;
-	@Autowired
-	private TaskService taskService;
+	private ManageTaskService manageTaskService; 
 	
 	@RequiresRoles(value = { "admin"}, logical = Logical.OR)
 	@RequestMapping(value = "showTaskQRcode/{id}",method = RequestMethod.GET)
@@ -246,12 +243,12 @@ public class ManageQRcodeController {
 		} 
 		try {
 			if ("WeixinGd".equals(entity.getQrcodeType())) {
-				String AccessToken = taskService.getAccessToken(); 
+				String AccessToken = manageTaskService.getAccessToken(); 
 				String ticket = MobileHttpClient.getJsapi_ticket_WeixinGd(AccessToken, entity.getId());
 				MobileHttpClient.getticketImage(URLEncoder.encode(ticket, "UTF-8"), url);
 
 			} else if ("WeixinLs".equals(entity.getQrcodeType())) {
-				String AccessToken = taskService.getAccessToken(); 
+				String AccessToken = manageTaskService.getAccessToken(); 
 				String ticket = MobileHttpClient.getJsapi_ticket_WeixinLs(AccessToken, entity.getId());
 				MobileHttpClient.getticketImage(URLEncoder.encode(ticket, "UTF-8"), url);
 			} else if ("WeixinApk".equals(entity.getQrcodeType())) {

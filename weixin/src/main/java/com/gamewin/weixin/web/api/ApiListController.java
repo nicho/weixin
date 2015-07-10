@@ -6,8 +6,8 @@
 package com.gamewin.weixin.web.api;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -26,7 +26,10 @@ import com.gamewin.weixin.entity.HistoryWeixin;
 import com.gamewin.weixin.entity.ManageQRcode;
 import com.gamewin.weixin.service.account.AccountService;
 import com.gamewin.weixin.service.task.ManageQRcodeService;
+import com.gamewin.weixin.service.task.ManageTaskService;
 import com.gamewin.weixin.util.InputMessage;
+import com.gamewin.weixin.util.MobileContants;
+import com.gamewin.weixin.util.MobileHttpClient;
 import com.gamewin.weixin.util.OutputMessage;
 import com.gamewin.weixin.util.SHA1;
 import com.gamewin.weixin.util.SerializeXmlUtil;
@@ -42,6 +45,8 @@ public class ApiListController {
 	private ManageQRcodeService manageQRcodeService;
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private ManageTaskService manageTaskService;
 	 
 	
  
@@ -132,10 +137,10 @@ public class ApiListController {
         // 将xml内容转换为InputMessage对象  
         InputMessage inputMsg = (InputMessage) xs.fromXML(xmlMsg.toString());  
   
-        String servername = inputMsg.getToUserName();// 服务端  
-        String custermname = inputMsg.getFromUserName();// 客户端  
+    //    String servername = inputMsg.getToUserName();// 服务端  
+   //     String custermname = inputMsg.getFromUserName();// 客户端  
         long createTime = inputMsg.getCreateTime();// 接收时间  
-        Long returnTime = Calendar.getInstance().getTimeInMillis() / 1000;// 返回时间  
+  //      Long returnTime = Calendar.getInstance().getTimeInMillis() / 1000;// 返回时间  
   
         // 取得消息类型  
         String msgType = inputMsg.getMsgType();  
@@ -180,7 +185,23 @@ public class ApiListController {
             	}
             
             } 
-            
+            else if("text".equals(inputMsg.getEvent()))
+            {
+            	if("绑定推广帐号".equals(inputMsg.getContent()))
+            	{
+            		String AccessToken = manageTaskService.getAccessToken(); 
+            		try {
+            			String redurl=URLEncoder.encode(MobileContants.YM+"/weixinUser/bindUserOpenId","utf-8"); 
+            			String url="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+MobileContants.appID+"&redirect_uri="+redurl+"&response_type=code&scope=snsapi_base&state=1#wechat_redirect";
+            			
+						MobileHttpClient.sendWinXinMessage(AccessToken, inputMsg.getFromUserName(), "绑定推广帐号,请点击阅读全文,进行绑定", "绑定推广帐号通知", url);
+					} catch (Exception e) { 
+						System.out.println("消息发送失败");
+						e.printStackTrace();
+					}
+            		
+            	}
+            }
             
             StringBuffer str = new StringBuffer();  
             str.append("OK");   

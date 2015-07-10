@@ -22,14 +22,11 @@ import com.gamewin.weixin.entity.ManageQRcode;
 import com.gamewin.weixin.service.account.AccountService;
 import com.gamewin.weixin.service.task.ManageQRcodeService;
 import com.gamewin.weixin.service.task.ManageTaskService;
-import com.gamewin.weixin.service.weixinUser.WeiXinUserService;
 
 @Controller
 @RequestMapping(value = "/readurl")
 public class ReadUrlController {
-
-	@Autowired
-	private WeiXinUserService weiXinUserService;
+ 
 	@Autowired
 	private AccountService accountService;
 	@Autowired

@@ -29,6 +29,7 @@
 				/api/** = anon
 				/readurl/** = anon
 				/register/** = anon
+				/weixinUser/** = anon
 				/ReceiveServlet=anon  
 				/** = user
 			</value>

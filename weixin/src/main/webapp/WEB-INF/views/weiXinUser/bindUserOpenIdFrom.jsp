@@ -25,48 +25,19 @@
  <link rel="stylesheet" type="text/css" href="${ctx}/static/styles/loginstyle.css" />
 </head>
  
-  <body>
-  <div id="header" class="row">
-	<div style="text-align:center"><h1><a href="${ctx}">《宝箱》微信公众号推广系统</a></h1><small>--二维码</small></div>
-	 
-</div>
+  <body> 
  
-   <form id="loginForm" action="${ctx}/login" method="post" class="form-horizontal">
+   <form id="loginForm" action="${ctx}/weixinUser/updateBindUserOpenId" method="post" class="form-horizontal">
+   <input type="hidden" name="code" value="${code}">
+   <input type="hidden" name="grant_type" value="${grant_type}">
     <div class="container"> 
-    	<c:if test="${not empty message}">
-	     <div class="alert alert-success controls input-large">
-			<button data-dismiss="alert" class="close">×</button>${message}</div>
-		</c:if>
-		<%
-			String error = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
-			if(error != null){
-		%>
-				<div class="alert alert-error controls input-large">
-					<button class="close" data-dismiss="alert">×</button>
-		<%
-				if(error.contains("DisabledAccountException")){
-					out.print("用户已被屏蔽,请登录其他用户.");
-				}
-				else if(error.contains("ConcurrentAccessException")){
-					out.print("用户正在审批,请等待.");
-				} 
-				else{
-					out.print("登录失败，请重试.");
-				}
-		%>		
-				</div>
-		<%
-			}
-		%>
+    	 
 			<section class="loginBox row-fluid">
 					<div class="tabbable" id="tabs-634549">
 						<ul class="nav nav-tabs"> 
 							<li class="active">
-								<a href="#panel-549981" data-toggle="tab">帐号登录</a>
-							</li>
-						     <li >
-								<a href="${ctx}/register" data-toggle="tab">注册</a>
-							</li>
+								<a href="#panel-549981" data-toggle="tab">绑定微信用户</a>
+							</li> 
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane" id="panel-60560">
@@ -77,8 +48,8 @@
 								<DIV>
 									<input type="password" name="password" placeholder="密码"  class="input-medium required"/><br>
 								</DIV>
-								 <DIV class="span6"><br><label><input type="checkbox" id="rememberMe" name="rememberMe"  />下次自动登录</label></DIV><br>
-									<DIV class="span1"><input type="submit" value=" 登录 " class="btn btn-primary"></DIV>  
+								 <DIV class="span6"><br><label> </label></DIV><br>
+									<DIV class="span1"><input type="submit" value=" 绑定 " class="btn btn-primary"></DIV>  
 									
 							</div>
 						</div>

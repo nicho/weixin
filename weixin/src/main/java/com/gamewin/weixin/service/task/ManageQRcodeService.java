@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springside.modules.cache.memcached.SpyMemcachedClient;
 import org.springside.modules.persistence.DynamicSpecifications;
 import org.springside.modules.persistence.SearchFilter;
 import org.springside.modules.persistence.SearchFilter.Operator;
@@ -30,8 +28,6 @@ import com.gamewin.weixin.mybatis.ManageQRcodeMybatisDao;
 import com.gamewin.weixin.repository.HistoryUrlDao;
 import com.gamewin.weixin.repository.HistoryWeixinDao;
 import com.gamewin.weixin.repository.ManageQRcodeDao;
-import com.gamewin.weixin.util.MemcachedObjectType;
-import com.gamewin.weixin.util.MobileHttpClient;
 import com.github.pagehelper.PageHelper;
 
 // Spring Bean的标识.
@@ -41,9 +37,7 @@ import com.github.pagehelper.PageHelper;
 public class ManageQRcodeService {
 
 	private ManageQRcodeDao manageQRcodeDao;
-
-	@Autowired(required = false)
-	private SpyMemcachedClient memcachedClient;
+ 
 	@Autowired
 	private ManageQRcodeMybatisDao manageQRcodeMybatisDao;
 	@Autowired
@@ -133,22 +127,7 @@ public class ManageQRcodeService {
 		this.manageQRcodeDao = manageQRcodeDao;
 	}
 
-	public String getAccessToken() {
-		String key = MemcachedObjectType.WEIXIN.getPrefix() + "AccessToken";
-
-		String accessToken = memcachedClient.get(key);
-		if (StringUtils.isEmpty(accessToken)) {
-			try {
-				accessToken = MobileHttpClient.getAccessToken();
-				memcachedClient.set(key, MemcachedObjectType.WEIXIN.getExpiredTime(), accessToken);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
-		return accessToken;
-	}
-
+	 
  
 
 	public ManageQRcode getManageQRcodeByUser(Long userid) {

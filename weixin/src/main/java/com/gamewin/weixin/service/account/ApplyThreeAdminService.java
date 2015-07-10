@@ -34,10 +34,7 @@ import com.gamewin.weixin.util.MobileHttpClient;
 @Transactional
 public class ApplyThreeAdminService {
 
-	private ApplyThreeAdminDao applyThreeAdminDao;
-
-	@Autowired(required = false)
-	private SpyMemcachedClient memcachedClient;
+	private ApplyThreeAdminDao applyThreeAdminDao; 
 
 	public ApplyThreeAdmin getApplyThreeAdmin(Long id) {
 		return applyThreeAdminDao.findOne(id);
@@ -119,22 +116,7 @@ public class ApplyThreeAdminService {
 		this.applyThreeAdminDao = applyThreeAdminDao;
 	}
 
-	public String getAccessToken() {
-		String key = MemcachedObjectType.WEIXIN.getPrefix() + "AccessToken";
-
-		String accessToken = memcachedClient.get(key);
-		if (StringUtils.isEmpty(accessToken)) {
-			try {
-				accessToken = MobileHttpClient.getAccessToken();
-				memcachedClient.set(key, MemcachedObjectType.WEIXIN.getExpiredTime(), accessToken);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
-		return accessToken;
-	}
-
+	 
  
 
 	public ApplyThreeAdmin getApplyThreeAdminByUser(Long userid) {

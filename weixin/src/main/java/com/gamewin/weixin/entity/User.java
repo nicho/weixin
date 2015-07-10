@@ -35,9 +35,18 @@ public class User extends IdEntity {
 	private Date registerDate;
 	private String status;
 	private String manageAddress;
+	private String weixinOpenid;
 	private User upuser; 
 	
 	
+	public String getWeixinOpenid() {
+		return weixinOpenid;
+	}
+
+	public void setWeixinOpenid(String weixinOpenid) {
+		this.weixinOpenid = weixinOpenid;
+	}
+
 	public String getManageAddress() {
 		return manageAddress;
 	}
