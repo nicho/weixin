@@ -53,7 +53,7 @@ function confirmPass(url)
 		<%@ include file="/WEB-INF/layouts/header.jsp"%>
 		<div class="row">
 			<%@ include file="/WEB-INF/layouts/left.jsp"%>
-			<div id="main" class="span10" style="width:auto">
+			<div id="main" class="span10" style="width:auto;max-width: 84%;">
 			  		  <sitemesh:body />  
 			</div>
 		</div>
