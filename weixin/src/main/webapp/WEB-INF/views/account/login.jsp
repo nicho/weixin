@@ -65,7 +65,7 @@
 								<a href="#panel-549981" data-toggle="tab">帐号登录</a>
 							</li> 
 						</ul>
-						<div class="tab-content">
+						<div class="">
 							<div class="tab-pane" id="panel-60560">
 							
 							</div>

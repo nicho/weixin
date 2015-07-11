@@ -49,11 +49,11 @@ function confirmPass(url)
 </head>
 
 <body>
-	<div class="container" style="width:95%">
+	<div class="container" style="width:99%">
 		<%@ include file="/WEB-INF/layouts/header.jsp"%>
 		<div class="row">
 			<%@ include file="/WEB-INF/layouts/left.jsp"%>
-			<div id="main" class="span10" style="width:auto;max-width: 84%;">
+			<div id="main" class="" style="overflow:hidden;padding-left: 15px;">
 			  		  <sitemesh:body />  
 			</div>
 		</div>
