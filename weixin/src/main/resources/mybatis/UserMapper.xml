@@ -31,7 +31,7 @@
 	</resultMap>
 	
 	<select id="getUserAllUserlist" parameterType="long" resultMap="userMap">
-		SELECT u.*,m.id AS upuser_user_id,m.login_Name AS upuser_login_Name  FROM wx_user u LEFT JOIN wx_user m ON u.upuser_id=m.id WHERE u.isdelete=0 AND u.upuser_id IS NULL
+		SELECT u.*,m.id AS upuser_user_id,m.login_Name AS upuser_login_Name  FROM wx_user u LEFT JOIN wx_user m ON u.upuser_id=m.id WHERE u.isdelete=0 
 	</select>
 	
 	  
@@ -53,8 +53,12 @@
 		
 	<select id="getUserTree2"  resultType="com.gamewin.weixin.entity.UserTree2" parameterType="long">
 		SELECT u.id AS id,u.name AS TEXT,CASE WHEN(SELECT COUNT(*) FROM wx_user WHERE upuser_id=u.id)>0 THEN 'closed' ELSE '' END AS state FROM wx_user u 
+		WHERE
 		<if test="userid != 1">
-		WHERE u.upuser_id=#{userid}
+		 u.upuser_id=#{userid}
+		</if>
+		<if test="userid == 1">
+		 u.upuser_id IS NULL
 		</if>
 	</select>
 </mapper> 
