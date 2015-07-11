@@ -49,25 +49,30 @@ public class WeiXinUserController {
 			Subject subject = SecurityUtils.getSubject();
 			subject.login(new UsernamePasswordToken(username, password, false));
 			if (subject.isAuthenticated()) {
-				if (!StringUtils.isEmpty(code)) {
+				ShiroUser user = (ShiroUser) subject.getPrincipal();
+				User usr = accountService.getUser(user.id);
+				if (StringUtils.isEmpty(usr.getWeixinOpenid())) {
+					if (!StringUtils.isEmpty(code)) {
+						String openId = MobileHttpClient.getUserOpenIdByCode(code);
+						if (!StringUtils.isEmpty(openId)) {
 
-					String openId = MobileHttpClient.getUserOpenIdByCode(code);
-					if (!StringUtils.isEmpty(openId)) {
-						ShiroUser user = (ShiroUser) subject.getPrincipal();
-						User usr = accountService.getUser(user.id);
-						usr.setWeixinOpenid(openId);
-						accountService.updateUser(usr);
-						model.addAttribute("message", "认证成功!");
-					} else {
-						model.addAttribute("message", "认证失效,请重新认证");
+							usr.setWeixinOpenid(openId);
+							accountService.updateUser(usr);
+							model.addAttribute("message", "绑定成功!");
+						} else {
+							model.addAttribute("message", "绑定失效,请重新绑定");
+						}
+
 					}
-
+				}else
+				{
+					model.addAttribute("message", "用户已绑定过.无需重复绑定!");
 				}
 			} else {
 				model.addAttribute("message", "用户名/密码错误");
 			}
 		} catch (Exception e) {
-			model.addAttribute("message", "认证失效,请重新认证");
+			model.addAttribute("message", "绑定失效,请重新绑定");
 		}
 		return "weiXinUser/bindUserOpenIdView";
 	}
