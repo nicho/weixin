@@ -31,7 +31,7 @@
 	</resultMap>
 	
 	<select id="getUserAllUserlist" parameterType="long" resultMap="userMap">
-		SELECT u.*,m.id AS upuser_user_id,m.login_Name AS upuser_login_Name  FROM wx_user u LEFT JOIN wx_user m ON u.upuser_id=m.id WHERE u.isdelete=0
+		SELECT u.*,m.id AS upuser_user_id,m.login_Name AS upuser_login_Name  FROM wx_user u LEFT JOIN wx_user m ON u.upuser_id=m.id WHERE u.isdelete=0 AND u.upuser_id IS NULL
 	</select>
 	
 	  
