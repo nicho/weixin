@@ -236,7 +236,7 @@ public class ManageQRcodeController {
 		String imageUrl = entity.getTask().getId() + "-" + entity.getQrcodeType() + "-" + entity.getId() + ".jpg";
 		String url =  MobileContants.IMAGEURL+nowDate+"\\" + imageUrl; // 
 		
-		File file =new File(filePath);    
+		File file =new File(filePath+nowDate);    
 		// 如果文件夹不存在则创建
 		if (!file.exists() && !file.isDirectory()) {
 			file.mkdirs();
