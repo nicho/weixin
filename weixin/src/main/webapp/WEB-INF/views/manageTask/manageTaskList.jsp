@@ -51,11 +51,13 @@
 				</td>
 				<td>${task.finishTaskCount}</td>
 				<td>${task.finishTaskAdminCount}</td>
-				<td><a href="${ctx}/manageQRcode/showTaskQRcode/${task.id}">二维码管理</a> &nbsp;
-				<c:if test="${task.state eq 'Y'}"><a href="#" onclick ="confirmDisabled('${ctx}/manageTask/disabled/${task.id}')">失效</a> &nbsp;
-				<a href="${ctx}/manageTask/update/${task.id}"  >任务变更</a> &nbsp;
-				</c:if>
-				<a href="#" onclick="confirmDelete('${ctx}/manageTask/delete/${task.id}')">删除</a></td>
+				<td>
+				<a href="${ctx}/manageQRcode/showTaskQRcode/${task.id}">二维码管理</a> 
+				 <c:if test="${task.state eq 'Y'}"><a href="#" onclick ="confirmDisabled('${ctx}/manageTask/disabled/${task.id}')">失效</a> 
+				 <a href="${ctx}/manageTask/update/${task.id}"  >任务变更</a></c:if> 
+				<a href="#" onclick="confirmDelete('${ctx}/manageTask/delete/${task.id}')">删除</a>
+
+				</td>
 			</tr>
 		</c:forEach>
 		</tbody>
