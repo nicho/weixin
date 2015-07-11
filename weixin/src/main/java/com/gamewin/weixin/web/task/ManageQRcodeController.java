@@ -252,9 +252,9 @@ public class ManageQRcodeController {
 				String ticket = MobileHttpClient.getJsapi_ticket_WeixinLs(AccessToken, entity.getId());
 				MobileHttpClient.getticketImage(URLEncoder.encode(ticket, "UTF-8"), url);
 			} else if ("WeixinApk".equals(entity.getQrcodeType())) {
-				QRCodeUtil.createEncode(MobileContants.YM+"/readurl/redirectUrl?taskid="+entity.getTask().getId()+"&qrcodeId="+entity.getId(), entity.getUser().getName(), filePath, imageUrl);
+				QRCodeUtil.createEncode(MobileContants.YM+"/readurl/redirectUrl?taskid="+entity.getTask().getId()+"&qrcodeId="+entity.getId(), entity.getUser().getName(), filePath+nowDate, imageUrl);
 			} else if ("WeixinOther".equals(entity.getQrcodeType())) {
-				QRCodeUtil.createEncode(MobileContants.YM+"/readurl/redirectUrl?taskid="+entity.getTask().getId()+"&qrcodeId="+entity.getId(), entity.getUser().getName(), filePath, imageUrl);
+				QRCodeUtil.createEncode(MobileContants.YM+"/readurl/redirectUrl?taskid="+entity.getTask().getId()+"&qrcodeId="+entity.getId(), entity.getUser().getName(), filePath+nowDate, imageUrl);
 			}
 		} catch (Exception e) { 
 			e.printStackTrace();
