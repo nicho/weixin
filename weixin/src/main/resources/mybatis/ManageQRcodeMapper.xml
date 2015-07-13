@@ -44,4 +44,30 @@
 	 <select id="getUserManageQRcodeByTaskIdAndQrType"  resultType="java.lang.Integer">
 	 	SELECT count(*)  FROM wx_manage_QRcode t WHERE  t.task_id=#{taskId} AND t.user_id=#{userId} and t.qrcode_Type=#{qrType} and t.isdelete=0
 	</select>
+	
+	
+	
+	<select id="getUserQRcodeByHistoryWeixin" parameterType="long" resultType="com.gamewin.weixin.model.QRcodeByHistory">
+	SELECT h.title,t.from_User_Name AS userId ,t.create_Date  AS createDate FROM wx_history_weixin t,wx_manage_QRcode h WHERE h.id=t.qrcode_Id AND h.user_id=#{userId} AND t.qrcode_id=#{qrcodeId} and status='Y'
+	</select>
+	<select id="getUserQRcodeByHistoryUrl" parameterType="long" resultType="com.gamewin.weixin.model.QRcodeByHistory">
+	SELECT h.title,t.user_ip AS userId ,t.create_Date  AS createDate FROM wx_history_url t,wx_manage_QRcode h WHERE h.id=t.qrcode_Id AND h.user_id=#{userId} AND t.qrcode_id=#{qrcodeId} and status='Y'
+ 
+	</select>
+	
+		<select id="getUserQRcodeByHistoryWeixinUp" parameterType="long" resultType="com.gamewin.weixin.model.QRcodeByHistory">
+	SELECT h.title,t.from_User_Name AS userId ,t.create_Date  AS createDate FROM wx_history_weixin t,wx_manage_QRcode h WHERE h.id=t.qrcode_Id   AND t.qrcode_id=#{qrcodeId} and status='Y'
+	 AND h.user_id in (SELECT w.id
+                               FROM wx_user w
+                              WHERE FIND_IN_SET(w.id, queryChildrenUser(#{userId}))
+                                 )
+	</select>
+	<select id="getUserQRcodeByHistoryUrlUp" parameterType="long" resultType="com.gamewin.weixin.model.QRcodeByHistory">
+	SELECT h.title,t.user_ip AS userId ,t.create_Date  AS createDate FROM wx_history_url t,wx_manage_QRcode h WHERE h.id=t.qrcode_Id   AND t.qrcode_id=#{qrcodeId} and status='Y'
+	 AND h.user_id in (SELECT w.id
+                               FROM wx_user w
+                              WHERE FIND_IN_SET(w.id, queryChildrenUser(#{userId}))
+                                 )
+ 
+	</select>
 </mapper> 

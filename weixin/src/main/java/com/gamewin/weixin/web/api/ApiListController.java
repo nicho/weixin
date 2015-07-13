@@ -157,7 +157,16 @@ public class ApiListController {
 		if ("event".equals(msgType)) {
 
 			if ("subscribe".equals(inputMsg.getEvent())) {
-				Long qrCodeId = Long.parseLong(inputMsg.getEventKey().replaceAll("qrscene_", "").trim().toString());
+				
+				Long qrCodeId =null;
+				try {
+					qrCodeId=Long.parseLong(inputMsg.getEventKey().replaceAll("qrscene_", "").trim().toString());
+				} catch (Exception e) {
+					System.out.println("用户关注"+inputMsg.getEventKey()+"------转换失败");
+					e.printStackTrace(); 
+				}
+						
+				
 				ManageQRcode manageQRcode = manageQRcodeService.getManageQRcode(qrCodeId);
 
 				Integer count = manageQRcodeService.selectHistoryWeixinBytaskId(manageQRcode.getTask().getId(),

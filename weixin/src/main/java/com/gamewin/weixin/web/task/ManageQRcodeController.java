@@ -33,6 +33,7 @@ import org.springside.modules.web.Servlets;
 import com.gamewin.weixin.entity.ManageQRcode;
 import com.gamewin.weixin.entity.ManageTask;
 import com.gamewin.weixin.entity.User;
+import com.gamewin.weixin.model.QRcodeByHistory;
 import com.gamewin.weixin.service.account.ShiroDbRealm.ShiroUser;
 import com.gamewin.weixin.service.task.ManageQRcodeService;
 import com.gamewin.weixin.service.task.ManageTaskService;
@@ -68,6 +69,61 @@ public class ManageQRcodeController {
 	private ManageQRcodeService manageQRcodeService;
 	@Autowired
 	private ManageTaskService manageTaskService; 
+	
+	
+	@RequestMapping(value = "showMyTaskQRcodeHistroy/{id}",method = RequestMethod.GET)
+	public String showMyTaskQRcodeHistroy(@PathVariable("id") Long id,@RequestParam(value = "page", defaultValue = "1") int pageNumber,
+			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
+			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
+			ServletRequest request) {
+		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
+		 
+		List<QRcodeByHistory> qRcodeByHistory =null;
+		ManageQRcode code=manageQRcodeService.getManageQRcode(id);
+		if("WeixinGd".equals(code.getQrcodeType()) || "WeixinLs".equals(code.getQrcodeType()))
+		{
+			qRcodeByHistory=manageQRcodeService.getUserQRcodeByHistoryWeixin(id,getCurrentUserId(), searchParams, pageNumber, pageSize,sortType);			
+		}
+		else if("WeixinApk".equals(code.getQrcodeType()) || "WeixinOther".equals(code.getQrcodeType()))
+		{
+			qRcodeByHistory=manageQRcodeService.getUserQRcodeByHistoryUrl(id,getCurrentUserId(), searchParams, pageNumber, pageSize,sortType);			
+		} 
+		PageInfo<QRcodeByHistory> page = new PageInfo<QRcodeByHistory>(qRcodeByHistory);
+	  	model.addAttribute("page", page);
+	  	model.addAttribute("qRcodeByHistory", qRcodeByHistory); 
+		model.addAttribute("sortType", sortType);
+		model.addAttribute("sortTypes", sortTypes);
+		// 将搜索条件编码成字符串，用于排序，分页的URL
+		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
+		return "myTask/showMyTaskQRcodeHistroyList";
+	}
+	
+	@RequestMapping(value = "showMyTaskQRcodeHistroyUp/{id}",method = RequestMethod.GET)
+	public String showMyTaskQRcodeHistroyUp(@PathVariable("id") Long id,@RequestParam(value = "page", defaultValue = "1") int pageNumber,
+			@RequestParam(value = "page.size", defaultValue = PAGE_SIZE) int pageSize,
+			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
+			ServletRequest request) {
+		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
+		 
+		List<QRcodeByHistory> qRcodeByHistory =null;
+		ManageQRcode code=manageQRcodeService.getManageQRcode(id);
+		if("WeixinGd".equals(code.getQrcodeType()) || "WeixinLs".equals(code.getQrcodeType()))
+		{
+			qRcodeByHistory=manageQRcodeService.getUserQRcodeByHistoryWeixinUp(id,getCurrentUserId(), searchParams, pageNumber, pageSize,sortType);			
+		}
+		else if("WeixinApk".equals(code.getQrcodeType()) || "WeixinOther".equals(code.getQrcodeType()))
+		{
+			qRcodeByHistory=manageQRcodeService.getUserQRcodeByHistoryUrlUp(id,getCurrentUserId(), searchParams, pageNumber, pageSize,sortType);			
+		} 
+		PageInfo<QRcodeByHistory> page = new PageInfo<QRcodeByHistory>(qRcodeByHistory);
+	  	model.addAttribute("page", page);
+	  	model.addAttribute("qRcodeByHistory", qRcodeByHistory); 
+		model.addAttribute("sortType", sortType);
+		model.addAttribute("sortTypes", sortTypes);
+		// 将搜索条件编码成字符串，用于排序，分页的URL
+		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
+		return "myTask/showMyTaskQRcodeHistroyList";
+	}
 	
 	@RequiresRoles(value = { "admin"}, logical = Logical.OR)
 	@RequestMapping(value = "showTaskQRcode/{id}",method = RequestMethod.GET)

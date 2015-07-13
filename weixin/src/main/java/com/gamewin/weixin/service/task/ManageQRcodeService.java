@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,7 @@ import org.springside.modules.persistence.SearchFilter.Operator;
 import com.gamewin.weixin.entity.HistoryUrl;
 import com.gamewin.weixin.entity.HistoryWeixin;
 import com.gamewin.weixin.entity.ManageQRcode;
+import com.gamewin.weixin.model.QRcodeByHistory;
 import com.gamewin.weixin.mybatis.ManageQRcodeMybatisDao;
 import com.gamewin.weixin.repository.HistoryUrlDao;
 import com.gamewin.weixin.repository.HistoryWeixinDao;
@@ -44,7 +46,23 @@ public class ManageQRcodeService {
 	private HistoryUrlDao historyUrlDao;
 	@Autowired
 	private HistoryWeixinDao historyWeixinDao;
-	
+ 
+	public List<QRcodeByHistory> getUserQRcodeByHistoryWeixin(Long taskId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
+		return manageQRcodeMybatisDao.getUserQRcodeByHistoryWeixin(taskId,userId);
+	}
+	public List<QRcodeByHistory> getUserQRcodeByHistoryUrl(Long taskId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
+		return manageQRcodeMybatisDao.getUserQRcodeByHistoryUrl(taskId,userId);
+	}
+	public List<QRcodeByHistory> getUserQRcodeByHistoryWeixinUp(Long taskId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
+		return manageQRcodeMybatisDao.getUserQRcodeByHistoryWeixinUp(taskId,userId);
+	}
+	public List<QRcodeByHistory> getUserQRcodeByHistoryUrlUp(Long taskId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
+		return manageQRcodeMybatisDao.getUserQRcodeByHistoryUrlUp(taskId,userId);
+	}
 	
 	public ManageQRcode getManageQRcode(Long id) {
 		return manageQRcodeDao.findOne(id);
