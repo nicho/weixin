@@ -28,8 +28,7 @@ public class ActivationCode extends IdEntity {
 	private Date createDate;
 	private Date activationDate;
 	private User user;
-	private User activationUser;
-	private Integer isdelete; 
+	private Integer isdelete;
 
 	public String getActivationCodeType() {
 		return activationCodeType;
@@ -77,16 +76,6 @@ public class ActivationCode extends IdEntity {
 
 	public void setActivationDate(Date activationDate) {
 		this.activationDate = activationDate;
-	}
-	// JPA 基于USER_ID列的多对一关系定义
-	@ManyToOne
-	@JoinColumn(name = "activation_user_id")
-	public User getActivationUser() {
-		return activationUser;
-	}
-
-	public void setActivationUser(User activationUser) {
-		this.activationUser = activationUser;
 	}
 
 	// JSR303 BeanValidator的校验规则

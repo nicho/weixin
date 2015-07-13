@@ -44,7 +44,7 @@
 				<td><fmt:formatDate  value="${task.activationDate}" type="both" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 				<td>${task.activationUser.loginName}</td> 
  
-				<td><a href="#" onclick="confirmDisabled('${ctx}/activationCode/disabled/${task.id}')">失效</a>&nbsp; <a href="#" onclick="confirmDelete('${ctx}/activationCode/delete/${task.id}')">删除</a></td>
+				<td><a href="${ctx}/register/code/${task.activationCode}"  >注册链接</a>&nbsp; <a href="#" onclick="confirmDisabled('${ctx}/activationCode/disabled/${task.id}')">失效</a>&nbsp; <a href="#" onclick="confirmDelete('${ctx}/activationCode/delete/${task.id}')">删除</a></td>
 			</tr>
 		</c:forEach>
 		</tbody>
