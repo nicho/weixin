@@ -60,7 +60,7 @@
 	    </h1>
 	    	</div>
 </div>
-	<form id="inputForm" action="${ctx}/registerByCode" method="post" class="form-horizontal">
+	<form id="inputForm" action="${ctx}/registerByAdminCode" method="post" class="form-horizontal">
 	<input type="hidden" value="${activationCode}" name="activationCode">
 		<fieldset>
 			<legend><small>用户注册</small></legend>
@@ -88,6 +88,30 @@
 					<input type="password" id="confirmPassword" name="confirmPassword" class="input-large required" equalTo="#plainPassword"/>
 				</div>
 			</div> 
+						<div class="control-group">
+				<label for="loginName" class="control-label">姓名:</label>
+				<div class="controls">
+					<input type="text" id="userName" name="userName" class="input-large required" value="${applyThreeAdmin.userName }" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="name" class="control-label">证件号:</label>
+				<div class="controls">
+					<input type="text" id="ssnumber" name="ssnumber" class="input-large required" value="${applyThreeAdmin.ssnumber }"/>
+				</div>
+			</div>
+	 		<div class="control-group">
+				<label for="name" class="control-label">地址:</label>
+				<div class="controls"> 
+					<input type="text" id="address" name="address" class="input-large required" value="${applyThreeAdmin.address }" />
+				</div>
+			</div>
+						 <div class="control-group">
+				<label for="plainPassword" class="control-label">申请理由:</label>
+				<div class="controls"> 
+					<textarea rows="5" cols="5" style="  width: 500px;" name="description" class="required" ${applyThreeAdmin.description }></textarea>
+				</div>
+			</div>
 			<div class="form-actions">
 				<input id="submit_btn" class="btn btn-primary" type="submit" value="提交"/>&nbsp;	
 				<input id="cancel_btn" class="btn" type="button" value="返回" onclick="history.back()"/>

@@ -5,6 +5,7 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.account;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletRequest;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gamewin.weixin.entity.ActivationCode;
+import com.gamewin.weixin.entity.ApplyThreeAdmin;
 import com.gamewin.weixin.entity.User;
 import com.gamewin.weixin.model.UserDto;
 import com.gamewin.weixin.service.account.AccountService;
@@ -54,12 +56,16 @@ public class RegisterController {
 		List<ActivationCode> codeList = activationCodeService.getActivationCodeByCode(id + "");
 		if (codeList != null && codeList.size() > 0) {
 			ActivationCode code = codeList.get(0);
-			if ("disabled".equals(code.getStatus())) {
-				redirectAttributes.addFlashAttribute("message", "激活码已失效");
-				return "redirect:/register";
-			} else {
+			if ("CREATEUSER".equals(code.getActivationCodeType())) {
 				model.addAttribute("activationCode", id);
-				return "account/registerByCode";
+				return "account/registerByUserCode";
+			}else if ("CREATETHREEADMIN".equals(code.getActivationCodeType())) {
+				model.addAttribute("activationCode", id);
+				return "account/registerByAdminCode";
+			}else
+			{
+				redirectAttributes.addFlashAttribute("message", "激活码类型异常!");
+				return "redirect:/register";
 			}
 		} else {
 			redirectAttributes.addFlashAttribute("message", "激活码不存在!");
@@ -68,8 +74,8 @@ public class RegisterController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
-	public String registerByCode(@Valid User user, RedirectAttributes redirectAttributes, ServletRequest request) {
+	@RequestMapping(value = "registerByUserCode",method = RequestMethod.POST)
+	public String registerByUserCode(@Valid User user, RedirectAttributes redirectAttributes, ServletRequest request) {
 		user.setIsdelete(0);
 
 		String activationCode = request.getParameter("activationCode");
@@ -77,13 +83,19 @@ public class RegisterController {
 			List<ActivationCode> codeList = activationCodeService.getActivationCodeByCode(activationCode);
 			if (codeList != null && codeList.size() > 0) {
 				ActivationCode code = codeList.get(0);
-				if ("disabled".equals(code.getStatus())) {
-					redirectAttributes.addFlashAttribute("message", "注册失败,激活码已失效");
-					return "redirect:/register";
-				} else if (!"CREATEUSER".equals(code.getActivationCodeType())) {
+				if (!"CREATEUSER".equals(code.getActivationCodeType())) {
 					redirectAttributes.addFlashAttribute("message", "注册失败,激活码类型不符");
 					return "redirect:/register";
-				} else {
+				}
+				
+				if ("disabled".equals(code.getStatus())) {
+					user.setUpuser(code.getUser());
+					user.setStatus("Audit");
+					accountService.registerUser(user);
+					
+					redirectAttributes.addFlashAttribute("message", "激活码已失效,注册申请已提交,待审核.");
+					return "redirect:/login";
+				} else{
 					user.setUpuser(code.getUser());
 					user.setStatus("enabled");
 					accountService.registerUser(user);
@@ -102,7 +114,71 @@ public class RegisterController {
 		}
 
 	}
+	@RequestMapping(value = "registerByAdminCode",method = RequestMethod.POST)
+	public String registerByAdminCode(@Valid User user, RedirectAttributes redirectAttributes, ServletRequest request,String userName,String ssnumber,String address,String description) {
+		user.setIsdelete(0);
 
+		String activationCode = request.getParameter("activationCode");
+		if (!StringUtils.isEmpty(activationCode)) {
+			List<ActivationCode> codeList = activationCodeService.getActivationCodeByCode(activationCode);
+			if (codeList != null && codeList.size() > 0) {
+				ActivationCode code = codeList.get(0);
+				if (!"CREATETHREEADMIN".equals(code.getActivationCodeType())) {
+					redirectAttributes.addFlashAttribute("message", "注册失败,激活码类型不符");
+					return "redirect:/register";
+				}
+				
+				if ("disabled".equals(code.getStatus())) {
+					user.setUpuser(code.getUser());
+					user.setStatus("Audit");
+					accountService.registerAdminUser(user);
+					
+					ApplyThreeAdmin newApplyThreeAdmin=new ApplyThreeAdmin();
+					newApplyThreeAdmin.setUser(user);
+					newApplyThreeAdmin.setIsdelete(0);
+					newApplyThreeAdmin.setStatus("submit");
+					newApplyThreeAdmin.setUpuser(code.getUser());
+					newApplyThreeAdmin.setUserName(userName);
+					newApplyThreeAdmin.setSsnumber(ssnumber);
+					newApplyThreeAdmin.setAddress(address);
+					newApplyThreeAdmin.setDescription(description);
+					newApplyThreeAdmin.setCreateDate(new Date());
+					newApplyThreeAdmin.setApprovalOpinion("激活码'"+activationCode+"'激活,激活码已失效待审核");
+				 
+	 
+					redirectAttributes.addFlashAttribute("message", "激活码已失效,注册申请已提交,待审核.");
+					return "redirect:/login";
+				} else{
+					user.setUpuser(code.getUser());
+					user.setStatus("enabled");
+					accountService.registerAdminUser(user);
+					
+					ApplyThreeAdmin newApplyThreeAdmin=new ApplyThreeAdmin();
+					newApplyThreeAdmin.setUser(user);
+					newApplyThreeAdmin.setIsdelete(0);
+					newApplyThreeAdmin.setStatus("pass");
+					newApplyThreeAdmin.setUpuser(code.getUser());
+					newApplyThreeAdmin.setUserName(userName);
+					newApplyThreeAdmin.setSsnumber(ssnumber);
+					newApplyThreeAdmin.setAddress(address);
+					newApplyThreeAdmin.setDescription(description);
+					newApplyThreeAdmin.setCreateDate(new Date());
+					newApplyThreeAdmin.setApprovalOpinion("激活码'"+activationCode+"'激活成功");
+					 
+					redirectAttributes.addFlashAttribute("message", "注册成功.您已成为三级分销商");
+					return "redirect:/login";
+				}
+			} else {
+				redirectAttributes.addFlashAttribute("message", "注册失败,激活码不存在!");
+				return "redirect:/register";
+			}
+
+		} else {
+			redirectAttributes.addFlashAttribute("message", "注册失败,激活码不存在!");
+			return "redirect:/register";
+		}
+
+	}
 	@RequestMapping(method = RequestMethod.POST)
 	public String register(@Valid User user, RedirectAttributes redirectAttributes, ServletRequest request) {
 		user.setIsdelete(0);

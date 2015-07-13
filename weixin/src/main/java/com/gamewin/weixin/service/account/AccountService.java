@@ -79,7 +79,13 @@ public class AccountService {
 
 		userDao.save(user);
 	}
+	public void registerAdminUser(User user) {
+		entryptPassword(user);
+		user.setRoles("ThreeAdmin");
+		user.setRegisterDate(clock.getCurrentDate());
 
+		userDao.save(user);
+	}
 	public void createUser(User user) {
 		entryptPassword(user);
 		user.setRegisterDate(clock.getCurrentDate());
