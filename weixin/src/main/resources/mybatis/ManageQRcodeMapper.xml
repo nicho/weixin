@@ -35,7 +35,11 @@
 	
 	<select id="getMyUserManageQRcodeByTaskId" parameterType="long" resultMap="ManageQRcodeMap">
 	 	SELECT t.*,u.login_name AS user_loginName ,u.name AS user_name,m.title AS task_title   
-	 	 FROM wx_manage_QRcode t,wx_user u,wx_manage_task m WHERE u.id=t.user_id AND m.id=t.task_id AND t.task_id=#{taskId} and t.isdelete=0 AND t.user_id=#{userId}
+	 	 FROM wx_manage_QRcode t,wx_user u,wx_manage_task m WHERE u.id=t.user_id AND m.id=t.task_id AND t.task_id=#{taskId} and t.isdelete=0 
+	 	 AND u.user_id in (SELECT w.id
+                               FROM wx_user w
+                              WHERE FIND_IN_SET(w.id, queryChildrenUser(#{userId}))
+                                 )
 	</select>
 	 <select id="getUserManageQRcodeByTaskIdAndQrType"  resultType="java.lang.Integer">
 	 	SELECT count(*)  FROM wx_manage_QRcode t WHERE  t.task_id=#{taskId} AND t.user_id=#{userId} and t.qrcode_Type=#{qrType} and t.isdelete=0

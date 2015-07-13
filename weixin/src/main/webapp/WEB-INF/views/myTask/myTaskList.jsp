@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %> 
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
 <html>
@@ -23,7 +24,11 @@
 	</div>
 	
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><tr><th>任务名称</th><th>任务描述</th><th>开始时间</th><th>结束时间</th><th>任务目标数</th><th>任务状态</th><th>二维码类型</th><th>任务范围</th><th>总完成任务数</th><th>本人完成任务数</th><th>下级完成任务数</th><th>管理</th></tr></thead>
+		<thead><tr><th>任务名称</th><th>任务描述</th><th>开始时间</th><th>结束时间</th><th>任务目标数</th><th>任务状态</th><th>二维码类型</th><th>任务范围</th><th>总完成任务数</th><th>本人完成任务数</th>
+		<shiro:hasAnyRoles name="admin,TwoAdmin,ThreeAdmin">
+		<th>下级完成任务数</th>
+		</shiro:hasAnyRoles>
+		<th>管理</th></tr></thead>
 		<tbody>
 		<c:forEach items="${manageTasks}" var="task">
 			<tr>
@@ -50,7 +55,9 @@
 				</td>
 				<td>${task.finishTaskCount}</td> 
 			    <td>${task.finishTaskMyCount}</td> 
+			    <shiro:hasAnyRoles name="admin,TwoAdmin,ThreeAdmin">
 			    <td>${task.finishTaskMyChildrenCount}</td> 
+			    </shiro:hasAnyRoles>
 				<td><a href="${ctx}/manageQRcode/showMyTaskQRcode/${task.id}">查看二维码</a> </td>
 			</tr>
 		</c:forEach>
