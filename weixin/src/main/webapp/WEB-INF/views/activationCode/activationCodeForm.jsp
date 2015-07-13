@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %>  
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
@@ -24,7 +25,9 @@
 					 <select name="activationCodeType" class="required" >
 						<option value="">请选择</option>
 						<option value="CREATEUSER" >用户注册</option>
+						<shiro:hasAnyRoles name="admin,TwoAdmin">
 						<option value="CREATETHREEADMIN" >分销商注册</option>
+						</shiro:hasAnyRoles>
 					 </select>
 				</div>
 			</div>	

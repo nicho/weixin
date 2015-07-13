@@ -60,7 +60,7 @@
 	    </h1>
 	    	</div>
 </div>
-	<form id="inputForm" action="${ctx}/registerByUserCode" method="post" class="form-horizontal">
+	<form id="inputForm" action="${ctx}/register/registerByUserCode" method="post" class="form-horizontal">
 	<input type="hidden" value="${activationCode}" name="activationCode">
 		<fieldset>
 			<legend><small>用户注册</small></legend>

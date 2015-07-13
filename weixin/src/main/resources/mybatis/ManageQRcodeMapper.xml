@@ -36,7 +36,7 @@
 	<select id="getMyUserManageQRcodeByTaskId" parameterType="long" resultMap="ManageQRcodeMap">
 	 	SELECT t.*,u.login_name AS user_loginName ,u.name AS user_name,m.title AS task_title   
 	 	 FROM wx_manage_QRcode t,wx_user u,wx_manage_task m WHERE u.id=t.user_id AND m.id=t.task_id AND t.task_id=#{taskId} and t.isdelete=0 
-	 	 AND u.user_id in (SELECT w.id
+	 	 AND t.user_id in (SELECT w.id
                                FROM wx_user w
                               WHERE FIND_IN_SET(w.id, queryChildrenUser(#{userId}))
                                  )
@@ -56,18 +56,11 @@
 	</select>
 	
 		<select id="getUserQRcodeByHistoryWeixinUp" parameterType="long" resultType="com.gamewin.weixin.model.QRcodeByHistory">
-	SELECT h.title,t.from_User_Name AS userId ,t.create_Date  AS createDate FROM wx_history_weixin t,wx_manage_QRcode h WHERE h.id=t.qrcode_Id   AND t.qrcode_id=#{qrcodeId} and status='Y'
-	 AND h.user_id in (SELECT w.id
-                               FROM wx_user w
-                              WHERE FIND_IN_SET(w.id, queryChildrenUser(#{userId}))
-                                 )
+	SELECT h.title,t.from_User_Name AS userId ,t.create_Date  AS createDate FROM wx_history_weixin t,wx_manage_QRcode h WHERE h.id=t.qrcode_Id   AND t.qrcode_id=#{qrcodeId} and (status='Y' or status='N')
 	</select>
 	<select id="getUserQRcodeByHistoryUrlUp" parameterType="long" resultType="com.gamewin.weixin.model.QRcodeByHistory">
-	SELECT h.title,t.user_ip AS userId ,t.create_Date  AS createDate FROM wx_history_url t,wx_manage_QRcode h WHERE h.id=t.qrcode_Id   AND t.qrcode_id=#{qrcodeId} and status='Y'
-	 AND h.user_id in (SELECT w.id
-                               FROM wx_user w
-                              WHERE FIND_IN_SET(w.id, queryChildrenUser(#{userId}))
-                                 )
+	SELECT h.title,t.user_ip AS userId ,t.create_Date  AS createDate FROM wx_history_url t,wx_manage_QRcode h WHERE h.id=t.qrcode_Id   AND t.qrcode_id=#{qrcodeId} and (status='Y' or status='N')
+ 
  
 	</select>
 </mapper> 

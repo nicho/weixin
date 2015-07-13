@@ -27,11 +27,11 @@ public interface ManageQRcodeMybatisDao {
 
 	Integer getUserManageQRcodeByTaskIdAndQrType(@Param("taskId") Long taskId,@Param("qrType") String qrType,@Param("userId") Long userId );
 	
-	List<QRcodeByHistory> getUserQRcodeByHistoryWeixin(@Param("taskId") Long taskId,@Param("userId") Long userId );
+	List<QRcodeByHistory> getUserQRcodeByHistoryWeixin(@Param("qrcodeId") Long taskId,@Param("userId") Long userId );
 	
 	List<QRcodeByHistory> getUserQRcodeByHistoryUrl(@Param("qrcodeId") Long qrcodeId,@Param("userId") Long userId );
 	
-	List<QRcodeByHistory> getUserQRcodeByHistoryWeixinUp(@Param("taskId") Long taskId,@Param("userId") Long userId );
+	List<QRcodeByHistory> getUserQRcodeByHistoryWeixinUp(@Param("qrcodeId") Long taskId,@Param("userId") Long userId );
 	
 	List<QRcodeByHistory> getUserQRcodeByHistoryUrlUp(@Param("qrcodeId") Long qrcodeId,@Param("userId") Long userId );
 	

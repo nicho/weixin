@@ -54,9 +54,9 @@
 				</c:choose>
 				</td>
 				<td>${task.finishTaskCount}</td> 
-			    <td><a href="${ctx}/showMyTaskQRcodeHistroy/${task.id}">${task.finishTaskMyCount}</a></td> 
+			    <td>${task.finishTaskMyCount}</td> 
 			    <shiro:hasAnyRoles name="admin,TwoAdmin,ThreeAdmin">
-			    <td><a href="${ctx}/showMyTaskQRcodeHistroyUp/${task.id}">${task.finishTaskMyChildrenCount}</a></td> 
+			    <td>${task.finishTaskMyChildrenCount}</td> 
 			    </shiro:hasAnyRoles>
 				<td><a href="${ctx}/manageQRcode/showMyTaskQRcode/${task.id}">查看二维码</a> </td>
 			</tr>

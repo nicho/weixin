@@ -45,8 +45,8 @@
 					<c:when test="${task.qrState eq 'N'}">失效</c:when> 
 				</c:choose>
 				</td>
-				<td>${task.qrSubscribeCount}</td> 
-				<td>${task.qrSubscribeAdminCount}</td> 
+				<td><a href="${ctx}/manageQRcode/showMyTaskQRcodeHistroy/${task.id}">${task.qrSubscribeCount}</a></td> 
+				<td><a href="${ctx}/manageQRcode/showMyTaskQRcodeHistroyUp/${task.id}">${task.qrSubscribeAdminCount}</a></td> 
 				<td>${task.user.name}</td>
 				<td>
 				<shiro:hasRole name="admin">

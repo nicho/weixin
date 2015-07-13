@@ -51,9 +51,9 @@
 	SELECT u.id,u.name,u.upuser_id,u.name upuser_name  FROM wx_user u WHERE FIND_IN_SET(id, queryChildrenUser(1)) AND u.upuser_id IS NOT NULL 
 	AND u.status='enabled' AND u.isdelete=0
 	</select>
-		
+		<!-- CASE WHEN(SELECT COUNT(*) FROM wx_user WHERE upuser_id=u.id)>0 THEN 'closed' ELSE '' END AS state -->
 	<select id="getUserTree2"  resultType="com.gamewin.weixin.entity.UserTree2" parameterType="long">
-		SELECT u.id AS id,u.name AS TEXT,CASE WHEN(SELECT COUNT(*) FROM wx_user WHERE upuser_id=u.id)>0 THEN 'closed' ELSE '' END AS state FROM wx_user u 
+		SELECT u.id AS id,u.name AS TEXT,  ''  state FROM wx_user u 
 		WHERE  u.status='enabled' AND u.isdelete=0 AND
 		<if test="userid != 1">
 		 u.upuser_id=#{userid}

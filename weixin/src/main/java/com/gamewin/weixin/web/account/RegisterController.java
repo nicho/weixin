@@ -53,14 +53,13 @@ public class RegisterController {
 	@RequestMapping(value = "code/{id}")
 	public String registerFormByCode(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
 
-		List<ActivationCode> codeList = activationCodeService.getActivationCodeByCode(id + "");
-		if (codeList != null && codeList.size() > 0) {
-			ActivationCode code = codeList.get(0);
+		ActivationCode code = activationCodeService.getActivationCode(id);
+		if (code != null ) { 
 			if ("CREATEUSER".equals(code.getActivationCodeType())) {
-				model.addAttribute("activationCode", id);
+				model.addAttribute("activationCode", code.getActivationCode());
 				return "account/registerByUserCode";
 			}else if ("CREATETHREEADMIN".equals(code.getActivationCodeType())) {
-				model.addAttribute("activationCode", id);
+				model.addAttribute("activationCode", code.getActivationCode());
 				return "account/registerByAdminCode";
 			}else
 			{

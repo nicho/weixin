@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,21 +46,21 @@ public class ManageQRcodeService {
 	@Autowired
 	private HistoryWeixinDao historyWeixinDao;
  
-	public List<QRcodeByHistory> getUserQRcodeByHistoryWeixin(Long taskId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+	public List<QRcodeByHistory> getUserQRcodeByHistoryWeixin(Long qrcodeId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
-		return manageQRcodeMybatisDao.getUserQRcodeByHistoryWeixin(taskId,userId);
+		return manageQRcodeMybatisDao.getUserQRcodeByHistoryWeixin(qrcodeId,userId);
 	}
-	public List<QRcodeByHistory> getUserQRcodeByHistoryUrl(Long taskId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+	public List<QRcodeByHistory> getUserQRcodeByHistoryUrl(Long qrcodeId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
-		return manageQRcodeMybatisDao.getUserQRcodeByHistoryUrl(taskId,userId);
+		return manageQRcodeMybatisDao.getUserQRcodeByHistoryUrl(qrcodeId,userId);
 	}
-	public List<QRcodeByHistory> getUserQRcodeByHistoryWeixinUp(Long taskId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+	public List<QRcodeByHistory> getUserQRcodeByHistoryWeixinUp(Long qrcodeId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
-		return manageQRcodeMybatisDao.getUserQRcodeByHistoryWeixinUp(taskId,userId);
+		return manageQRcodeMybatisDao.getUserQRcodeByHistoryWeixinUp(qrcodeId,userId);
 	}
-	public List<QRcodeByHistory> getUserQRcodeByHistoryUrlUp(Long taskId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+	public List<QRcodeByHistory> getUserQRcodeByHistoryUrlUp(Long qrcodeId,Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
 			String sortType) {
-		return manageQRcodeMybatisDao.getUserQRcodeByHistoryUrlUp(taskId,userId);
+		return manageQRcodeMybatisDao.getUserQRcodeByHistoryUrlUp(qrcodeId,userId);
 	}
 	
 	public ManageQRcode getManageQRcode(Long id) {
