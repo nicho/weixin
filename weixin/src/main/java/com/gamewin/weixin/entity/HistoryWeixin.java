@@ -25,6 +25,15 @@ public class HistoryWeixin extends IdEntity {
 	private Long qrcodeId;
 	private Long taskId; 
 	private Date createDate;
+	private String status;
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public Long getTaskId() {
 		return taskId;

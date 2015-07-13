@@ -19,8 +19,16 @@ public class HistoryUrl extends IdEntity {
 	private String userIp;
 	private Long qrcodeId;
 	private Date createDate;
-
+	private String status;
  
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public String getUserIp() {
 		return userIp;

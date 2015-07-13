@@ -173,18 +173,22 @@ public class ApiListController {
 				wxUser.setCreateTime(inputMsg.getCreateTime().toString());
 				wxUser.setQrcodeId(qrCodeId);
 				wxUser.setTaskId(manageQRcode.getTask().getId());
-				manageQRcodeService.saveHistoryWeixin(wxUser);
+				
 
 				if (count == 0) {
 					if ("Y".equals(manageQRcode.getQrState())) {
 						manageQRcode.setQrSubscribeCount(manageQRcode.getQrSubscribeCount() + 1);
 						manageQRcode.setQrSubscribeAdminCount(manageQRcode.getQrSubscribeAdminCount() + 1);
 						manageQRcodeService.saveManageQRcode(manageQRcode);
+						wxUser.setStatus("Y");
 					} else {
 						manageQRcode.setQrSubscribeAdminCount(manageQRcode.getQrSubscribeAdminCount() + 1);
 						manageQRcodeService.saveManageQRcode(manageQRcode);
+						wxUser.setStatus("N");
 					}
 				}
+				
+				manageQRcodeService.saveHistoryWeixin(wxUser);
 		      	str.append("success");
 				System.out.println(str.toString());
 				response.getWriter().write(str.toString());
