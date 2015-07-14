@@ -4,7 +4,8 @@
 		<pattern>/static/*</pattern>
 		<pattern>/api/*</pattern>
 		<pattern>/login*</pattern>
-		<pattern>/register/**</pattern>
+		<pattern>/register*</pattern>
+		<pattern>/register/*</pattern>
 		<pattern>/readurl/*</pattern>
 		<pattern>/weixinUser/*</pattern>
 	</excludes>
