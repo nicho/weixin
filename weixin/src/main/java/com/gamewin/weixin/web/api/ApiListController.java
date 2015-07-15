@@ -244,7 +244,7 @@ public class ApiListController {
 				System.out.println(str.toString());
 				response.getWriter().write(str.toString());
 			} else {
-				if ("?".equals(xxxx) || "查看".equals(xxxx) || "礼包".equals(xxxx)) {
+				if ("?".equals(xxxx) || "？".equals(xxxx) || "查看".equals(xxxx) || "礼包".equals(xxxx)) {
 					List<Game> gameList = gameService.getEffectiveGamelist();
 					if (gameList != null && gameList.size() > 0) {
 						for (int i = 0; i < gameList.size(); i++) {
