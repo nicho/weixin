@@ -61,8 +61,8 @@ public class ApiListController {
 			System.out.println(timestamp);
 			System.out.println(nonce);
 			System.out.println(echostr);
-			if(!StringUtils.isEmpty(signature) && !StringUtils.isEmpty(timestamp) && !StringUtils.isEmpty(nonce) && !StringUtils.isEmpty(echostr))
-			access(request, response);
+			if (!StringUtils.isEmpty(signature) && !StringUtils.isEmpty(timestamp) && !StringUtils.isEmpty(nonce) && !StringUtils.isEmpty(echostr))
+				access(request, response);
 		} else {
 			// 进入POST聊天处理
 			System.out.println("enter post");
@@ -136,10 +136,10 @@ public class ApiListController {
 		// 将xml内容转换为InputMessage对象
 		InputMessage inputMsg = (InputMessage) xs.fromXML(xmlMsg.toString());
 
-		 String servername = inputMsg.getToUserName();// 服务端
-		 String custermname = inputMsg.getFromUserName();// 客户端
+		String servername = inputMsg.getToUserName();// 服务端
+		String custermname = inputMsg.getFromUserName();// 客户端
 		long createTime = inputMsg.getCreateTime();// 接收时间
-		 Long returnTime = Calendar.getInstance().getTimeInMillis() / 1000;//
+		Long returnTime = Calendar.getInstance().getTimeInMillis() / 1000;//
 		// 返回时间
 
 		// 取得消息类型
@@ -152,94 +152,105 @@ public class ApiListController {
 		System.out.println("消息Event：" + inputMsg.getEvent());
 		System.out.println("消息EventKey：" + inputMsg.getEventKey());
 		System.out.println("内容：" + inputMsg.getContent());
-		 StringBuffer str = new StringBuffer();
+		StringBuffer str = new StringBuffer();
 		// 根据消息类型获取对应的消息内容
 		if ("event".equals(msgType)) {
 
 			if ("subscribe".equals(inputMsg.getEvent())) {
-				
-				Long qrCodeId =null;
-				try {
-					qrCodeId=Long.parseLong(inputMsg.getEventKey().replaceAll("qrscene_", "").trim().toString());
-				} catch (Exception e) {
-					System.out.println("用户关注"+inputMsg.getEventKey()+"------转换失败");
-					e.printStackTrace(); 
-				}
-						
-				
-				ManageQRcode manageQRcode = manageQRcodeService.getManageQRcode(qrCodeId);
 
-				Integer count = manageQRcodeService.selectHistoryWeixinBytaskId(manageQRcode.getTask().getId(),
-						inputMsg.getFromUserName());
-
-				HistoryWeixin wxUser = new HistoryWeixin();
-				wxUser.setCreateDate(new Date());
-				wxUser.setToUserName(inputMsg.getToUserName());
-				wxUser.setFromUserName(inputMsg.getFromUserName());
-				wxUser.setMsgType(msgType);
-				wxUser.setEvent(inputMsg.getEvent());
-				wxUser.setEventKey(inputMsg.getEventKey());
-				wxUser.setCreateTime(inputMsg.getCreateTime().toString());
-				wxUser.setQrcodeId(qrCodeId);
-				wxUser.setTaskId(manageQRcode.getTask().getId());
-				
-
-				if (count == 0) {
-					if ("Y".equals(manageQRcode.getQrState())) {
-						manageQRcode.setQrSubscribeCount(manageQRcode.getQrSubscribeCount() + 1);
-						manageQRcode.setQrSubscribeAdminCount(manageQRcode.getQrSubscribeAdminCount() + 1);
-						manageQRcodeService.saveManageQRcode(manageQRcode);
-						wxUser.setStatus("Y");
-					} else {
-						manageQRcode.setQrSubscribeAdminCount(manageQRcode.getQrSubscribeAdminCount() + 1);
-						manageQRcodeService.saveManageQRcode(manageQRcode);
-						wxUser.setStatus("N");
+				if (!StringUtils.isEmpty(inputMsg.getEventKey())) {
+					Long qrCodeId = null;
+					try {
+						qrCodeId = Long.parseLong(inputMsg.getEventKey().replaceAll("qrscene_", "").trim().toString());
+					} catch (Exception e) {
+						System.out.println("用户关注" + inputMsg.getEventKey() + "------转换失败");
+						e.printStackTrace();
 					}
+
+					ManageQRcode manageQRcode = manageQRcodeService.getManageQRcode(qrCodeId);
+
+					Integer count = manageQRcodeService.selectHistoryWeixinBytaskId(manageQRcode.getTask().getId(), inputMsg.getFromUserName());
+
+					HistoryWeixin wxUser = new HistoryWeixin();
+					wxUser.setCreateDate(new Date());
+					wxUser.setToUserName(inputMsg.getToUserName());
+					wxUser.setFromUserName(inputMsg.getFromUserName());
+					wxUser.setMsgType(msgType);
+					wxUser.setEvent(inputMsg.getEvent());
+					wxUser.setEventKey(inputMsg.getEventKey());
+					wxUser.setCreateTime(inputMsg.getCreateTime().toString());
+					wxUser.setQrcodeId(qrCodeId);
+					wxUser.setTaskId(manageQRcode.getTask().getId());
+
+					if (count == 0) {
+						if ("Y".equals(manageQRcode.getQrState())) {
+							manageQRcode.setQrSubscribeCount(manageQRcode.getQrSubscribeCount() + 1);
+							manageQRcode.setQrSubscribeAdminCount(manageQRcode.getQrSubscribeAdminCount() + 1);
+							manageQRcodeService.saveManageQRcode(manageQRcode);
+							wxUser.setStatus("Y");
+						} else {
+							manageQRcode.setQrSubscribeAdminCount(manageQRcode.getQrSubscribeAdminCount() + 1);
+							manageQRcodeService.saveManageQRcode(manageQRcode);
+							wxUser.setStatus("N");
+						}
+					}
+
+					manageQRcodeService.saveHistoryWeixin(wxUser);
+					
 				}
-				
-				manageQRcodeService.saveHistoryWeixin(wxUser);
-		      	str.append("success");
+				String content="宝箱感谢您的关注。 \n 回复（ '？'，'查看'或'礼包'） 查看发送礼包的游戏，回复相应的名称或编号即可获取相应的游戏礼包。";
+				str.append("<xml>                                              ");
+				str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>        ");
+				str.append("<FromUserName><![CDATA[" + servername + "]]></FromUserName>  ");
+				str.append("<CreateTime>" + returnTime + "</CreateTime>                  ");
+				str.append("<MsgType><![CDATA[text]]></MsgType>                ");
+				str.append("<Content><![CDATA["+content+"]]></Content>                     "); 
+				str.append("</xml>                                             ");
 				System.out.println(str.toString());
 				response.getWriter().write(str.toString());
 			}
 
 		} else if ("text".equals(msgType)) {
-			
+
 			String redurl = URLEncoder.encode(MobileContants.YM + "/weixinUser/bindUserOpenId", "utf-8");
-			String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + MobileContants.appID
-					+ "&redirect_uri=" + redurl
-					+ "&response_type=code&scope=snsapi_base&state=1#wechat_redirect"; 
-			
-			String xxxx=inputMsg.getContent().toString();
-	 
-			if (xxxx.indexOf("绑定推广")!=-1) {
-				  
-		          str.append("<xml>                                              ");
-		          str.append("<ToUserName><![CDATA["+custermname+"]]></ToUserName>        ");
-		          str.append("<FromUserName><![CDATA["+servername+"]]></FromUserName>  ");
-		          str.append("<CreateTime>"+returnTime+"</CreateTime>                  ");
-		          str.append("<MsgType><![CDATA[news]]></MsgType>                ");
-		          str.append("<ArticleCount>1</ArticleCount>                     ");
-		          str.append("<Articles>                                         ");
-		          str.append("<item>                                             ");
-		          str.append("<Title><![CDATA[绑定推广帐号通知]]></Title>                   ");
-		          str.append("<Description><![CDATA[绑定推广帐号,请点击阅读全文,进行绑定]]></Description> ");
-		          str.append("<PicUrl><![CDATA[]]></PicUrl>                ");
-		          str.append("<Url><![CDATA["+url+"]]></Url>                         ");
-		          str.append("</item>                                            ");
-		          str.append("</Articles>                                        ");
-		          str.append("</xml>                                             ");
-			}else
-			{
-				str.append("success");
+			String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + MobileContants.appID + "&redirect_uri=" + redurl
+					+ "&response_type=code&scope=snsapi_base&state=1#wechat_redirect";
+
+			String xxxx = inputMsg.getContent().toString();
+
+			if (xxxx.indexOf("绑定推广") != -1) {
+
+				str.append("<xml>                                              ");
+				str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>        ");
+				str.append("<FromUserName><![CDATA[" + servername + "]]></FromUserName>  ");
+				str.append("<CreateTime>" + returnTime + "</CreateTime>                  ");
+				str.append("<MsgType><![CDATA[news]]></MsgType>                ");
+				str.append("<ArticleCount>1</ArticleCount>                     ");
+				str.append("<Articles>                                         ");
+				str.append("<item>                                             ");
+				str.append("<Title><![CDATA[绑定推广帐号通知]]></Title>                   ");
+				str.append("<Description><![CDATA[绑定推广帐号,请点击阅读全文,进行绑定]]></Description> ");
+				str.append("<PicUrl><![CDATA[]]></PicUrl>                ");
+				str.append("<Url><![CDATA[" + url + "]]></Url>                         ");
+				str.append("</item>                                            ");
+				str.append("</Articles>                                        ");
+				str.append("</xml>                                             ");
+			} else {
+				String content=" 此款游戏暂时没有更多的游戏礼包发送给您，敬请期待。\n 回复'?'可查看游戏礼包回复编号或者游戏名可领取礼包。";
+				str.append("<xml>                                              ");
+				str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>        ");
+				str.append("<FromUserName><![CDATA[" + servername + "]]></FromUserName>  ");
+				str.append("<CreateTime>" + returnTime + "</CreateTime>                  ");
+				str.append("<MsgType><![CDATA[text]]></MsgType>                ");
+				str.append("<Content><![CDATA["+content+"]]></Content>                     "); 
+				str.append("</xml>                                             ");
+				System.out.println(str.toString());
+				response.getWriter().write(str.toString());
 			}
-		     
+
 			System.out.println(str.toString());
 			response.getWriter().write(str.toString());
 		}
-
-		
-	
 
 	}
 }
