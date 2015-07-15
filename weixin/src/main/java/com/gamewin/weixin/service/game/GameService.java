@@ -39,8 +39,8 @@ public class GameService {
 		return gameCodeMybatisDao.updateMyGameCode(id, wxuserId);
 	}
 
-	public GameCode getMyGameCode() {
-		return gameCodeMybatisDao.getMyGameCode();
+	public GameCode getMyGameCode(Long id) {
+		return gameCodeMybatisDao.getMyGameCode(id);
 	}
 
 	public Long getMyGameCodeCount(Long gameid, String wxuserId) {

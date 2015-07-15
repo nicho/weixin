@@ -21,8 +21,8 @@
 	 SELECT c.code,c.id,c.`wxuser_Id`,c.`status`,c.`create_Date`,c.update_date,w.`game_Name` AS gamex_name,w.`id` AS gamex_id  FROM wx_game w, wx_game_code c WHERE w.`id`=c.`game_id` and w.id=#{id}
 	</select>
 	
-    <select id="getMyGameCode" resultType="com.gamewin.weixin.entity.GameCode">
-	 	SELECT c.code,c.id FROM wx_game_code c WHERE c.`status`='Y' AND c.`wxuser_Id` IS NULL ORDER BY c.`create_Date` LIMIT 1 
+    <select id="getMyGameCode"  parameterType="Long"  resultType="com.gamewin.weixin.entity.GameCode">
+	 		SELECT c.code,c.id FROM wx_game_code c WHERE c.`status`='Y' AND c.`wxuser_Id` IS NULL AND c.`game_id`=#{id} ORDER BY c.`create_Date` LIMIT 1 
 	</select> 
 	
 	<update id="updateMyGameCode" >

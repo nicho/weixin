@@ -21,7 +21,7 @@ import com.gamewin.weixin.entity.GameCode;
 public interface GameCodeMybatisDao {
  
 	List<GameCode> getGameCodelistByGame(Long id); 
-	GameCode  getMyGameCode(); 
+	GameCode  getMyGameCode(Long id); 
 	Long getMyGameCodeCount(@Param("gameid") Long gameid,@Param("wxuserId") String wxuserId); 
 	Long updateMyGameCode(@Param("id") Long id,@Param("wxuserId") String wxuserId);
 }

@@ -265,7 +265,7 @@ public class ApiListController {
 						if(count<game.getMaximum())
 						{
 							//获得激活码
-							GameCode code=gameService.getMyGameCode();
+							GameCode code=gameService.getMyGameCode(game.getId());
 							gameService.updateMyGameCode(code.getId(), custermname);
 							content = "您领取的游戏码："+code.getCode()+" 。\n  "+game.getGameMessage()+"。";
 							
