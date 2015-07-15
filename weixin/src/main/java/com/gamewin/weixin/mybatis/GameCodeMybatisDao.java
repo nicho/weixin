@@ -22,6 +22,6 @@ public interface GameCodeMybatisDao {
  
 	List<GameCode> getGameCodelistByGame(Long id); 
 	GameCode  getMyGameCode(); 
-	Integer getMyGameCodeCount(@Param("gameid") Long gameid,@Param("wxuserId") String wxuserId); 
-	Integer updateMyGameCode(@Param("id") Long id,@Param("wxuserId") String wxuserId);
+	Long getMyGameCodeCount(@Param("gameid") Long gameid,@Param("wxuserId") String wxuserId); 
+	Long updateMyGameCode(@Param("id") Long id,@Param("wxuserId") String wxuserId);
 }

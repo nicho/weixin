@@ -259,7 +259,9 @@ public class ApiListController {
 					Game game=gameService.findGameByNameOrXuhao(xxxx);
 					if(game!=null)
 					{
-						Integer count=gameService.getMyGameCodeCount(game.getId(), custermname);
+						Long count=gameService.getMyGameCodeCount(game.getId(), custermname);
+						System.out.println(count);
+						System.out.println(game.getMaximum());
 						if(count<game.getMaximum())
 						{
 							//获得激活码

@@ -8,7 +8,6 @@ package com.gamewin.weixin.service.game;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +35,7 @@ public class GameService {
 	@Autowired
 	private GameCodeMybatisDao gameCodeMybatisDao;
 
-	public Integer updateMyGameCode(Long id, String wxuserId) {
+	public Long updateMyGameCode(Long id, String wxuserId) {
 		return gameCodeMybatisDao.updateMyGameCode(id, wxuserId);
 	}
 
@@ -44,7 +43,7 @@ public class GameService {
 		return gameCodeMybatisDao.getMyGameCode();
 	}
 
-	public Integer getMyGameCodeCount(Long gameid, String wxuserId) {
+	public Long getMyGameCodeCount(Long gameid, String wxuserId) {
 		return gameCodeMybatisDao.getMyGameCodeCount(gameid, wxuserId);
 	}
 
