@@ -19,4 +19,5 @@ import com.gamewin.weixin.entity.GameCode;
 public interface GameCodeMybatisDao {
  
 	List<GameCode> getGameCodelistByGame(Long id); 
+	List<GameCode> getMyGameCode(String gameid,String wxuserId); 
 }

@@ -24,9 +24,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.gamewin.weixin.entity.Game;
 import com.gamewin.weixin.entity.HistoryWeixin;
 import com.gamewin.weixin.entity.ManageQRcode;
 import com.gamewin.weixin.service.account.AccountService;
+import com.gamewin.weixin.service.game.GameService;
 import com.gamewin.weixin.service.task.ManageQRcodeService;
 import com.gamewin.weixin.service.task.ManageTaskService;
 import com.gamewin.weixin.util.InputMessage;
@@ -47,6 +49,8 @@ public class ApiListController {
 	private AccountService accountService;
 	@Autowired
 	private ManageTaskService manageTaskService;
+	@Autowired
+	private GameService gameService;
 
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
 	public void list(HttpServletRequest request, HttpServletResponse response) {
@@ -196,15 +200,15 @@ public class ApiListController {
 					}
 
 					manageQRcodeService.saveHistoryWeixin(wxUser);
-					
+
 				}
-				String content="宝箱感谢您的关注。 \n 回复（ '？'，'查看'或'礼包'） 查看发送礼包的游戏，回复相应的名称或编号即可获取相应的游戏礼包。";
+				String content = "宝箱感谢您的关注。 \n 回复（ '？'，'查看'或'礼包'） 查看发送礼包的游戏，回复相应的名称或编号即可获取相应的游戏礼包。";
 				str.append("<xml>                                              ");
 				str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>        ");
 				str.append("<FromUserName><![CDATA[" + servername + "]]></FromUserName>  ");
 				str.append("<CreateTime>" + returnTime + "</CreateTime>                  ");
 				str.append("<MsgType><![CDATA[text]]></MsgType>                ");
-				str.append("<Content><![CDATA["+content+"]]></Content>                     "); 
+				str.append("<Content><![CDATA[" + content + "]]></Content>                     ");
 				str.append("</xml>                                             ");
 				System.out.println(str.toString());
 				response.getWriter().write(str.toString());
@@ -217,7 +221,7 @@ public class ApiListController {
 					+ "&response_type=code&scope=snsapi_base&state=1#wechat_redirect";
 
 			String xxxx = inputMsg.getContent().toString();
-
+			String content = "";
 			if (xxxx.indexOf("绑定推广") != -1) {
 
 				str.append("<xml>                                              ");
@@ -235,21 +239,35 @@ public class ApiListController {
 				str.append("</item>                                            ");
 				str.append("</Articles>                                        ");
 				str.append("</xml>                                             ");
+
+				System.out.println(str.toString());
+				response.getWriter().write(str.toString());
 			} else {
-				String content=" 此款游戏暂时没有更多的游戏礼包发送给您，敬请期待。\n 回复'?'可查看游戏礼包回复编号或者游戏名可领取礼包。";
+				if ("?".equals(xxxx) || "查看".equals(xxxx) || "礼包".equals(xxxx)) {
+					List<Game> gameList = gameService.getEffectiveGamelist();
+					if (gameList != null && gameList.size() > 0) {
+						for (int i = 0; i < gameList.size(); i++) {
+							Game game = gameList.get(i);
+							content += "[" + game.getXuhao() + "] " + game.getGameName() + "\n";
+						}
+						content += "请回复编号或游戏名领取礼包";
+					} else {
+						content = "目前没有可领取的礼包";
+					}
+				} else {
+					content = " 此款游戏暂时没有更多的游戏礼包发送给您，敬请期待。\n 回复'?'可查看游戏礼包回复编号或者游戏名可领取礼包。";
+				}
 				str.append("<xml>                                              ");
 				str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>        ");
 				str.append("<FromUserName><![CDATA[" + servername + "]]></FromUserName>  ");
 				str.append("<CreateTime>" + returnTime + "</CreateTime>                  ");
 				str.append("<MsgType><![CDATA[text]]></MsgType>                ");
-				str.append("<Content><![CDATA["+content+"]]></Content>                     "); 
+				str.append("<Content><![CDATA[" + content + "]]></Content>                     ");
 				str.append("</xml>                                             ");
 				System.out.println(str.toString());
 				response.getWriter().write(str.toString());
 			}
 
-			System.out.println(str.toString());
-			response.getWriter().write(str.toString());
 		}
 
 	}

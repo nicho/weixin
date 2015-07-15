@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gamewin.weixin.entity.Game;
 import com.gamewin.weixin.entity.GameCode;
+import com.gamewin.weixin.model.GameCodeDto;
 import com.gamewin.weixin.mybatis.GameCodeMybatisDao;
 import com.gamewin.weixin.mybatis.GameMybatisDao;
 import com.gamewin.weixin.repository.GameCodeDao;
@@ -53,5 +54,13 @@ public class GameService {
 	public List<GameCode> getGameCodelist(Long id,Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) { 	
 		PageHelper.startPage(pageNumber, pageSize);
 		return gameCodeMybatisDao.getGameCodelistByGame(id);
+	}
+	
+	public List<Game> getEffectiveGamelist() { 	 
+		return gameMybatisDao.getEffectiveGamelist(); 
+	}
+	public GameCodeDto getGameCode(String gamekey,String wxuserId) { 	 
+	//	gameCodeMybatisDao.getGameCode(wxuserId);
+		return null; 
 	}
 }
