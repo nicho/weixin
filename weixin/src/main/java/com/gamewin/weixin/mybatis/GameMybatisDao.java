@@ -19,5 +19,6 @@ import com.gamewin.weixin.entity.Game;
 public interface GameMybatisDao {
  
 	List<Game> getGamelist(); 
-	List<Game> getEffectiveGamelist(); 
+	List<Game> getEffectiveGamelist();  
+	Game finGameByNameOrXuhao(String key); 
 }

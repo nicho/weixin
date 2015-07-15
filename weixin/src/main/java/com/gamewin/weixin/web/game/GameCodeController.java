@@ -5,6 +5,7 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.game;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springside.modules.web.Servlets;
 
 import com.gamewin.weixin.entity.Game;
 import com.gamewin.weixin.entity.GameCode;
@@ -87,6 +87,7 @@ public class GameCodeController {
 					newcode.setIsdelete(0);
 					newcode.setCode(codeArr[i]);
 					newcode.setGame(game);
+					newcode.setCreateDate(new Date());
 					gameCodeService.saveGameCode(newcode);
 				}
 				redirectAttributes.addFlashAttribute("message", "创建游戏码成功,共"+codeArr.length+"个");

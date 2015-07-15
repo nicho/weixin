@@ -255,7 +255,17 @@ public class ApiListController {
 						content = "目前没有可领取的礼包";
 					}
 				} else {
-					content = " 此款游戏暂时没有更多的游戏礼包发送给您，敬请期待。\n 回复'?'可查看游戏礼包回复编号或者游戏名可领取礼包。";
+					Game game=gameService.findGameByNameOrXuhao(xxxx);
+					if(game!=null)
+					{
+						
+						
+					}
+					else
+					{
+						content = " 此款游戏暂时没有更多的游戏礼包发送给您，敬请期待。\n 回复'?'可查看游戏礼包回复编号或者游戏名可领取礼包。";
+					}
+					
 				}
 				str.append("<xml>                                              ");
 				str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>        ");

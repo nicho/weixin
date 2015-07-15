@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,11 @@ public class GameService {
 	@Autowired
 	private GameCodeMybatisDao gameCodeMybatisDao;
 	
+ 
+	public Game findGameByNameOrXuhao(String key) {
+		return gameMybatisDao.finGameByNameOrXuhao(key);
+	}
+
 	public Game getGame(Long id) {
 		return gameDao.findOne(id);
 	}

@@ -1,5 +1,7 @@
 package com.gamewin.weixin.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,6 +15,15 @@ public class GameCode extends IdEntity {
 	private String wxuserId;
 	private String status;
 	private Integer isdelete;
+	private Date createDate;
+	
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 
 	public String getCode() {
 		return code;

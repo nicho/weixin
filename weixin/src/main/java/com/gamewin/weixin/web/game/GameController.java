@@ -5,6 +5,7 @@
  *******************************************************************************/
 package com.gamewin.weixin.web.game;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springside.modules.web.Servlets;
 
 import com.gamewin.weixin.entity.Game;
 import com.gamewin.weixin.service.game.GameService;
@@ -74,6 +74,7 @@ public class GameController {
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String create(@Valid Game newGame, RedirectAttributes redirectAttributes, ServletRequest request) { 
 		newGame.setStatus("Y");
+		newGame.setCreateDate(new Date());
 		newGame.setIsdelete(0);
 		gameService.saveGame(newGame);
 		redirectAttributes.addFlashAttribute("message", "创建游戏成功");

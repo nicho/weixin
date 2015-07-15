@@ -1,8 +1,7 @@
 package com.gamewin.weixin.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import java.beans.Transient;
+import java.util.Date;
 
 @Entity
 @Table(name = "wx_game")
@@ -10,18 +9,28 @@ public class Game extends IdEntity {
 	private String gameName;
 	private String gameMessage;
 	private Long maximum;
-	private Long xuhao;
+	private String xuhao;
 	private String status;
 	private Integer isdelete;
 	private Integer totalCount;
 	private Integer postedCount;
 	private Integer surplusCount;
+	private Date createDate;
 	
-	public Long getXuhao() {
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+ 
+	public String getXuhao() {
 		return xuhao;
 	}
 
-	public void setXuhao(Long xuhao) {
+	public void setXuhao(String xuhao) {
 		this.xuhao = xuhao;
 	}
 

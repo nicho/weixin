@@ -6,10 +6,22 @@
  
  
 	<select id="getGamelist" resultType="com.gamewin.weixin.entity.Game">
-	 
+		SELECT t.`game_Name` AS gameName,t.`game_Message` gamemessage,t.`maximum`,t.`xuhao`,t.`status`,
+		(SELECT COUNT(*) FROM wx_game_code c WHERE c.game_id=t.`id`) AS totalCount,
+		(SELECT COUNT(*) FROM wx_game_code c WHERE c.game_id=t.`id` AND c.wxuser_id IS NOT NULL) AS postedCount,
+		(SELECT COUNT(*) FROM wx_game_code c WHERE c.game_id=t.`id` AND c.status='Y') AS totalCount
+		 FROM wx_game t WHERE t.isdelete=0 ORDER BY t.`create_Date` DESC
 	</select>
 	
     <select id="getEffectiveGamelist" resultType="com.gamewin.weixin.entity.Game">
-	 
+		 SELECT t.`game_Name` AS gameName,t.`game_Message` gamemessage,t.`maximum`,t.`xuhao`,t.`status` 
+	 FROM wx_game t WHERE t.isdelete=0 AND  t.status='Y' ORDER BY t.`create_Date` DESC
 	</select> 
+	
+	 <select id="finGameByNameOrXuhao" resultType="com.gamewin.weixin.entity.Game">
+		 SELECT t.`game_Name` AS gameName,t.`game_Message` gamemessage,t.`maximum`,t.`xuhao`,t.`status` 
+	 FROM wx_game t WHERE t.isdelete=0 AND  t.status='Y'   AND ( t.`xuhao`=#{key} or t.game_name=#{key})  LIMIT 1
+	</select> 
+	
+	
 </mapper> 
