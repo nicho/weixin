@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springside.modules.web.Servlets;
 
 import com.gamewin.weixin.entity.Game;
 import com.gamewin.weixin.entity.GameCode;
@@ -55,6 +56,7 @@ public class GameCodeController {
 		PageInfo<GameCode> page = new PageInfo<GameCode>(gameCodes);
 		model.addAttribute("page", page);
 		model.addAttribute("gameCodes", gameCodes);
+		model.addAttribute("gameId", id);
 		model.addAttribute("sortType", sortType);
 		model.addAttribute("sortTypes", sortTypes);
 		// 将搜索条件编码成字符串，用于排序，分页的URL
@@ -94,7 +96,7 @@ public class GameCodeController {
 			}
 		}
 		 
-		return "redirect:/gameCode/";
+		return "redirect:/gameCode/showGame/"+gameId;
 	}
 
  
@@ -102,11 +104,11 @@ public class GameCodeController {
 	@RequiresRoles("admin")
 	@RequestMapping(value = "disabled/{id}")
 	public String disabled(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-		Game gameCode = gameCodeService.getGame(id);
+		GameCode gameCode = gameCodeService.getGameCode(id);
 		gameCode.setStatus("N");
-		gameCodeService.saveGame(gameCode);
-		redirectAttributes.addFlashAttribute("message", "失效游戏码'" + gameCode.getGameName()+ "'成功");
-		return "redirect:/gameCode/";
+		gameCodeService.saveGameCode(gameCode);
+		redirectAttributes.addFlashAttribute("message", "失效游戏码'" + gameCode.getCode()+ "'成功");
+		return "redirect:/gameCode/showGame/"+gameCode.getGame().getId();
 	}
 
 	 

@@ -18,6 +18,12 @@
 		<input type="hidden" name="id" value="${task.id}"/> 
 		<fieldset>
 			<legend><small>创建游戏</small></legend>
+			 <div class="control-group">
+				<label for="task_title" class="control-label">游戏序号:</label>
+				<div class="controls">
+					<input type="text" id="xuhao" name="xuhao"  value="${task.xuhao}" class="input-large required digits"  />
+				</div>
+			</div>	
 			<div class="control-group">
 				<label for="task_title" class="control-label">游戏名称:</label>
 				<div class="controls">
@@ -30,7 +36,7 @@
 					<input type="text" id="task_gameMessage" name="maximum"  value="${task.maximum}" class="input-large required digits"  />
 				</div>
 			</div>	
-	  
+
 			<div class="control-group">
 				<label for="description" class="control-label">游戏广告语:</label>
 				<div class="controls">

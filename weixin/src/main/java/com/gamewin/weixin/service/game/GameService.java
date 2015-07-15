@@ -8,8 +8,8 @@ package com.gamewin.weixin.service.game;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,14 +35,29 @@ public class GameService {
 	private GameMybatisDao gameMybatisDao;
 	@Autowired
 	private GameCodeMybatisDao gameCodeMybatisDao;
-	
- 
+
+	public Integer updateMyGameCode(Long id, String wxuserId) {
+		return gameCodeMybatisDao.updateMyGameCode(id, wxuserId);
+	}
+
+	public GameCode getMyGameCode() {
+		return gameCodeMybatisDao.getMyGameCode();
+	}
+
+	public Integer getMyGameCodeCount(Long gameid, String wxuserId) {
+		return gameCodeMybatisDao.getMyGameCodeCount(gameid, wxuserId);
+	}
+
 	public Game findGameByNameOrXuhao(String key) {
 		return gameMybatisDao.finGameByNameOrXuhao(key);
 	}
 
 	public Game getGame(Long id) {
 		return gameDao.findOne(id);
+	}
+
+	public GameCode getGameCode(Long id) {
+		return gameCodeDao.findOne(id);
 	}
 
 	public void saveGame(Game entity) {
@@ -53,20 +68,23 @@ public class GameService {
 		gameCodeDao.save(entity);
 	}
 
-	public List<Game> getGamelist(Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) { 	
+	public List<Game> getGamelist(Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) {
 		PageHelper.startPage(pageNumber, pageSize);
-		return gameMybatisDao.getGamelist(); 
+		return gameMybatisDao.getGamelist();
 	}
-	public List<GameCode> getGameCodelist(Long id,Map<String, Object> searchParams, int pageNumber, int pageSize, String sortType) { 	
+
+	public List<GameCode> getGameCodelist(Long id, Map<String, Object> searchParams, int pageNumber, int pageSize,
+			String sortType) {
 		PageHelper.startPage(pageNumber, pageSize);
 		return gameCodeMybatisDao.getGameCodelistByGame(id);
 	}
-	
-	public List<Game> getEffectiveGamelist() { 	 
-		return gameMybatisDao.getEffectiveGamelist(); 
+
+	public List<Game> getEffectiveGamelist() {
+		return gameMybatisDao.getEffectiveGamelist();
 	}
-	public GameCodeDto getGameCode(String gamekey,String wxuserId) { 	 
-	//	gameCodeMybatisDao.getGameCode(wxuserId);
-		return null; 
+
+	public GameCodeDto getGameCode(String gamekey, String wxuserId) {
+		// gameCodeMybatisDao.getGameCode(wxuserId);
+		return null;
 	}
 }

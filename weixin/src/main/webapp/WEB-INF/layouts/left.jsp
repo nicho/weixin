@@ -28,6 +28,9 @@
 		<shiro:hasAnyRoles name="admin,TwoAdmin,ThreeAdmin">
 			<a id="account-tab"href="${ctx}/activationCode">激活码管理</a> 
 		</shiro:hasAnyRoles>
+	     <shiro:hasAnyRoles name="admin">
+			<a id="account-tab"href="${ctx}/game">游戏管理</a>
+		</shiro:hasAnyRoles>
 			<a id="account-tab"href="${ctx}/profile">资料修改</a>
 	</div>
 	

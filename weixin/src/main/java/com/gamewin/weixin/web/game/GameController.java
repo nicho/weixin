@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springside.modules.web.Servlets;
 
 import com.gamewin.weixin.entity.Game;
 import com.gamewin.weixin.service.game.GameService;
@@ -97,13 +98,17 @@ public class GameController {
 	@RequiresRoles("admin")
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	public String updateForm(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("game", gameService.getGame(id)); 
+		model.addAttribute("task", gameService.getGame(id)); 
+		model.addAttribute("action", "update");
 		return "game/gameForm";
 	}
 	
 	@RequiresRoles("admin")
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(@Valid @ModelAttribute("game") Game game, RedirectAttributes redirectAttributes,ServletRequest request) {
+		game.setStatus("Y");
+		game.setCreateDate(new Date());
+		game.setIsdelete(0);
 		gameService.saveGame(game);
 		redirectAttributes.addFlashAttribute("message", "更新游戏" + game.getGameName() + "成功");
 		return "redirect:/game/";

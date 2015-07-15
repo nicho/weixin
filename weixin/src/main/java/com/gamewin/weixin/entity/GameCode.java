@@ -16,7 +16,16 @@ public class GameCode extends IdEntity {
 	private String status;
 	private Integer isdelete;
 	private Date createDate;
+	private Date updateDate;
 	
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
 	public Date getCreateDate() {
 		return createDate;
 	}

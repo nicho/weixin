@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.gamewin.weixin.entity.Game;
+import com.gamewin.weixin.entity.GameCode;
 import com.gamewin.weixin.entity.HistoryWeixin;
 import com.gamewin.weixin.entity.ManageQRcode;
 import com.gamewin.weixin.service.account.AccountService;
@@ -258,7 +259,18 @@ public class ApiListController {
 					Game game=gameService.findGameByNameOrXuhao(xxxx);
 					if(game!=null)
 					{
-						
+						Integer count=gameService.getMyGameCodeCount(game.getId(), custermname);
+						if(count<game.getMaximum())
+						{
+							//获得激活码
+							GameCode code=gameService.getMyGameCode();
+							gameService.updateMyGameCode(code.getId(), custermname);
+							content = "您领取的游戏码："+code.getCode()+" 。\n  "+game.getGameMessage()+"。";
+							
+						}else
+						{
+							content = "您领取的游戏码已到上限，此款游戏暂时没有更多的游戏礼包发送给您，敬请期待。\n 回复'?'可查看游戏礼包回复编号或者游戏名可领取礼包。";
+						}
 						
 					}
 					else

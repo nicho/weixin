@@ -7,6 +7,8 @@ package com.gamewin.weixin.mybatis;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.gamewin.weixin.entity.GameCode;
 
 /**
@@ -19,5 +21,7 @@ import com.gamewin.weixin.entity.GameCode;
 public interface GameCodeMybatisDao {
  
 	List<GameCode> getGameCodelistByGame(Long id); 
-	List<GameCode> getMyGameCode(String gameid,String wxuserId); 
+	GameCode  getMyGameCode(); 
+	Integer getMyGameCodeCount(@Param("gameid") Long gameid,@Param("wxuserId") String wxuserId); 
+	Integer updateMyGameCode(@Param("id") Long id,@Param("wxuserId") String wxuserId);
 }

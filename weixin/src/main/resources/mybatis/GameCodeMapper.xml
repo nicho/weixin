@@ -10,17 +10,27 @@
 		<result property="wxuserId" column="wxuser_Id" /> 
 		<result property="status" column="status" /> 
 		<result property="createDate" column="create_Date" />   
+		<result property="updateDate" column="update_Date" />   
 		 <association property="game" column="game_id" javaType="Game">
 			<id property="id" column="gamex_id" />
 			<result property="gameName" column="gamex_name" /> 
 		</association>
 	</resultMap>
 	
- 	<select id="getGameCodelistByGame" parameterType="Long" resultMap="GameCodeMap">
-	 
+ 	<select id="getGameCodelistByGame" parameterType="Long" resultMap="GameCodeMap"> 
+	 SELECT c.code,c.id,c.`wxuser_Id`,c.`status`,c.`create_Date`,c.update_Date,w.`game_Name` AS gamex_name,w.`id` AS gamex_id  FROM wx_game w, wx_game_code c WHERE w.`id`=c.`game_id` and w.id=#{id}
 	</select>
 	
-    <select id="getMyGameCode" parameterType="Long" resultType="com.gamewin.weixin.entity.GameCode">
-	 
+    <select id="getMyGameCode" resultType="com.gamewin.weixin.entity.GameCode">
+	 	SELECT c.code,c.id FROM wx_game_code c WHERE c.`status`='Y' AND c.`wxuser_Id` IS NULL ORDER BY c.`create_Date` LIMIT 1 
 	</select> 
+	
+	<update id="updateMyGameCode" >
+	 	UPDATE wx_game_code c SET c.`status` = 'N' ,c.`wxuser_Id`=#{wxuserId} ,c.`update_date`=SYSDATE() WHERE id=#{id} ; 
+	</update> 
+	
+	 <select id="getMyGameCodeCount"  resultType="Integer">
+	 SELECT COUNT(*) FROM wx_game_code c WHERE c.`wxuser_Id`=#{wxuserId} AND c.`game_id`=#{gameid}
+	</select> 
+	
 </mapper> 

@@ -1,7 +1,11 @@
 package com.gamewin.weixin.entity;
 
-import java.beans.Transient;
+ 
 import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "wx_game")
