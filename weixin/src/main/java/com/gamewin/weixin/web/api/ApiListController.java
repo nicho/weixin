@@ -203,7 +203,18 @@ public class ApiListController {
 					manageQRcodeService.saveHistoryWeixin(wxUser);
 
 				}
-				String content = "宝箱感谢您的关注。 \n 回复（ '？'，'查看'或'礼包'） 查看发送礼包的游戏，回复相应的名称或编号即可获取相应的游戏礼包。";
+				String content = "HI，小伙伴，欢迎关注《宝箱》。目前宝箱正在为您提供以下游戏的礼包，回复序号，可直接领取。 \n ";
+				
+				List<Game> gameList = gameService.getEffectiveGamelist();
+				if (gameList != null && gameList.size() > 0) {
+					for (int i = 0; i < gameList.size(); i++) {
+						Game game = gameList.get(i);
+						content += "[" + game.getXuhao() + "] " + game.getGameName() + "\n";
+					} 
+				} else {
+					content += "目前没有可领取的礼包";
+				}
+				
 				str.append("<xml>                                              ");
 				str.append("<ToUserName><![CDATA[" + custermname + "]]></ToUserName>        ");
 				str.append("<FromUserName><![CDATA[" + servername + "]]></FromUserName>  ");
